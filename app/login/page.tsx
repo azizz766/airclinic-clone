@@ -11,6 +11,8 @@ export default function LoginPage() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [error, setError] = useState("")
+  const [resetSent, setResetSent] = useState(false)
+  const [resetLoading, setResetLoading] = useState(false)
 
   const handleLogin = async () => {
     setError("")
@@ -23,6 +25,24 @@ export default function LoginPage() {
       setError(error.message)
     } else {
       router.push("/dashboard")
+    }
+  }
+
+  const handleForgotPassword = async () => {
+    if (!email) {
+      setError("Enter your email address first, then click Forgot password.")
+      return
+    }
+    setError("")
+    setResetLoading(true)
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/auth/callback?type=recovery`,
+    })
+    setResetLoading(false)
+    if (error) {
+      setError(error.message)
+    } else {
+      setResetSent(true)
     }
   }
 
@@ -68,12 +88,26 @@ export default function LoginPage() {
             </div>
           )}
 
-          <div>
+          {resetSent && (
+            <div className="text-green-600 text-sm text-center">
+              Password reset email sent — check your inbox.
+            </div>
+          )}
+
+          <div className="space-y-3">
             <button
               type="submit"
               className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
             >
               Sign in
+            </button>
+            <button
+              type="button"
+              disabled={resetLoading}
+              onClick={handleForgotPassword}
+              className="w-full text-center text-sm text-indigo-600 hover:text-indigo-500 disabled:opacity-50"
+            >
+              {resetLoading ? "Sending…" : "Forgot password?"}
             </button>
           </div>
         </form>
