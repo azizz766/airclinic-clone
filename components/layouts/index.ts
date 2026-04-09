@@ -1,0 +1,1 @@
+export { ClinicSidebar } from './ClinicSidebar'
