@@ -8,6 +8,7 @@ import {
   findSingleClinicContextFromPhone as resolveSingleClinicContextFromPhone,
 } from '@/lib/whatsapp/context-resolution'
 import { ensureConversation, persistInboundMessage } from '@/lib/whatsapp/persist-message'
+import { resolveSession, persistMessage, transitionSession } from '@/lib/whatsapp/session'
 import { runAiInterpretationPipeline } from '@/lib/whatsapp/ai-interpretation-pipeline'
 import { sendWhatsAppWithOutcomeLogging } from '@/lib/whatsapp/delivery-outcome'
 import {
@@ -1129,7 +1130,7 @@ async function findSafeRecentNotificationJobFallback(fromRaw: string) {
   }
 }
 
-async function findLatestActiveAppointmentByPhone(fromRaw: string) {
+async function findLatestActiveAppointmentByPhone(fromRaw: string, clinicId?: string) {
   const phone = normalizePhone(fromRaw)
   const last8 = phone.replace(/\D/g, '').slice(-8)
 
@@ -1146,6 +1147,7 @@ async function findLatestActiveAppointmentByPhone(fromRaw: string) {
       status: {
         in: ['scheduled', 'confirmation_pending', 'confirmed'],
       },
+      ...(clinicId ? { clinicId } : {}),
       patient: {
         phone: {
           endsWith: last8,
@@ -1401,30 +1403,12 @@ export async function POST(request: NextRequest) {
   const reminderRef = parseReminderRef(bodyRaw)
 
   if (messageSid) {
-    const duplicateWindow = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)
-    const existingProcessed = await prisma.escalationLog.findFirst({
-      where: {
-        createdAt: { gte: duplicateWindow },
-        metadata: {
-          path: ['inboundMessageSid'],
-          equals: messageSid,
-        },
-      },
-      select: {
-        id: true,
-        eventType: true,
-      },
-      orderBy: {
-        createdAt: 'desc',
-      },
+    const alreadyProcessed = await prisma.conversationMessage.findFirst({
+      where: { twilioMessageSid: messageSid },
+      select: { id: true },
     })
-
-    if (existingProcessed) {
-      console.log('[whatsapp-webhook] duplicate-message-suppressed', {
-        messageSid,
-        matchedLogId: existingProcessed.id,
-        matchedEventType: existingProcessed.eventType,
-      })
+    if (alreadyProcessed) {
+      console.log('[whatsapp-webhook] duplicate-message-suppressed', { messageSid })
       return twilioXmlResponse()
     }
   }
@@ -1483,6 +1467,27 @@ export async function POST(request: NextRequest) {
     ? { clinicId: inboundContext.clinicId, patientId: inboundContext.patientId, patientPhone: inboundContext.phoneNormalized }
     : undefined
 
+  // ── FSM Session Resolution ────────────────────────────────────────────────────
+  let fsmSession: Awaited<ReturnType<typeof resolveSession>> | null = null
+  if (from && inboundContext?.clinicId) {
+    try {
+      const fsmPhone = normalizePhone(from)
+      fsmSession = await resolveSession(fsmPhone, inboundContext.clinicId)
+      await persistMessage({
+        sessionId: fsmSession.id,
+        clinicId: inboundContext.clinicId,
+        role: 'patient',
+        channel: 'whatsapp',
+        content: bodyRaw,
+        currentState: fsmSession.currentState,
+        twilioMessageSid: messageSid || undefined,
+      })
+    } catch (fsmErr) {
+      console.error('[whatsapp-webhook] fsm-session-resolve-failed', { error: String(fsmErr) })
+    }
+  }
+  // ─────────────────────────────────────────────────────────────────────────────
+
   const aiDecision = await runAiInterpretationPipeline({
     bodyRaw,
     from,
@@ -1528,6 +1533,20 @@ export async function POST(request: NextRequest) {
       from: controlState.phoneNormalized,
       clinicId: controlState.clinicId,
     })
+    // ── FSM: mirror human_active into HUMAN_ESCALATION_ACTIVE ────────────────
+    if (fsmSession && fsmSession.currentState !== 'HUMAN_ESCALATION_ACTIVE') {
+      try {
+        await transitionSession(
+          fsmSession.id,
+          controlState.clinicId ?? inboundContext?.clinicId ?? '',
+          'HUMAN_ESCALATION_ACTIVE',
+          'STAFF_CLAIMED'
+        )
+      } catch (fsmErr) {
+        console.error('[whatsapp-webhook] fsm-human-active-failed', { error: fsmErr })
+      }
+    }
+    // ─────────────────────────────────────────────────────────────────────────
     return twilioXmlResponse()
   }
 
@@ -1562,7 +1581,24 @@ export async function POST(request: NextRequest) {
     }
 
     await expireConversationSession(session.logId)
-
+    // ── FSM: transition to SLOT_COLLECTION_DATE ───────────────────────────────
+    if (fsmSession) {
+      try {
+        await transitionSession(
+          fsmSession.id,
+          session.clinicId,
+          'SLOT_COLLECTION_DATE',
+          'SLOT_VALID'
+        )
+        await prisma.conversationSession.update({
+          where: { id: fsmSession.id },
+          data: { slotServiceId: selectedServiceOption.serviceId },
+        })
+      } catch (fsmErr) {
+        console.error('[whatsapp-webhook] fsm-slot-date-failed', { error: fsmErr })
+      }
+    }
+    // ─────────────────────────────────────────────────────────────────────────
     const sentMsg = await sendWhatsAppWithOutcomeLogging({
       to: normalizePhone(from),
       body: 'وش الوقت المناسب لك؟ (صباح / مساء / يوم معين)',
@@ -1712,6 +1748,21 @@ export async function POST(request: NextRequest) {
     })
 
     await expireConversationSession(session.logId)
+
+    // ── FSM: transition to BOOKING_CONFIRMED ─────────────────────────────────────────────
+    if (fsmSession) {
+      try {
+        await transitionSession(
+          fsmSession.id,
+          inboundContext!.clinicId,
+          'BOOKING_CONFIRMED',
+          'BOOKING_SUCCESS'
+        )
+      } catch (fsmErr) {
+        console.error('[whatsapp-webhook] fsm-booking-confirmed-failed', { error: fsmErr })
+      }
+    }
+    // ─────────────────────────────────────────────────────────────────────────────
 
     await prisma.escalationLog.create({
       data: {
@@ -2035,6 +2086,28 @@ export async function POST(request: NextRequest) {
           },
           patientContext: outboundPatientContext,
         })
+        // ── FSM: transition to SLOT_COLLECTION_SERVICE ────────────────────────
+        if (fsmSession) {
+          try {
+            await transitionSession(
+              fsmSession.id,
+              clinicContext.clinicId,
+              'SLOT_COLLECTION_SERVICE',
+              'INTENT_BOOKING'
+            )
+            await persistMessage({
+              sessionId: fsmSession.id,
+              clinicId: clinicContext.clinicId,
+              role: 'assistant',
+              channel: 'whatsapp',
+              content: serviceListMsg,
+              currentState: 'SLOT_COLLECTION_SERVICE',
+            })
+          } catch (fsmErr) {
+            console.error('[whatsapp-webhook] fsm-service-selection-failed', { error: fsmErr })
+          }
+        }
+        // ─────────────────────────────────────────────────────────────────────
         await saveConversationSession({
           flow: 'service_selection_flow',
           clinicId: clinicContext.clinicId,
@@ -2111,6 +2184,28 @@ export async function POST(request: NextRequest) {
       patientContext: outboundPatientContext,
     })
 
+    // ── FSM: transition to SLOT_COLLECTION_TIME ───────────────────────────────
+    if (fsmSession) {
+      try {
+        await transitionSession(
+          fsmSession.id,
+          clinicContext.clinicId,
+          'SLOT_COLLECTION_TIME',
+          'SLOT_VALID'
+        )
+        await persistMessage({
+          sessionId: fsmSession.id,
+          clinicId: clinicContext.clinicId,
+          role: 'assistant',
+          channel: 'whatsapp',
+          content: message,
+          currentState: 'SLOT_COLLECTION_TIME',
+        })
+      } catch (fsmErr) {
+        console.error('[whatsapp-webhook] fsm-slot-time-failed', { error: fsmErr })
+      }
+    }
+    // ─────────────────────────────────────────────────────────────────────────
     await saveConversationSession({
       flow: aiInterpretation.intent === 'availability_check' ? 'availability_flow' : 'booking_flow',
       clinicId: clinicContext.clinicId,
@@ -2192,7 +2287,7 @@ export async function POST(request: NextRequest) {
   }
 
   if (!notificationJob && (isConfirmIntent || isCancelIntent || isRescheduleIntent)) {
-    const appointmentFallback = await resolveLatestActiveAppointmentByPhone(from)
+    const appointmentFallback = await resolveLatestActiveAppointmentByPhone(from, inboundContext?.clinicId)
     latestAppointmentFallbackReason = appointmentFallback.reason
     latestAppointmentFallbackCandidates = appointmentFallback.candidateCount
 
@@ -2387,6 +2482,21 @@ export async function POST(request: NextRequest) {
         },
       },
     })
+
+    // ── FSM: transition to CANCELLATION_CONFIRMED ────────────────────────────────
+    if (fsmSession) {
+      try {
+        await transitionSession(
+          fsmSession.id,
+          cancelClinicId,
+          'CANCELLATION_CONFIRMED',
+          'AFFIRM'
+        )
+      } catch (fsmErr) {
+        console.error('[whatsapp-webhook] fsm-cancellation-confirmed-failed', { error: fsmErr })
+      }
+    }
+    // ─────────────────────────────────────────────────────────────────────────────
 
     console.log('[whatsapp-webhook] action', {
       action: 'cancel_appointment',

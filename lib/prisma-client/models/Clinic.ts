@@ -33,6 +33,7 @@ export type ClinicMinAggregateOutputType = {
   email: string | null
   website: string | null
   timezone: string | null
+  twilioPhoneNumber: string | null
   isActive: boolean | null
   subscriptionPlan: $Enums.SubscriptionPlan | null
   subscriptionExpiresAt: Date | null
@@ -49,6 +50,7 @@ export type ClinicMaxAggregateOutputType = {
   email: string | null
   website: string | null
   timezone: string | null
+  twilioPhoneNumber: string | null
   isActive: boolean | null
   subscriptionPlan: $Enums.SubscriptionPlan | null
   subscriptionExpiresAt: Date | null
@@ -65,6 +67,7 @@ export type ClinicCountAggregateOutputType = {
   email: number
   website: number
   timezone: number
+  twilioPhoneNumber: number
   isActive: number
   subscriptionPlan: number
   subscriptionExpiresAt: number
@@ -83,6 +86,7 @@ export type ClinicMinAggregateInputType = {
   email?: true
   website?: true
   timezone?: true
+  twilioPhoneNumber?: true
   isActive?: true
   subscriptionPlan?: true
   subscriptionExpiresAt?: true
@@ -99,6 +103,7 @@ export type ClinicMaxAggregateInputType = {
   email?: true
   website?: true
   timezone?: true
+  twilioPhoneNumber?: true
   isActive?: true
   subscriptionPlan?: true
   subscriptionExpiresAt?: true
@@ -115,6 +120,7 @@ export type ClinicCountAggregateInputType = {
   email?: true
   website?: true
   timezone?: true
+  twilioPhoneNumber?: true
   isActive?: true
   subscriptionPlan?: true
   subscriptionExpiresAt?: true
@@ -204,6 +210,7 @@ export type ClinicGroupByOutputType = {
   email: string | null
   website: string | null
   timezone: string
+  twilioPhoneNumber: string | null
   isActive: boolean
   subscriptionPlan: $Enums.SubscriptionPlan
   subscriptionExpiresAt: Date | null
@@ -241,6 +248,7 @@ export type ClinicWhereInput = {
   email?: Prisma.StringNullableFilter<"Clinic"> | string | null
   website?: Prisma.StringNullableFilter<"Clinic"> | string | null
   timezone?: Prisma.StringFilter<"Clinic"> | string
+  twilioPhoneNumber?: Prisma.StringNullableFilter<"Clinic"> | string | null
   isActive?: Prisma.BoolFilter<"Clinic"> | boolean
   subscriptionPlan?: Prisma.EnumSubscriptionPlanFilter<"Clinic"> | $Enums.SubscriptionPlan
   subscriptionExpiresAt?: Prisma.DateTimeNullableFilter<"Clinic"> | Date | string | null
@@ -258,6 +266,8 @@ export type ClinicWhereInput = {
   clinicSettings?: Prisma.XOR<Prisma.ClinicSettingsNullableScalarRelationFilter, Prisma.ClinicSettingsWhereInput> | null
   businessHours?: Prisma.BusinessHoursListRelationFilter
   escalationLogs?: Prisma.EscalationLogListRelationFilter
+  availableSlots?: Prisma.AvailableSlotListRelationFilter
+  conversationSessions?: Prisma.ConversationSessionListRelationFilter
 }
 
 export type ClinicOrderByWithRelationInput = {
@@ -269,6 +279,7 @@ export type ClinicOrderByWithRelationInput = {
   email?: Prisma.SortOrderInput | Prisma.SortOrder
   website?: Prisma.SortOrderInput | Prisma.SortOrder
   timezone?: Prisma.SortOrder
+  twilioPhoneNumber?: Prisma.SortOrderInput | Prisma.SortOrder
   isActive?: Prisma.SortOrder
   subscriptionPlan?: Prisma.SortOrder
   subscriptionExpiresAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -286,6 +297,8 @@ export type ClinicOrderByWithRelationInput = {
   clinicSettings?: Prisma.ClinicSettingsOrderByWithRelationInput
   businessHours?: Prisma.BusinessHoursOrderByRelationAggregateInput
   escalationLogs?: Prisma.EscalationLogOrderByRelationAggregateInput
+  availableSlots?: Prisma.AvailableSlotOrderByRelationAggregateInput
+  conversationSessions?: Prisma.ConversationSessionOrderByRelationAggregateInput
 }
 
 export type ClinicWhereUniqueInput = Prisma.AtLeast<{
@@ -300,6 +313,7 @@ export type ClinicWhereUniqueInput = Prisma.AtLeast<{
   phone?: Prisma.StringNullableFilter<"Clinic"> | string | null
   website?: Prisma.StringNullableFilter<"Clinic"> | string | null
   timezone?: Prisma.StringFilter<"Clinic"> | string
+  twilioPhoneNumber?: Prisma.StringNullableFilter<"Clinic"> | string | null
   isActive?: Prisma.BoolFilter<"Clinic"> | boolean
   subscriptionPlan?: Prisma.EnumSubscriptionPlanFilter<"Clinic"> | $Enums.SubscriptionPlan
   subscriptionExpiresAt?: Prisma.DateTimeNullableFilter<"Clinic"> | Date | string | null
@@ -317,6 +331,8 @@ export type ClinicWhereUniqueInput = Prisma.AtLeast<{
   clinicSettings?: Prisma.XOR<Prisma.ClinicSettingsNullableScalarRelationFilter, Prisma.ClinicSettingsWhereInput> | null
   businessHours?: Prisma.BusinessHoursListRelationFilter
   escalationLogs?: Prisma.EscalationLogListRelationFilter
+  availableSlots?: Prisma.AvailableSlotListRelationFilter
+  conversationSessions?: Prisma.ConversationSessionListRelationFilter
 }, "id" | "slug" | "email">
 
 export type ClinicOrderByWithAggregationInput = {
@@ -328,6 +344,7 @@ export type ClinicOrderByWithAggregationInput = {
   email?: Prisma.SortOrderInput | Prisma.SortOrder
   website?: Prisma.SortOrderInput | Prisma.SortOrder
   timezone?: Prisma.SortOrder
+  twilioPhoneNumber?: Prisma.SortOrderInput | Prisma.SortOrder
   isActive?: Prisma.SortOrder
   subscriptionPlan?: Prisma.SortOrder
   subscriptionExpiresAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -350,6 +367,7 @@ export type ClinicScalarWhereWithAggregatesInput = {
   email?: Prisma.StringNullableWithAggregatesFilter<"Clinic"> | string | null
   website?: Prisma.StringNullableWithAggregatesFilter<"Clinic"> | string | null
   timezone?: Prisma.StringWithAggregatesFilter<"Clinic"> | string
+  twilioPhoneNumber?: Prisma.StringNullableWithAggregatesFilter<"Clinic"> | string | null
   isActive?: Prisma.BoolWithAggregatesFilter<"Clinic"> | boolean
   subscriptionPlan?: Prisma.EnumSubscriptionPlanWithAggregatesFilter<"Clinic"> | $Enums.SubscriptionPlan
   subscriptionExpiresAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Clinic"> | Date | string | null
@@ -366,6 +384,7 @@ export type ClinicCreateInput = {
   email?: string | null
   website?: string | null
   timezone?: string
+  twilioPhoneNumber?: string | null
   isActive?: boolean
   subscriptionPlan?: $Enums.SubscriptionPlan
   subscriptionExpiresAt?: Date | string | null
@@ -383,6 +402,8 @@ export type ClinicCreateInput = {
   clinicSettings?: Prisma.ClinicSettingsCreateNestedOneWithoutClinicInput
   businessHours?: Prisma.BusinessHoursCreateNestedManyWithoutClinicInput
   escalationLogs?: Prisma.EscalationLogCreateNestedManyWithoutClinicInput
+  availableSlots?: Prisma.AvailableSlotCreateNestedManyWithoutClinicInput
+  conversationSessions?: Prisma.ConversationSessionCreateNestedManyWithoutClinicInput
 }
 
 export type ClinicUncheckedCreateInput = {
@@ -394,6 +415,7 @@ export type ClinicUncheckedCreateInput = {
   email?: string | null
   website?: string | null
   timezone?: string
+  twilioPhoneNumber?: string | null
   isActive?: boolean
   subscriptionPlan?: $Enums.SubscriptionPlan
   subscriptionExpiresAt?: Date | string | null
@@ -411,6 +433,8 @@ export type ClinicUncheckedCreateInput = {
   clinicSettings?: Prisma.ClinicSettingsUncheckedCreateNestedOneWithoutClinicInput
   businessHours?: Prisma.BusinessHoursUncheckedCreateNestedManyWithoutClinicInput
   escalationLogs?: Prisma.EscalationLogUncheckedCreateNestedManyWithoutClinicInput
+  availableSlots?: Prisma.AvailableSlotUncheckedCreateNestedManyWithoutClinicInput
+  conversationSessions?: Prisma.ConversationSessionUncheckedCreateNestedManyWithoutClinicInput
 }
 
 export type ClinicUpdateInput = {
@@ -422,6 +446,7 @@ export type ClinicUpdateInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   timezone?: Prisma.StringFieldUpdateOperationsInput | string
+  twilioPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   subscriptionPlan?: Prisma.EnumSubscriptionPlanFieldUpdateOperationsInput | $Enums.SubscriptionPlan
   subscriptionExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -439,6 +464,8 @@ export type ClinicUpdateInput = {
   clinicSettings?: Prisma.ClinicSettingsUpdateOneWithoutClinicNestedInput
   businessHours?: Prisma.BusinessHoursUpdateManyWithoutClinicNestedInput
   escalationLogs?: Prisma.EscalationLogUpdateManyWithoutClinicNestedInput
+  availableSlots?: Prisma.AvailableSlotUpdateManyWithoutClinicNestedInput
+  conversationSessions?: Prisma.ConversationSessionUpdateManyWithoutClinicNestedInput
 }
 
 export type ClinicUncheckedUpdateInput = {
@@ -450,6 +477,7 @@ export type ClinicUncheckedUpdateInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   timezone?: Prisma.StringFieldUpdateOperationsInput | string
+  twilioPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   subscriptionPlan?: Prisma.EnumSubscriptionPlanFieldUpdateOperationsInput | $Enums.SubscriptionPlan
   subscriptionExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -467,6 +495,8 @@ export type ClinicUncheckedUpdateInput = {
   clinicSettings?: Prisma.ClinicSettingsUncheckedUpdateOneWithoutClinicNestedInput
   businessHours?: Prisma.BusinessHoursUncheckedUpdateManyWithoutClinicNestedInput
   escalationLogs?: Prisma.EscalationLogUncheckedUpdateManyWithoutClinicNestedInput
+  availableSlots?: Prisma.AvailableSlotUncheckedUpdateManyWithoutClinicNestedInput
+  conversationSessions?: Prisma.ConversationSessionUncheckedUpdateManyWithoutClinicNestedInput
 }
 
 export type ClinicCreateManyInput = {
@@ -478,6 +508,7 @@ export type ClinicCreateManyInput = {
   email?: string | null
   website?: string | null
   timezone?: string
+  twilioPhoneNumber?: string | null
   isActive?: boolean
   subscriptionPlan?: $Enums.SubscriptionPlan
   subscriptionExpiresAt?: Date | string | null
@@ -494,6 +525,7 @@ export type ClinicUpdateManyMutationInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   timezone?: Prisma.StringFieldUpdateOperationsInput | string
+  twilioPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   subscriptionPlan?: Prisma.EnumSubscriptionPlanFieldUpdateOperationsInput | $Enums.SubscriptionPlan
   subscriptionExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -510,6 +542,7 @@ export type ClinicUncheckedUpdateManyInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   timezone?: Prisma.StringFieldUpdateOperationsInput | string
+  twilioPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   subscriptionPlan?: Prisma.EnumSubscriptionPlanFieldUpdateOperationsInput | $Enums.SubscriptionPlan
   subscriptionExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -526,6 +559,7 @@ export type ClinicCountOrderByAggregateInput = {
   email?: Prisma.SortOrder
   website?: Prisma.SortOrder
   timezone?: Prisma.SortOrder
+  twilioPhoneNumber?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   subscriptionPlan?: Prisma.SortOrder
   subscriptionExpiresAt?: Prisma.SortOrder
@@ -542,6 +576,7 @@ export type ClinicMaxOrderByAggregateInput = {
   email?: Prisma.SortOrder
   website?: Prisma.SortOrder
   timezone?: Prisma.SortOrder
+  twilioPhoneNumber?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   subscriptionPlan?: Prisma.SortOrder
   subscriptionExpiresAt?: Prisma.SortOrder
@@ -558,6 +593,7 @@ export type ClinicMinOrderByAggregateInput = {
   email?: Prisma.SortOrder
   website?: Prisma.SortOrder
   timezone?: Prisma.SortOrder
+  twilioPhoneNumber?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   subscriptionPlan?: Prisma.SortOrder
   subscriptionExpiresAt?: Prisma.SortOrder
@@ -634,6 +670,34 @@ export type ClinicUpdateOneRequiredWithoutServicesNestedInput = {
   upsert?: Prisma.ClinicUpsertWithoutServicesInput
   connect?: Prisma.ClinicWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.ClinicUpdateToOneWithWhereWithoutServicesInput, Prisma.ClinicUpdateWithoutServicesInput>, Prisma.ClinicUncheckedUpdateWithoutServicesInput>
+}
+
+export type ClinicCreateNestedOneWithoutAvailableSlotsInput = {
+  create?: Prisma.XOR<Prisma.ClinicCreateWithoutAvailableSlotsInput, Prisma.ClinicUncheckedCreateWithoutAvailableSlotsInput>
+  connectOrCreate?: Prisma.ClinicCreateOrConnectWithoutAvailableSlotsInput
+  connect?: Prisma.ClinicWhereUniqueInput
+}
+
+export type ClinicUpdateOneRequiredWithoutAvailableSlotsNestedInput = {
+  create?: Prisma.XOR<Prisma.ClinicCreateWithoutAvailableSlotsInput, Prisma.ClinicUncheckedCreateWithoutAvailableSlotsInput>
+  connectOrCreate?: Prisma.ClinicCreateOrConnectWithoutAvailableSlotsInput
+  upsert?: Prisma.ClinicUpsertWithoutAvailableSlotsInput
+  connect?: Prisma.ClinicWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ClinicUpdateToOneWithWhereWithoutAvailableSlotsInput, Prisma.ClinicUpdateWithoutAvailableSlotsInput>, Prisma.ClinicUncheckedUpdateWithoutAvailableSlotsInput>
+}
+
+export type ClinicCreateNestedOneWithoutConversationSessionsInput = {
+  create?: Prisma.XOR<Prisma.ClinicCreateWithoutConversationSessionsInput, Prisma.ClinicUncheckedCreateWithoutConversationSessionsInput>
+  connectOrCreate?: Prisma.ClinicCreateOrConnectWithoutConversationSessionsInput
+  connect?: Prisma.ClinicWhereUniqueInput
+}
+
+export type ClinicUpdateOneRequiredWithoutConversationSessionsNestedInput = {
+  create?: Prisma.XOR<Prisma.ClinicCreateWithoutConversationSessionsInput, Prisma.ClinicUncheckedCreateWithoutConversationSessionsInput>
+  connectOrCreate?: Prisma.ClinicCreateOrConnectWithoutConversationSessionsInput
+  upsert?: Prisma.ClinicUpsertWithoutConversationSessionsInput
+  connect?: Prisma.ClinicWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ClinicUpdateToOneWithWhereWithoutConversationSessionsInput, Prisma.ClinicUpdateWithoutConversationSessionsInput>, Prisma.ClinicUncheckedUpdateWithoutConversationSessionsInput>
 }
 
 export type ClinicCreateNestedOneWithoutPatientsInput = {
@@ -771,6 +835,7 @@ export type ClinicCreateWithoutMembershipsInput = {
   email?: string | null
   website?: string | null
   timezone?: string
+  twilioPhoneNumber?: string | null
   isActive?: boolean
   subscriptionPlan?: $Enums.SubscriptionPlan
   subscriptionExpiresAt?: Date | string | null
@@ -787,6 +852,8 @@ export type ClinicCreateWithoutMembershipsInput = {
   clinicSettings?: Prisma.ClinicSettingsCreateNestedOneWithoutClinicInput
   businessHours?: Prisma.BusinessHoursCreateNestedManyWithoutClinicInput
   escalationLogs?: Prisma.EscalationLogCreateNestedManyWithoutClinicInput
+  availableSlots?: Prisma.AvailableSlotCreateNestedManyWithoutClinicInput
+  conversationSessions?: Prisma.ConversationSessionCreateNestedManyWithoutClinicInput
 }
 
 export type ClinicUncheckedCreateWithoutMembershipsInput = {
@@ -798,6 +865,7 @@ export type ClinicUncheckedCreateWithoutMembershipsInput = {
   email?: string | null
   website?: string | null
   timezone?: string
+  twilioPhoneNumber?: string | null
   isActive?: boolean
   subscriptionPlan?: $Enums.SubscriptionPlan
   subscriptionExpiresAt?: Date | string | null
@@ -814,6 +882,8 @@ export type ClinicUncheckedCreateWithoutMembershipsInput = {
   clinicSettings?: Prisma.ClinicSettingsUncheckedCreateNestedOneWithoutClinicInput
   businessHours?: Prisma.BusinessHoursUncheckedCreateNestedManyWithoutClinicInput
   escalationLogs?: Prisma.EscalationLogUncheckedCreateNestedManyWithoutClinicInput
+  availableSlots?: Prisma.AvailableSlotUncheckedCreateNestedManyWithoutClinicInput
+  conversationSessions?: Prisma.ConversationSessionUncheckedCreateNestedManyWithoutClinicInput
 }
 
 export type ClinicCreateOrConnectWithoutMembershipsInput = {
@@ -841,6 +911,7 @@ export type ClinicUpdateWithoutMembershipsInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   timezone?: Prisma.StringFieldUpdateOperationsInput | string
+  twilioPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   subscriptionPlan?: Prisma.EnumSubscriptionPlanFieldUpdateOperationsInput | $Enums.SubscriptionPlan
   subscriptionExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -857,6 +928,8 @@ export type ClinicUpdateWithoutMembershipsInput = {
   clinicSettings?: Prisma.ClinicSettingsUpdateOneWithoutClinicNestedInput
   businessHours?: Prisma.BusinessHoursUpdateManyWithoutClinicNestedInput
   escalationLogs?: Prisma.EscalationLogUpdateManyWithoutClinicNestedInput
+  availableSlots?: Prisma.AvailableSlotUpdateManyWithoutClinicNestedInput
+  conversationSessions?: Prisma.ConversationSessionUpdateManyWithoutClinicNestedInput
 }
 
 export type ClinicUncheckedUpdateWithoutMembershipsInput = {
@@ -868,6 +941,7 @@ export type ClinicUncheckedUpdateWithoutMembershipsInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   timezone?: Prisma.StringFieldUpdateOperationsInput | string
+  twilioPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   subscriptionPlan?: Prisma.EnumSubscriptionPlanFieldUpdateOperationsInput | $Enums.SubscriptionPlan
   subscriptionExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -884,6 +958,8 @@ export type ClinicUncheckedUpdateWithoutMembershipsInput = {
   clinicSettings?: Prisma.ClinicSettingsUncheckedUpdateOneWithoutClinicNestedInput
   businessHours?: Prisma.BusinessHoursUncheckedUpdateManyWithoutClinicNestedInput
   escalationLogs?: Prisma.EscalationLogUncheckedUpdateManyWithoutClinicNestedInput
+  availableSlots?: Prisma.AvailableSlotUncheckedUpdateManyWithoutClinicNestedInput
+  conversationSessions?: Prisma.ConversationSessionUncheckedUpdateManyWithoutClinicNestedInput
 }
 
 export type ClinicCreateWithoutDoctorsInput = {
@@ -895,6 +971,7 @@ export type ClinicCreateWithoutDoctorsInput = {
   email?: string | null
   website?: string | null
   timezone?: string
+  twilioPhoneNumber?: string | null
   isActive?: boolean
   subscriptionPlan?: $Enums.SubscriptionPlan
   subscriptionExpiresAt?: Date | string | null
@@ -911,6 +988,8 @@ export type ClinicCreateWithoutDoctorsInput = {
   clinicSettings?: Prisma.ClinicSettingsCreateNestedOneWithoutClinicInput
   businessHours?: Prisma.BusinessHoursCreateNestedManyWithoutClinicInput
   escalationLogs?: Prisma.EscalationLogCreateNestedManyWithoutClinicInput
+  availableSlots?: Prisma.AvailableSlotCreateNestedManyWithoutClinicInput
+  conversationSessions?: Prisma.ConversationSessionCreateNestedManyWithoutClinicInput
 }
 
 export type ClinicUncheckedCreateWithoutDoctorsInput = {
@@ -922,6 +1001,7 @@ export type ClinicUncheckedCreateWithoutDoctorsInput = {
   email?: string | null
   website?: string | null
   timezone?: string
+  twilioPhoneNumber?: string | null
   isActive?: boolean
   subscriptionPlan?: $Enums.SubscriptionPlan
   subscriptionExpiresAt?: Date | string | null
@@ -938,6 +1018,8 @@ export type ClinicUncheckedCreateWithoutDoctorsInput = {
   clinicSettings?: Prisma.ClinicSettingsUncheckedCreateNestedOneWithoutClinicInput
   businessHours?: Prisma.BusinessHoursUncheckedCreateNestedManyWithoutClinicInput
   escalationLogs?: Prisma.EscalationLogUncheckedCreateNestedManyWithoutClinicInput
+  availableSlots?: Prisma.AvailableSlotUncheckedCreateNestedManyWithoutClinicInput
+  conversationSessions?: Prisma.ConversationSessionUncheckedCreateNestedManyWithoutClinicInput
 }
 
 export type ClinicCreateOrConnectWithoutDoctorsInput = {
@@ -965,6 +1047,7 @@ export type ClinicUpdateWithoutDoctorsInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   timezone?: Prisma.StringFieldUpdateOperationsInput | string
+  twilioPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   subscriptionPlan?: Prisma.EnumSubscriptionPlanFieldUpdateOperationsInput | $Enums.SubscriptionPlan
   subscriptionExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -981,6 +1064,8 @@ export type ClinicUpdateWithoutDoctorsInput = {
   clinicSettings?: Prisma.ClinicSettingsUpdateOneWithoutClinicNestedInput
   businessHours?: Prisma.BusinessHoursUpdateManyWithoutClinicNestedInput
   escalationLogs?: Prisma.EscalationLogUpdateManyWithoutClinicNestedInput
+  availableSlots?: Prisma.AvailableSlotUpdateManyWithoutClinicNestedInput
+  conversationSessions?: Prisma.ConversationSessionUpdateManyWithoutClinicNestedInput
 }
 
 export type ClinicUncheckedUpdateWithoutDoctorsInput = {
@@ -992,6 +1077,7 @@ export type ClinicUncheckedUpdateWithoutDoctorsInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   timezone?: Prisma.StringFieldUpdateOperationsInput | string
+  twilioPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   subscriptionPlan?: Prisma.EnumSubscriptionPlanFieldUpdateOperationsInput | $Enums.SubscriptionPlan
   subscriptionExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1008,6 +1094,8 @@ export type ClinicUncheckedUpdateWithoutDoctorsInput = {
   clinicSettings?: Prisma.ClinicSettingsUncheckedUpdateOneWithoutClinicNestedInput
   businessHours?: Prisma.BusinessHoursUncheckedUpdateManyWithoutClinicNestedInput
   escalationLogs?: Prisma.EscalationLogUncheckedUpdateManyWithoutClinicNestedInput
+  availableSlots?: Prisma.AvailableSlotUncheckedUpdateManyWithoutClinicNestedInput
+  conversationSessions?: Prisma.ConversationSessionUncheckedUpdateManyWithoutClinicNestedInput
 }
 
 export type ClinicCreateWithoutServicesInput = {
@@ -1019,6 +1107,7 @@ export type ClinicCreateWithoutServicesInput = {
   email?: string | null
   website?: string | null
   timezone?: string
+  twilioPhoneNumber?: string | null
   isActive?: boolean
   subscriptionPlan?: $Enums.SubscriptionPlan
   subscriptionExpiresAt?: Date | string | null
@@ -1035,6 +1124,8 @@ export type ClinicCreateWithoutServicesInput = {
   clinicSettings?: Prisma.ClinicSettingsCreateNestedOneWithoutClinicInput
   businessHours?: Prisma.BusinessHoursCreateNestedManyWithoutClinicInput
   escalationLogs?: Prisma.EscalationLogCreateNestedManyWithoutClinicInput
+  availableSlots?: Prisma.AvailableSlotCreateNestedManyWithoutClinicInput
+  conversationSessions?: Prisma.ConversationSessionCreateNestedManyWithoutClinicInput
 }
 
 export type ClinicUncheckedCreateWithoutServicesInput = {
@@ -1046,6 +1137,7 @@ export type ClinicUncheckedCreateWithoutServicesInput = {
   email?: string | null
   website?: string | null
   timezone?: string
+  twilioPhoneNumber?: string | null
   isActive?: boolean
   subscriptionPlan?: $Enums.SubscriptionPlan
   subscriptionExpiresAt?: Date | string | null
@@ -1062,6 +1154,8 @@ export type ClinicUncheckedCreateWithoutServicesInput = {
   clinicSettings?: Prisma.ClinicSettingsUncheckedCreateNestedOneWithoutClinicInput
   businessHours?: Prisma.BusinessHoursUncheckedCreateNestedManyWithoutClinicInput
   escalationLogs?: Prisma.EscalationLogUncheckedCreateNestedManyWithoutClinicInput
+  availableSlots?: Prisma.AvailableSlotUncheckedCreateNestedManyWithoutClinicInput
+  conversationSessions?: Prisma.ConversationSessionUncheckedCreateNestedManyWithoutClinicInput
 }
 
 export type ClinicCreateOrConnectWithoutServicesInput = {
@@ -1089,6 +1183,7 @@ export type ClinicUpdateWithoutServicesInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   timezone?: Prisma.StringFieldUpdateOperationsInput | string
+  twilioPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   subscriptionPlan?: Prisma.EnumSubscriptionPlanFieldUpdateOperationsInput | $Enums.SubscriptionPlan
   subscriptionExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1105,6 +1200,8 @@ export type ClinicUpdateWithoutServicesInput = {
   clinicSettings?: Prisma.ClinicSettingsUpdateOneWithoutClinicNestedInput
   businessHours?: Prisma.BusinessHoursUpdateManyWithoutClinicNestedInput
   escalationLogs?: Prisma.EscalationLogUpdateManyWithoutClinicNestedInput
+  availableSlots?: Prisma.AvailableSlotUpdateManyWithoutClinicNestedInput
+  conversationSessions?: Prisma.ConversationSessionUpdateManyWithoutClinicNestedInput
 }
 
 export type ClinicUncheckedUpdateWithoutServicesInput = {
@@ -1116,6 +1213,7 @@ export type ClinicUncheckedUpdateWithoutServicesInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   timezone?: Prisma.StringFieldUpdateOperationsInput | string
+  twilioPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   subscriptionPlan?: Prisma.EnumSubscriptionPlanFieldUpdateOperationsInput | $Enums.SubscriptionPlan
   subscriptionExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1132,6 +1230,280 @@ export type ClinicUncheckedUpdateWithoutServicesInput = {
   clinicSettings?: Prisma.ClinicSettingsUncheckedUpdateOneWithoutClinicNestedInput
   businessHours?: Prisma.BusinessHoursUncheckedUpdateManyWithoutClinicNestedInput
   escalationLogs?: Prisma.EscalationLogUncheckedUpdateManyWithoutClinicNestedInput
+  availableSlots?: Prisma.AvailableSlotUncheckedUpdateManyWithoutClinicNestedInput
+  conversationSessions?: Prisma.ConversationSessionUncheckedUpdateManyWithoutClinicNestedInput
+}
+
+export type ClinicCreateWithoutAvailableSlotsInput = {
+  id?: string
+  name: string
+  slug: string
+  address?: string | null
+  phone?: string | null
+  email?: string | null
+  website?: string | null
+  timezone?: string
+  twilioPhoneNumber?: string | null
+  isActive?: boolean
+  subscriptionPlan?: $Enums.SubscriptionPlan
+  subscriptionExpiresAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  memberships?: Prisma.MembershipCreateNestedManyWithoutClinicInput
+  doctors?: Prisma.DoctorCreateNestedManyWithoutClinicInput
+  services?: Prisma.ServiceCreateNestedManyWithoutClinicInput
+  patients?: Prisma.PatientCreateNestedManyWithoutClinicInput
+  appointments?: Prisma.AppointmentCreateNestedManyWithoutClinicInput
+  conversations?: Prisma.ConversationCreateNestedManyWithoutClinicInput
+  reminders?: Prisma.ReminderCreateNestedManyWithoutClinicInput
+  notificationJobs?: Prisma.NotificationJobCreateNestedManyWithoutClinicInput
+  campaigns?: Prisma.CampaignCreateNestedManyWithoutClinicInput
+  clinicSettings?: Prisma.ClinicSettingsCreateNestedOneWithoutClinicInput
+  businessHours?: Prisma.BusinessHoursCreateNestedManyWithoutClinicInput
+  escalationLogs?: Prisma.EscalationLogCreateNestedManyWithoutClinicInput
+  conversationSessions?: Prisma.ConversationSessionCreateNestedManyWithoutClinicInput
+}
+
+export type ClinicUncheckedCreateWithoutAvailableSlotsInput = {
+  id?: string
+  name: string
+  slug: string
+  address?: string | null
+  phone?: string | null
+  email?: string | null
+  website?: string | null
+  timezone?: string
+  twilioPhoneNumber?: string | null
+  isActive?: boolean
+  subscriptionPlan?: $Enums.SubscriptionPlan
+  subscriptionExpiresAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  memberships?: Prisma.MembershipUncheckedCreateNestedManyWithoutClinicInput
+  doctors?: Prisma.DoctorUncheckedCreateNestedManyWithoutClinicInput
+  services?: Prisma.ServiceUncheckedCreateNestedManyWithoutClinicInput
+  patients?: Prisma.PatientUncheckedCreateNestedManyWithoutClinicInput
+  appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutClinicInput
+  conversations?: Prisma.ConversationUncheckedCreateNestedManyWithoutClinicInput
+  reminders?: Prisma.ReminderUncheckedCreateNestedManyWithoutClinicInput
+  notificationJobs?: Prisma.NotificationJobUncheckedCreateNestedManyWithoutClinicInput
+  campaigns?: Prisma.CampaignUncheckedCreateNestedManyWithoutClinicInput
+  clinicSettings?: Prisma.ClinicSettingsUncheckedCreateNestedOneWithoutClinicInput
+  businessHours?: Prisma.BusinessHoursUncheckedCreateNestedManyWithoutClinicInput
+  escalationLogs?: Prisma.EscalationLogUncheckedCreateNestedManyWithoutClinicInput
+  conversationSessions?: Prisma.ConversationSessionUncheckedCreateNestedManyWithoutClinicInput
+}
+
+export type ClinicCreateOrConnectWithoutAvailableSlotsInput = {
+  where: Prisma.ClinicWhereUniqueInput
+  create: Prisma.XOR<Prisma.ClinicCreateWithoutAvailableSlotsInput, Prisma.ClinicUncheckedCreateWithoutAvailableSlotsInput>
+}
+
+export type ClinicUpsertWithoutAvailableSlotsInput = {
+  update: Prisma.XOR<Prisma.ClinicUpdateWithoutAvailableSlotsInput, Prisma.ClinicUncheckedUpdateWithoutAvailableSlotsInput>
+  create: Prisma.XOR<Prisma.ClinicCreateWithoutAvailableSlotsInput, Prisma.ClinicUncheckedCreateWithoutAvailableSlotsInput>
+  where?: Prisma.ClinicWhereInput
+}
+
+export type ClinicUpdateToOneWithWhereWithoutAvailableSlotsInput = {
+  where?: Prisma.ClinicWhereInput
+  data: Prisma.XOR<Prisma.ClinicUpdateWithoutAvailableSlotsInput, Prisma.ClinicUncheckedUpdateWithoutAvailableSlotsInput>
+}
+
+export type ClinicUpdateWithoutAvailableSlotsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  timezone?: Prisma.StringFieldUpdateOperationsInput | string
+  twilioPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  subscriptionPlan?: Prisma.EnumSubscriptionPlanFieldUpdateOperationsInput | $Enums.SubscriptionPlan
+  subscriptionExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  memberships?: Prisma.MembershipUpdateManyWithoutClinicNestedInput
+  doctors?: Prisma.DoctorUpdateManyWithoutClinicNestedInput
+  services?: Prisma.ServiceUpdateManyWithoutClinicNestedInput
+  patients?: Prisma.PatientUpdateManyWithoutClinicNestedInput
+  appointments?: Prisma.AppointmentUpdateManyWithoutClinicNestedInput
+  conversations?: Prisma.ConversationUpdateManyWithoutClinicNestedInput
+  reminders?: Prisma.ReminderUpdateManyWithoutClinicNestedInput
+  notificationJobs?: Prisma.NotificationJobUpdateManyWithoutClinicNestedInput
+  campaigns?: Prisma.CampaignUpdateManyWithoutClinicNestedInput
+  clinicSettings?: Prisma.ClinicSettingsUpdateOneWithoutClinicNestedInput
+  businessHours?: Prisma.BusinessHoursUpdateManyWithoutClinicNestedInput
+  escalationLogs?: Prisma.EscalationLogUpdateManyWithoutClinicNestedInput
+  conversationSessions?: Prisma.ConversationSessionUpdateManyWithoutClinicNestedInput
+}
+
+export type ClinicUncheckedUpdateWithoutAvailableSlotsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  timezone?: Prisma.StringFieldUpdateOperationsInput | string
+  twilioPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  subscriptionPlan?: Prisma.EnumSubscriptionPlanFieldUpdateOperationsInput | $Enums.SubscriptionPlan
+  subscriptionExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  memberships?: Prisma.MembershipUncheckedUpdateManyWithoutClinicNestedInput
+  doctors?: Prisma.DoctorUncheckedUpdateManyWithoutClinicNestedInput
+  services?: Prisma.ServiceUncheckedUpdateManyWithoutClinicNestedInput
+  patients?: Prisma.PatientUncheckedUpdateManyWithoutClinicNestedInput
+  appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutClinicNestedInput
+  conversations?: Prisma.ConversationUncheckedUpdateManyWithoutClinicNestedInput
+  reminders?: Prisma.ReminderUncheckedUpdateManyWithoutClinicNestedInput
+  notificationJobs?: Prisma.NotificationJobUncheckedUpdateManyWithoutClinicNestedInput
+  campaigns?: Prisma.CampaignUncheckedUpdateManyWithoutClinicNestedInput
+  clinicSettings?: Prisma.ClinicSettingsUncheckedUpdateOneWithoutClinicNestedInput
+  businessHours?: Prisma.BusinessHoursUncheckedUpdateManyWithoutClinicNestedInput
+  escalationLogs?: Prisma.EscalationLogUncheckedUpdateManyWithoutClinicNestedInput
+  conversationSessions?: Prisma.ConversationSessionUncheckedUpdateManyWithoutClinicNestedInput
+}
+
+export type ClinicCreateWithoutConversationSessionsInput = {
+  id?: string
+  name: string
+  slug: string
+  address?: string | null
+  phone?: string | null
+  email?: string | null
+  website?: string | null
+  timezone?: string
+  twilioPhoneNumber?: string | null
+  isActive?: boolean
+  subscriptionPlan?: $Enums.SubscriptionPlan
+  subscriptionExpiresAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  memberships?: Prisma.MembershipCreateNestedManyWithoutClinicInput
+  doctors?: Prisma.DoctorCreateNestedManyWithoutClinicInput
+  services?: Prisma.ServiceCreateNestedManyWithoutClinicInput
+  patients?: Prisma.PatientCreateNestedManyWithoutClinicInput
+  appointments?: Prisma.AppointmentCreateNestedManyWithoutClinicInput
+  conversations?: Prisma.ConversationCreateNestedManyWithoutClinicInput
+  reminders?: Prisma.ReminderCreateNestedManyWithoutClinicInput
+  notificationJobs?: Prisma.NotificationJobCreateNestedManyWithoutClinicInput
+  campaigns?: Prisma.CampaignCreateNestedManyWithoutClinicInput
+  clinicSettings?: Prisma.ClinicSettingsCreateNestedOneWithoutClinicInput
+  businessHours?: Prisma.BusinessHoursCreateNestedManyWithoutClinicInput
+  escalationLogs?: Prisma.EscalationLogCreateNestedManyWithoutClinicInput
+  availableSlots?: Prisma.AvailableSlotCreateNestedManyWithoutClinicInput
+}
+
+export type ClinicUncheckedCreateWithoutConversationSessionsInput = {
+  id?: string
+  name: string
+  slug: string
+  address?: string | null
+  phone?: string | null
+  email?: string | null
+  website?: string | null
+  timezone?: string
+  twilioPhoneNumber?: string | null
+  isActive?: boolean
+  subscriptionPlan?: $Enums.SubscriptionPlan
+  subscriptionExpiresAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  memberships?: Prisma.MembershipUncheckedCreateNestedManyWithoutClinicInput
+  doctors?: Prisma.DoctorUncheckedCreateNestedManyWithoutClinicInput
+  services?: Prisma.ServiceUncheckedCreateNestedManyWithoutClinicInput
+  patients?: Prisma.PatientUncheckedCreateNestedManyWithoutClinicInput
+  appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutClinicInput
+  conversations?: Prisma.ConversationUncheckedCreateNestedManyWithoutClinicInput
+  reminders?: Prisma.ReminderUncheckedCreateNestedManyWithoutClinicInput
+  notificationJobs?: Prisma.NotificationJobUncheckedCreateNestedManyWithoutClinicInput
+  campaigns?: Prisma.CampaignUncheckedCreateNestedManyWithoutClinicInput
+  clinicSettings?: Prisma.ClinicSettingsUncheckedCreateNestedOneWithoutClinicInput
+  businessHours?: Prisma.BusinessHoursUncheckedCreateNestedManyWithoutClinicInput
+  escalationLogs?: Prisma.EscalationLogUncheckedCreateNestedManyWithoutClinicInput
+  availableSlots?: Prisma.AvailableSlotUncheckedCreateNestedManyWithoutClinicInput
+}
+
+export type ClinicCreateOrConnectWithoutConversationSessionsInput = {
+  where: Prisma.ClinicWhereUniqueInput
+  create: Prisma.XOR<Prisma.ClinicCreateWithoutConversationSessionsInput, Prisma.ClinicUncheckedCreateWithoutConversationSessionsInput>
+}
+
+export type ClinicUpsertWithoutConversationSessionsInput = {
+  update: Prisma.XOR<Prisma.ClinicUpdateWithoutConversationSessionsInput, Prisma.ClinicUncheckedUpdateWithoutConversationSessionsInput>
+  create: Prisma.XOR<Prisma.ClinicCreateWithoutConversationSessionsInput, Prisma.ClinicUncheckedCreateWithoutConversationSessionsInput>
+  where?: Prisma.ClinicWhereInput
+}
+
+export type ClinicUpdateToOneWithWhereWithoutConversationSessionsInput = {
+  where?: Prisma.ClinicWhereInput
+  data: Prisma.XOR<Prisma.ClinicUpdateWithoutConversationSessionsInput, Prisma.ClinicUncheckedUpdateWithoutConversationSessionsInput>
+}
+
+export type ClinicUpdateWithoutConversationSessionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  timezone?: Prisma.StringFieldUpdateOperationsInput | string
+  twilioPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  subscriptionPlan?: Prisma.EnumSubscriptionPlanFieldUpdateOperationsInput | $Enums.SubscriptionPlan
+  subscriptionExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  memberships?: Prisma.MembershipUpdateManyWithoutClinicNestedInput
+  doctors?: Prisma.DoctorUpdateManyWithoutClinicNestedInput
+  services?: Prisma.ServiceUpdateManyWithoutClinicNestedInput
+  patients?: Prisma.PatientUpdateManyWithoutClinicNestedInput
+  appointments?: Prisma.AppointmentUpdateManyWithoutClinicNestedInput
+  conversations?: Prisma.ConversationUpdateManyWithoutClinicNestedInput
+  reminders?: Prisma.ReminderUpdateManyWithoutClinicNestedInput
+  notificationJobs?: Prisma.NotificationJobUpdateManyWithoutClinicNestedInput
+  campaigns?: Prisma.CampaignUpdateManyWithoutClinicNestedInput
+  clinicSettings?: Prisma.ClinicSettingsUpdateOneWithoutClinicNestedInput
+  businessHours?: Prisma.BusinessHoursUpdateManyWithoutClinicNestedInput
+  escalationLogs?: Prisma.EscalationLogUpdateManyWithoutClinicNestedInput
+  availableSlots?: Prisma.AvailableSlotUpdateManyWithoutClinicNestedInput
+}
+
+export type ClinicUncheckedUpdateWithoutConversationSessionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  timezone?: Prisma.StringFieldUpdateOperationsInput | string
+  twilioPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  subscriptionPlan?: Prisma.EnumSubscriptionPlanFieldUpdateOperationsInput | $Enums.SubscriptionPlan
+  subscriptionExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  memberships?: Prisma.MembershipUncheckedUpdateManyWithoutClinicNestedInput
+  doctors?: Prisma.DoctorUncheckedUpdateManyWithoutClinicNestedInput
+  services?: Prisma.ServiceUncheckedUpdateManyWithoutClinicNestedInput
+  patients?: Prisma.PatientUncheckedUpdateManyWithoutClinicNestedInput
+  appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutClinicNestedInput
+  conversations?: Prisma.ConversationUncheckedUpdateManyWithoutClinicNestedInput
+  reminders?: Prisma.ReminderUncheckedUpdateManyWithoutClinicNestedInput
+  notificationJobs?: Prisma.NotificationJobUncheckedUpdateManyWithoutClinicNestedInput
+  campaigns?: Prisma.CampaignUncheckedUpdateManyWithoutClinicNestedInput
+  clinicSettings?: Prisma.ClinicSettingsUncheckedUpdateOneWithoutClinicNestedInput
+  businessHours?: Prisma.BusinessHoursUncheckedUpdateManyWithoutClinicNestedInput
+  escalationLogs?: Prisma.EscalationLogUncheckedUpdateManyWithoutClinicNestedInput
+  availableSlots?: Prisma.AvailableSlotUncheckedUpdateManyWithoutClinicNestedInput
 }
 
 export type ClinicCreateWithoutPatientsInput = {
@@ -1143,6 +1515,7 @@ export type ClinicCreateWithoutPatientsInput = {
   email?: string | null
   website?: string | null
   timezone?: string
+  twilioPhoneNumber?: string | null
   isActive?: boolean
   subscriptionPlan?: $Enums.SubscriptionPlan
   subscriptionExpiresAt?: Date | string | null
@@ -1159,6 +1532,8 @@ export type ClinicCreateWithoutPatientsInput = {
   clinicSettings?: Prisma.ClinicSettingsCreateNestedOneWithoutClinicInput
   businessHours?: Prisma.BusinessHoursCreateNestedManyWithoutClinicInput
   escalationLogs?: Prisma.EscalationLogCreateNestedManyWithoutClinicInput
+  availableSlots?: Prisma.AvailableSlotCreateNestedManyWithoutClinicInput
+  conversationSessions?: Prisma.ConversationSessionCreateNestedManyWithoutClinicInput
 }
 
 export type ClinicUncheckedCreateWithoutPatientsInput = {
@@ -1170,6 +1545,7 @@ export type ClinicUncheckedCreateWithoutPatientsInput = {
   email?: string | null
   website?: string | null
   timezone?: string
+  twilioPhoneNumber?: string | null
   isActive?: boolean
   subscriptionPlan?: $Enums.SubscriptionPlan
   subscriptionExpiresAt?: Date | string | null
@@ -1186,6 +1562,8 @@ export type ClinicUncheckedCreateWithoutPatientsInput = {
   clinicSettings?: Prisma.ClinicSettingsUncheckedCreateNestedOneWithoutClinicInput
   businessHours?: Prisma.BusinessHoursUncheckedCreateNestedManyWithoutClinicInput
   escalationLogs?: Prisma.EscalationLogUncheckedCreateNestedManyWithoutClinicInput
+  availableSlots?: Prisma.AvailableSlotUncheckedCreateNestedManyWithoutClinicInput
+  conversationSessions?: Prisma.ConversationSessionUncheckedCreateNestedManyWithoutClinicInput
 }
 
 export type ClinicCreateOrConnectWithoutPatientsInput = {
@@ -1213,6 +1591,7 @@ export type ClinicUpdateWithoutPatientsInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   timezone?: Prisma.StringFieldUpdateOperationsInput | string
+  twilioPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   subscriptionPlan?: Prisma.EnumSubscriptionPlanFieldUpdateOperationsInput | $Enums.SubscriptionPlan
   subscriptionExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1229,6 +1608,8 @@ export type ClinicUpdateWithoutPatientsInput = {
   clinicSettings?: Prisma.ClinicSettingsUpdateOneWithoutClinicNestedInput
   businessHours?: Prisma.BusinessHoursUpdateManyWithoutClinicNestedInput
   escalationLogs?: Prisma.EscalationLogUpdateManyWithoutClinicNestedInput
+  availableSlots?: Prisma.AvailableSlotUpdateManyWithoutClinicNestedInput
+  conversationSessions?: Prisma.ConversationSessionUpdateManyWithoutClinicNestedInput
 }
 
 export type ClinicUncheckedUpdateWithoutPatientsInput = {
@@ -1240,6 +1621,7 @@ export type ClinicUncheckedUpdateWithoutPatientsInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   timezone?: Prisma.StringFieldUpdateOperationsInput | string
+  twilioPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   subscriptionPlan?: Prisma.EnumSubscriptionPlanFieldUpdateOperationsInput | $Enums.SubscriptionPlan
   subscriptionExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1256,6 +1638,8 @@ export type ClinicUncheckedUpdateWithoutPatientsInput = {
   clinicSettings?: Prisma.ClinicSettingsUncheckedUpdateOneWithoutClinicNestedInput
   businessHours?: Prisma.BusinessHoursUncheckedUpdateManyWithoutClinicNestedInput
   escalationLogs?: Prisma.EscalationLogUncheckedUpdateManyWithoutClinicNestedInput
+  availableSlots?: Prisma.AvailableSlotUncheckedUpdateManyWithoutClinicNestedInput
+  conversationSessions?: Prisma.ConversationSessionUncheckedUpdateManyWithoutClinicNestedInput
 }
 
 export type ClinicCreateWithoutAppointmentsInput = {
@@ -1267,6 +1651,7 @@ export type ClinicCreateWithoutAppointmentsInput = {
   email?: string | null
   website?: string | null
   timezone?: string
+  twilioPhoneNumber?: string | null
   isActive?: boolean
   subscriptionPlan?: $Enums.SubscriptionPlan
   subscriptionExpiresAt?: Date | string | null
@@ -1283,6 +1668,8 @@ export type ClinicCreateWithoutAppointmentsInput = {
   clinicSettings?: Prisma.ClinicSettingsCreateNestedOneWithoutClinicInput
   businessHours?: Prisma.BusinessHoursCreateNestedManyWithoutClinicInput
   escalationLogs?: Prisma.EscalationLogCreateNestedManyWithoutClinicInput
+  availableSlots?: Prisma.AvailableSlotCreateNestedManyWithoutClinicInput
+  conversationSessions?: Prisma.ConversationSessionCreateNestedManyWithoutClinicInput
 }
 
 export type ClinicUncheckedCreateWithoutAppointmentsInput = {
@@ -1294,6 +1681,7 @@ export type ClinicUncheckedCreateWithoutAppointmentsInput = {
   email?: string | null
   website?: string | null
   timezone?: string
+  twilioPhoneNumber?: string | null
   isActive?: boolean
   subscriptionPlan?: $Enums.SubscriptionPlan
   subscriptionExpiresAt?: Date | string | null
@@ -1310,6 +1698,8 @@ export type ClinicUncheckedCreateWithoutAppointmentsInput = {
   clinicSettings?: Prisma.ClinicSettingsUncheckedCreateNestedOneWithoutClinicInput
   businessHours?: Prisma.BusinessHoursUncheckedCreateNestedManyWithoutClinicInput
   escalationLogs?: Prisma.EscalationLogUncheckedCreateNestedManyWithoutClinicInput
+  availableSlots?: Prisma.AvailableSlotUncheckedCreateNestedManyWithoutClinicInput
+  conversationSessions?: Prisma.ConversationSessionUncheckedCreateNestedManyWithoutClinicInput
 }
 
 export type ClinicCreateOrConnectWithoutAppointmentsInput = {
@@ -1337,6 +1727,7 @@ export type ClinicUpdateWithoutAppointmentsInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   timezone?: Prisma.StringFieldUpdateOperationsInput | string
+  twilioPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   subscriptionPlan?: Prisma.EnumSubscriptionPlanFieldUpdateOperationsInput | $Enums.SubscriptionPlan
   subscriptionExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1353,6 +1744,8 @@ export type ClinicUpdateWithoutAppointmentsInput = {
   clinicSettings?: Prisma.ClinicSettingsUpdateOneWithoutClinicNestedInput
   businessHours?: Prisma.BusinessHoursUpdateManyWithoutClinicNestedInput
   escalationLogs?: Prisma.EscalationLogUpdateManyWithoutClinicNestedInput
+  availableSlots?: Prisma.AvailableSlotUpdateManyWithoutClinicNestedInput
+  conversationSessions?: Prisma.ConversationSessionUpdateManyWithoutClinicNestedInput
 }
 
 export type ClinicUncheckedUpdateWithoutAppointmentsInput = {
@@ -1364,6 +1757,7 @@ export type ClinicUncheckedUpdateWithoutAppointmentsInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   timezone?: Prisma.StringFieldUpdateOperationsInput | string
+  twilioPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   subscriptionPlan?: Prisma.EnumSubscriptionPlanFieldUpdateOperationsInput | $Enums.SubscriptionPlan
   subscriptionExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1380,6 +1774,8 @@ export type ClinicUncheckedUpdateWithoutAppointmentsInput = {
   clinicSettings?: Prisma.ClinicSettingsUncheckedUpdateOneWithoutClinicNestedInput
   businessHours?: Prisma.BusinessHoursUncheckedUpdateManyWithoutClinicNestedInput
   escalationLogs?: Prisma.EscalationLogUncheckedUpdateManyWithoutClinicNestedInput
+  availableSlots?: Prisma.AvailableSlotUncheckedUpdateManyWithoutClinicNestedInput
+  conversationSessions?: Prisma.ConversationSessionUncheckedUpdateManyWithoutClinicNestedInput
 }
 
 export type ClinicCreateWithoutConversationsInput = {
@@ -1391,6 +1787,7 @@ export type ClinicCreateWithoutConversationsInput = {
   email?: string | null
   website?: string | null
   timezone?: string
+  twilioPhoneNumber?: string | null
   isActive?: boolean
   subscriptionPlan?: $Enums.SubscriptionPlan
   subscriptionExpiresAt?: Date | string | null
@@ -1407,6 +1804,8 @@ export type ClinicCreateWithoutConversationsInput = {
   clinicSettings?: Prisma.ClinicSettingsCreateNestedOneWithoutClinicInput
   businessHours?: Prisma.BusinessHoursCreateNestedManyWithoutClinicInput
   escalationLogs?: Prisma.EscalationLogCreateNestedManyWithoutClinicInput
+  availableSlots?: Prisma.AvailableSlotCreateNestedManyWithoutClinicInput
+  conversationSessions?: Prisma.ConversationSessionCreateNestedManyWithoutClinicInput
 }
 
 export type ClinicUncheckedCreateWithoutConversationsInput = {
@@ -1418,6 +1817,7 @@ export type ClinicUncheckedCreateWithoutConversationsInput = {
   email?: string | null
   website?: string | null
   timezone?: string
+  twilioPhoneNumber?: string | null
   isActive?: boolean
   subscriptionPlan?: $Enums.SubscriptionPlan
   subscriptionExpiresAt?: Date | string | null
@@ -1434,6 +1834,8 @@ export type ClinicUncheckedCreateWithoutConversationsInput = {
   clinicSettings?: Prisma.ClinicSettingsUncheckedCreateNestedOneWithoutClinicInput
   businessHours?: Prisma.BusinessHoursUncheckedCreateNestedManyWithoutClinicInput
   escalationLogs?: Prisma.EscalationLogUncheckedCreateNestedManyWithoutClinicInput
+  availableSlots?: Prisma.AvailableSlotUncheckedCreateNestedManyWithoutClinicInput
+  conversationSessions?: Prisma.ConversationSessionUncheckedCreateNestedManyWithoutClinicInput
 }
 
 export type ClinicCreateOrConnectWithoutConversationsInput = {
@@ -1461,6 +1863,7 @@ export type ClinicUpdateWithoutConversationsInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   timezone?: Prisma.StringFieldUpdateOperationsInput | string
+  twilioPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   subscriptionPlan?: Prisma.EnumSubscriptionPlanFieldUpdateOperationsInput | $Enums.SubscriptionPlan
   subscriptionExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1477,6 +1880,8 @@ export type ClinicUpdateWithoutConversationsInput = {
   clinicSettings?: Prisma.ClinicSettingsUpdateOneWithoutClinicNestedInput
   businessHours?: Prisma.BusinessHoursUpdateManyWithoutClinicNestedInput
   escalationLogs?: Prisma.EscalationLogUpdateManyWithoutClinicNestedInput
+  availableSlots?: Prisma.AvailableSlotUpdateManyWithoutClinicNestedInput
+  conversationSessions?: Prisma.ConversationSessionUpdateManyWithoutClinicNestedInput
 }
 
 export type ClinicUncheckedUpdateWithoutConversationsInput = {
@@ -1488,6 +1893,7 @@ export type ClinicUncheckedUpdateWithoutConversationsInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   timezone?: Prisma.StringFieldUpdateOperationsInput | string
+  twilioPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   subscriptionPlan?: Prisma.EnumSubscriptionPlanFieldUpdateOperationsInput | $Enums.SubscriptionPlan
   subscriptionExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1504,6 +1910,8 @@ export type ClinicUncheckedUpdateWithoutConversationsInput = {
   clinicSettings?: Prisma.ClinicSettingsUncheckedUpdateOneWithoutClinicNestedInput
   businessHours?: Prisma.BusinessHoursUncheckedUpdateManyWithoutClinicNestedInput
   escalationLogs?: Prisma.EscalationLogUncheckedUpdateManyWithoutClinicNestedInput
+  availableSlots?: Prisma.AvailableSlotUncheckedUpdateManyWithoutClinicNestedInput
+  conversationSessions?: Prisma.ConversationSessionUncheckedUpdateManyWithoutClinicNestedInput
 }
 
 export type ClinicCreateWithoutRemindersInput = {
@@ -1515,6 +1923,7 @@ export type ClinicCreateWithoutRemindersInput = {
   email?: string | null
   website?: string | null
   timezone?: string
+  twilioPhoneNumber?: string | null
   isActive?: boolean
   subscriptionPlan?: $Enums.SubscriptionPlan
   subscriptionExpiresAt?: Date | string | null
@@ -1531,6 +1940,8 @@ export type ClinicCreateWithoutRemindersInput = {
   clinicSettings?: Prisma.ClinicSettingsCreateNestedOneWithoutClinicInput
   businessHours?: Prisma.BusinessHoursCreateNestedManyWithoutClinicInput
   escalationLogs?: Prisma.EscalationLogCreateNestedManyWithoutClinicInput
+  availableSlots?: Prisma.AvailableSlotCreateNestedManyWithoutClinicInput
+  conversationSessions?: Prisma.ConversationSessionCreateNestedManyWithoutClinicInput
 }
 
 export type ClinicUncheckedCreateWithoutRemindersInput = {
@@ -1542,6 +1953,7 @@ export type ClinicUncheckedCreateWithoutRemindersInput = {
   email?: string | null
   website?: string | null
   timezone?: string
+  twilioPhoneNumber?: string | null
   isActive?: boolean
   subscriptionPlan?: $Enums.SubscriptionPlan
   subscriptionExpiresAt?: Date | string | null
@@ -1558,6 +1970,8 @@ export type ClinicUncheckedCreateWithoutRemindersInput = {
   clinicSettings?: Prisma.ClinicSettingsUncheckedCreateNestedOneWithoutClinicInput
   businessHours?: Prisma.BusinessHoursUncheckedCreateNestedManyWithoutClinicInput
   escalationLogs?: Prisma.EscalationLogUncheckedCreateNestedManyWithoutClinicInput
+  availableSlots?: Prisma.AvailableSlotUncheckedCreateNestedManyWithoutClinicInput
+  conversationSessions?: Prisma.ConversationSessionUncheckedCreateNestedManyWithoutClinicInput
 }
 
 export type ClinicCreateOrConnectWithoutRemindersInput = {
@@ -1585,6 +1999,7 @@ export type ClinicUpdateWithoutRemindersInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   timezone?: Prisma.StringFieldUpdateOperationsInput | string
+  twilioPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   subscriptionPlan?: Prisma.EnumSubscriptionPlanFieldUpdateOperationsInput | $Enums.SubscriptionPlan
   subscriptionExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1601,6 +2016,8 @@ export type ClinicUpdateWithoutRemindersInput = {
   clinicSettings?: Prisma.ClinicSettingsUpdateOneWithoutClinicNestedInput
   businessHours?: Prisma.BusinessHoursUpdateManyWithoutClinicNestedInput
   escalationLogs?: Prisma.EscalationLogUpdateManyWithoutClinicNestedInput
+  availableSlots?: Prisma.AvailableSlotUpdateManyWithoutClinicNestedInput
+  conversationSessions?: Prisma.ConversationSessionUpdateManyWithoutClinicNestedInput
 }
 
 export type ClinicUncheckedUpdateWithoutRemindersInput = {
@@ -1612,6 +2029,7 @@ export type ClinicUncheckedUpdateWithoutRemindersInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   timezone?: Prisma.StringFieldUpdateOperationsInput | string
+  twilioPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   subscriptionPlan?: Prisma.EnumSubscriptionPlanFieldUpdateOperationsInput | $Enums.SubscriptionPlan
   subscriptionExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1628,6 +2046,8 @@ export type ClinicUncheckedUpdateWithoutRemindersInput = {
   clinicSettings?: Prisma.ClinicSettingsUncheckedUpdateOneWithoutClinicNestedInput
   businessHours?: Prisma.BusinessHoursUncheckedUpdateManyWithoutClinicNestedInput
   escalationLogs?: Prisma.EscalationLogUncheckedUpdateManyWithoutClinicNestedInput
+  availableSlots?: Prisma.AvailableSlotUncheckedUpdateManyWithoutClinicNestedInput
+  conversationSessions?: Prisma.ConversationSessionUncheckedUpdateManyWithoutClinicNestedInput
 }
 
 export type ClinicCreateWithoutNotificationJobsInput = {
@@ -1639,6 +2059,7 @@ export type ClinicCreateWithoutNotificationJobsInput = {
   email?: string | null
   website?: string | null
   timezone?: string
+  twilioPhoneNumber?: string | null
   isActive?: boolean
   subscriptionPlan?: $Enums.SubscriptionPlan
   subscriptionExpiresAt?: Date | string | null
@@ -1655,6 +2076,8 @@ export type ClinicCreateWithoutNotificationJobsInput = {
   clinicSettings?: Prisma.ClinicSettingsCreateNestedOneWithoutClinicInput
   businessHours?: Prisma.BusinessHoursCreateNestedManyWithoutClinicInput
   escalationLogs?: Prisma.EscalationLogCreateNestedManyWithoutClinicInput
+  availableSlots?: Prisma.AvailableSlotCreateNestedManyWithoutClinicInput
+  conversationSessions?: Prisma.ConversationSessionCreateNestedManyWithoutClinicInput
 }
 
 export type ClinicUncheckedCreateWithoutNotificationJobsInput = {
@@ -1666,6 +2089,7 @@ export type ClinicUncheckedCreateWithoutNotificationJobsInput = {
   email?: string | null
   website?: string | null
   timezone?: string
+  twilioPhoneNumber?: string | null
   isActive?: boolean
   subscriptionPlan?: $Enums.SubscriptionPlan
   subscriptionExpiresAt?: Date | string | null
@@ -1682,6 +2106,8 @@ export type ClinicUncheckedCreateWithoutNotificationJobsInput = {
   clinicSettings?: Prisma.ClinicSettingsUncheckedCreateNestedOneWithoutClinicInput
   businessHours?: Prisma.BusinessHoursUncheckedCreateNestedManyWithoutClinicInput
   escalationLogs?: Prisma.EscalationLogUncheckedCreateNestedManyWithoutClinicInput
+  availableSlots?: Prisma.AvailableSlotUncheckedCreateNestedManyWithoutClinicInput
+  conversationSessions?: Prisma.ConversationSessionUncheckedCreateNestedManyWithoutClinicInput
 }
 
 export type ClinicCreateOrConnectWithoutNotificationJobsInput = {
@@ -1709,6 +2135,7 @@ export type ClinicUpdateWithoutNotificationJobsInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   timezone?: Prisma.StringFieldUpdateOperationsInput | string
+  twilioPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   subscriptionPlan?: Prisma.EnumSubscriptionPlanFieldUpdateOperationsInput | $Enums.SubscriptionPlan
   subscriptionExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1725,6 +2152,8 @@ export type ClinicUpdateWithoutNotificationJobsInput = {
   clinicSettings?: Prisma.ClinicSettingsUpdateOneWithoutClinicNestedInput
   businessHours?: Prisma.BusinessHoursUpdateManyWithoutClinicNestedInput
   escalationLogs?: Prisma.EscalationLogUpdateManyWithoutClinicNestedInput
+  availableSlots?: Prisma.AvailableSlotUpdateManyWithoutClinicNestedInput
+  conversationSessions?: Prisma.ConversationSessionUpdateManyWithoutClinicNestedInput
 }
 
 export type ClinicUncheckedUpdateWithoutNotificationJobsInput = {
@@ -1736,6 +2165,7 @@ export type ClinicUncheckedUpdateWithoutNotificationJobsInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   timezone?: Prisma.StringFieldUpdateOperationsInput | string
+  twilioPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   subscriptionPlan?: Prisma.EnumSubscriptionPlanFieldUpdateOperationsInput | $Enums.SubscriptionPlan
   subscriptionExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1752,6 +2182,8 @@ export type ClinicUncheckedUpdateWithoutNotificationJobsInput = {
   clinicSettings?: Prisma.ClinicSettingsUncheckedUpdateOneWithoutClinicNestedInput
   businessHours?: Prisma.BusinessHoursUncheckedUpdateManyWithoutClinicNestedInput
   escalationLogs?: Prisma.EscalationLogUncheckedUpdateManyWithoutClinicNestedInput
+  availableSlots?: Prisma.AvailableSlotUncheckedUpdateManyWithoutClinicNestedInput
+  conversationSessions?: Prisma.ConversationSessionUncheckedUpdateManyWithoutClinicNestedInput
 }
 
 export type ClinicCreateWithoutCampaignsInput = {
@@ -1763,6 +2195,7 @@ export type ClinicCreateWithoutCampaignsInput = {
   email?: string | null
   website?: string | null
   timezone?: string
+  twilioPhoneNumber?: string | null
   isActive?: boolean
   subscriptionPlan?: $Enums.SubscriptionPlan
   subscriptionExpiresAt?: Date | string | null
@@ -1779,6 +2212,8 @@ export type ClinicCreateWithoutCampaignsInput = {
   clinicSettings?: Prisma.ClinicSettingsCreateNestedOneWithoutClinicInput
   businessHours?: Prisma.BusinessHoursCreateNestedManyWithoutClinicInput
   escalationLogs?: Prisma.EscalationLogCreateNestedManyWithoutClinicInput
+  availableSlots?: Prisma.AvailableSlotCreateNestedManyWithoutClinicInput
+  conversationSessions?: Prisma.ConversationSessionCreateNestedManyWithoutClinicInput
 }
 
 export type ClinicUncheckedCreateWithoutCampaignsInput = {
@@ -1790,6 +2225,7 @@ export type ClinicUncheckedCreateWithoutCampaignsInput = {
   email?: string | null
   website?: string | null
   timezone?: string
+  twilioPhoneNumber?: string | null
   isActive?: boolean
   subscriptionPlan?: $Enums.SubscriptionPlan
   subscriptionExpiresAt?: Date | string | null
@@ -1806,6 +2242,8 @@ export type ClinicUncheckedCreateWithoutCampaignsInput = {
   clinicSettings?: Prisma.ClinicSettingsUncheckedCreateNestedOneWithoutClinicInput
   businessHours?: Prisma.BusinessHoursUncheckedCreateNestedManyWithoutClinicInput
   escalationLogs?: Prisma.EscalationLogUncheckedCreateNestedManyWithoutClinicInput
+  availableSlots?: Prisma.AvailableSlotUncheckedCreateNestedManyWithoutClinicInput
+  conversationSessions?: Prisma.ConversationSessionUncheckedCreateNestedManyWithoutClinicInput
 }
 
 export type ClinicCreateOrConnectWithoutCampaignsInput = {
@@ -1833,6 +2271,7 @@ export type ClinicUpdateWithoutCampaignsInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   timezone?: Prisma.StringFieldUpdateOperationsInput | string
+  twilioPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   subscriptionPlan?: Prisma.EnumSubscriptionPlanFieldUpdateOperationsInput | $Enums.SubscriptionPlan
   subscriptionExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1849,6 +2288,8 @@ export type ClinicUpdateWithoutCampaignsInput = {
   clinicSettings?: Prisma.ClinicSettingsUpdateOneWithoutClinicNestedInput
   businessHours?: Prisma.BusinessHoursUpdateManyWithoutClinicNestedInput
   escalationLogs?: Prisma.EscalationLogUpdateManyWithoutClinicNestedInput
+  availableSlots?: Prisma.AvailableSlotUpdateManyWithoutClinicNestedInput
+  conversationSessions?: Prisma.ConversationSessionUpdateManyWithoutClinicNestedInput
 }
 
 export type ClinicUncheckedUpdateWithoutCampaignsInput = {
@@ -1860,6 +2301,7 @@ export type ClinicUncheckedUpdateWithoutCampaignsInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   timezone?: Prisma.StringFieldUpdateOperationsInput | string
+  twilioPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   subscriptionPlan?: Prisma.EnumSubscriptionPlanFieldUpdateOperationsInput | $Enums.SubscriptionPlan
   subscriptionExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1876,6 +2318,8 @@ export type ClinicUncheckedUpdateWithoutCampaignsInput = {
   clinicSettings?: Prisma.ClinicSettingsUncheckedUpdateOneWithoutClinicNestedInput
   businessHours?: Prisma.BusinessHoursUncheckedUpdateManyWithoutClinicNestedInput
   escalationLogs?: Prisma.EscalationLogUncheckedUpdateManyWithoutClinicNestedInput
+  availableSlots?: Prisma.AvailableSlotUncheckedUpdateManyWithoutClinicNestedInput
+  conversationSessions?: Prisma.ConversationSessionUncheckedUpdateManyWithoutClinicNestedInput
 }
 
 export type ClinicCreateWithoutClinicSettingsInput = {
@@ -1887,6 +2331,7 @@ export type ClinicCreateWithoutClinicSettingsInput = {
   email?: string | null
   website?: string | null
   timezone?: string
+  twilioPhoneNumber?: string | null
   isActive?: boolean
   subscriptionPlan?: $Enums.SubscriptionPlan
   subscriptionExpiresAt?: Date | string | null
@@ -1903,6 +2348,8 @@ export type ClinicCreateWithoutClinicSettingsInput = {
   campaigns?: Prisma.CampaignCreateNestedManyWithoutClinicInput
   businessHours?: Prisma.BusinessHoursCreateNestedManyWithoutClinicInput
   escalationLogs?: Prisma.EscalationLogCreateNestedManyWithoutClinicInput
+  availableSlots?: Prisma.AvailableSlotCreateNestedManyWithoutClinicInput
+  conversationSessions?: Prisma.ConversationSessionCreateNestedManyWithoutClinicInput
 }
 
 export type ClinicUncheckedCreateWithoutClinicSettingsInput = {
@@ -1914,6 +2361,7 @@ export type ClinicUncheckedCreateWithoutClinicSettingsInput = {
   email?: string | null
   website?: string | null
   timezone?: string
+  twilioPhoneNumber?: string | null
   isActive?: boolean
   subscriptionPlan?: $Enums.SubscriptionPlan
   subscriptionExpiresAt?: Date | string | null
@@ -1930,6 +2378,8 @@ export type ClinicUncheckedCreateWithoutClinicSettingsInput = {
   campaigns?: Prisma.CampaignUncheckedCreateNestedManyWithoutClinicInput
   businessHours?: Prisma.BusinessHoursUncheckedCreateNestedManyWithoutClinicInput
   escalationLogs?: Prisma.EscalationLogUncheckedCreateNestedManyWithoutClinicInput
+  availableSlots?: Prisma.AvailableSlotUncheckedCreateNestedManyWithoutClinicInput
+  conversationSessions?: Prisma.ConversationSessionUncheckedCreateNestedManyWithoutClinicInput
 }
 
 export type ClinicCreateOrConnectWithoutClinicSettingsInput = {
@@ -1957,6 +2407,7 @@ export type ClinicUpdateWithoutClinicSettingsInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   timezone?: Prisma.StringFieldUpdateOperationsInput | string
+  twilioPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   subscriptionPlan?: Prisma.EnumSubscriptionPlanFieldUpdateOperationsInput | $Enums.SubscriptionPlan
   subscriptionExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1973,6 +2424,8 @@ export type ClinicUpdateWithoutClinicSettingsInput = {
   campaigns?: Prisma.CampaignUpdateManyWithoutClinicNestedInput
   businessHours?: Prisma.BusinessHoursUpdateManyWithoutClinicNestedInput
   escalationLogs?: Prisma.EscalationLogUpdateManyWithoutClinicNestedInput
+  availableSlots?: Prisma.AvailableSlotUpdateManyWithoutClinicNestedInput
+  conversationSessions?: Prisma.ConversationSessionUpdateManyWithoutClinicNestedInput
 }
 
 export type ClinicUncheckedUpdateWithoutClinicSettingsInput = {
@@ -1984,6 +2437,7 @@ export type ClinicUncheckedUpdateWithoutClinicSettingsInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   timezone?: Prisma.StringFieldUpdateOperationsInput | string
+  twilioPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   subscriptionPlan?: Prisma.EnumSubscriptionPlanFieldUpdateOperationsInput | $Enums.SubscriptionPlan
   subscriptionExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2000,6 +2454,8 @@ export type ClinicUncheckedUpdateWithoutClinicSettingsInput = {
   campaigns?: Prisma.CampaignUncheckedUpdateManyWithoutClinicNestedInput
   businessHours?: Prisma.BusinessHoursUncheckedUpdateManyWithoutClinicNestedInput
   escalationLogs?: Prisma.EscalationLogUncheckedUpdateManyWithoutClinicNestedInput
+  availableSlots?: Prisma.AvailableSlotUncheckedUpdateManyWithoutClinicNestedInput
+  conversationSessions?: Prisma.ConversationSessionUncheckedUpdateManyWithoutClinicNestedInput
 }
 
 export type ClinicCreateWithoutBusinessHoursInput = {
@@ -2011,6 +2467,7 @@ export type ClinicCreateWithoutBusinessHoursInput = {
   email?: string | null
   website?: string | null
   timezone?: string
+  twilioPhoneNumber?: string | null
   isActive?: boolean
   subscriptionPlan?: $Enums.SubscriptionPlan
   subscriptionExpiresAt?: Date | string | null
@@ -2027,6 +2484,8 @@ export type ClinicCreateWithoutBusinessHoursInput = {
   campaigns?: Prisma.CampaignCreateNestedManyWithoutClinicInput
   clinicSettings?: Prisma.ClinicSettingsCreateNestedOneWithoutClinicInput
   escalationLogs?: Prisma.EscalationLogCreateNestedManyWithoutClinicInput
+  availableSlots?: Prisma.AvailableSlotCreateNestedManyWithoutClinicInput
+  conversationSessions?: Prisma.ConversationSessionCreateNestedManyWithoutClinicInput
 }
 
 export type ClinicUncheckedCreateWithoutBusinessHoursInput = {
@@ -2038,6 +2497,7 @@ export type ClinicUncheckedCreateWithoutBusinessHoursInput = {
   email?: string | null
   website?: string | null
   timezone?: string
+  twilioPhoneNumber?: string | null
   isActive?: boolean
   subscriptionPlan?: $Enums.SubscriptionPlan
   subscriptionExpiresAt?: Date | string | null
@@ -2054,6 +2514,8 @@ export type ClinicUncheckedCreateWithoutBusinessHoursInput = {
   campaigns?: Prisma.CampaignUncheckedCreateNestedManyWithoutClinicInput
   clinicSettings?: Prisma.ClinicSettingsUncheckedCreateNestedOneWithoutClinicInput
   escalationLogs?: Prisma.EscalationLogUncheckedCreateNestedManyWithoutClinicInput
+  availableSlots?: Prisma.AvailableSlotUncheckedCreateNestedManyWithoutClinicInput
+  conversationSessions?: Prisma.ConversationSessionUncheckedCreateNestedManyWithoutClinicInput
 }
 
 export type ClinicCreateOrConnectWithoutBusinessHoursInput = {
@@ -2081,6 +2543,7 @@ export type ClinicUpdateWithoutBusinessHoursInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   timezone?: Prisma.StringFieldUpdateOperationsInput | string
+  twilioPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   subscriptionPlan?: Prisma.EnumSubscriptionPlanFieldUpdateOperationsInput | $Enums.SubscriptionPlan
   subscriptionExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2097,6 +2560,8 @@ export type ClinicUpdateWithoutBusinessHoursInput = {
   campaigns?: Prisma.CampaignUpdateManyWithoutClinicNestedInput
   clinicSettings?: Prisma.ClinicSettingsUpdateOneWithoutClinicNestedInput
   escalationLogs?: Prisma.EscalationLogUpdateManyWithoutClinicNestedInput
+  availableSlots?: Prisma.AvailableSlotUpdateManyWithoutClinicNestedInput
+  conversationSessions?: Prisma.ConversationSessionUpdateManyWithoutClinicNestedInput
 }
 
 export type ClinicUncheckedUpdateWithoutBusinessHoursInput = {
@@ -2108,6 +2573,7 @@ export type ClinicUncheckedUpdateWithoutBusinessHoursInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   timezone?: Prisma.StringFieldUpdateOperationsInput | string
+  twilioPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   subscriptionPlan?: Prisma.EnumSubscriptionPlanFieldUpdateOperationsInput | $Enums.SubscriptionPlan
   subscriptionExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2124,6 +2590,8 @@ export type ClinicUncheckedUpdateWithoutBusinessHoursInput = {
   campaigns?: Prisma.CampaignUncheckedUpdateManyWithoutClinicNestedInput
   clinicSettings?: Prisma.ClinicSettingsUncheckedUpdateOneWithoutClinicNestedInput
   escalationLogs?: Prisma.EscalationLogUncheckedUpdateManyWithoutClinicNestedInput
+  availableSlots?: Prisma.AvailableSlotUncheckedUpdateManyWithoutClinicNestedInput
+  conversationSessions?: Prisma.ConversationSessionUncheckedUpdateManyWithoutClinicNestedInput
 }
 
 export type ClinicCreateWithoutEscalationLogsInput = {
@@ -2135,6 +2603,7 @@ export type ClinicCreateWithoutEscalationLogsInput = {
   email?: string | null
   website?: string | null
   timezone?: string
+  twilioPhoneNumber?: string | null
   isActive?: boolean
   subscriptionPlan?: $Enums.SubscriptionPlan
   subscriptionExpiresAt?: Date | string | null
@@ -2151,6 +2620,8 @@ export type ClinicCreateWithoutEscalationLogsInput = {
   campaigns?: Prisma.CampaignCreateNestedManyWithoutClinicInput
   clinicSettings?: Prisma.ClinicSettingsCreateNestedOneWithoutClinicInput
   businessHours?: Prisma.BusinessHoursCreateNestedManyWithoutClinicInput
+  availableSlots?: Prisma.AvailableSlotCreateNestedManyWithoutClinicInput
+  conversationSessions?: Prisma.ConversationSessionCreateNestedManyWithoutClinicInput
 }
 
 export type ClinicUncheckedCreateWithoutEscalationLogsInput = {
@@ -2162,6 +2633,7 @@ export type ClinicUncheckedCreateWithoutEscalationLogsInput = {
   email?: string | null
   website?: string | null
   timezone?: string
+  twilioPhoneNumber?: string | null
   isActive?: boolean
   subscriptionPlan?: $Enums.SubscriptionPlan
   subscriptionExpiresAt?: Date | string | null
@@ -2178,6 +2650,8 @@ export type ClinicUncheckedCreateWithoutEscalationLogsInput = {
   campaigns?: Prisma.CampaignUncheckedCreateNestedManyWithoutClinicInput
   clinicSettings?: Prisma.ClinicSettingsUncheckedCreateNestedOneWithoutClinicInput
   businessHours?: Prisma.BusinessHoursUncheckedCreateNestedManyWithoutClinicInput
+  availableSlots?: Prisma.AvailableSlotUncheckedCreateNestedManyWithoutClinicInput
+  conversationSessions?: Prisma.ConversationSessionUncheckedCreateNestedManyWithoutClinicInput
 }
 
 export type ClinicCreateOrConnectWithoutEscalationLogsInput = {
@@ -2205,6 +2679,7 @@ export type ClinicUpdateWithoutEscalationLogsInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   timezone?: Prisma.StringFieldUpdateOperationsInput | string
+  twilioPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   subscriptionPlan?: Prisma.EnumSubscriptionPlanFieldUpdateOperationsInput | $Enums.SubscriptionPlan
   subscriptionExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2221,6 +2696,8 @@ export type ClinicUpdateWithoutEscalationLogsInput = {
   campaigns?: Prisma.CampaignUpdateManyWithoutClinicNestedInput
   clinicSettings?: Prisma.ClinicSettingsUpdateOneWithoutClinicNestedInput
   businessHours?: Prisma.BusinessHoursUpdateManyWithoutClinicNestedInput
+  availableSlots?: Prisma.AvailableSlotUpdateManyWithoutClinicNestedInput
+  conversationSessions?: Prisma.ConversationSessionUpdateManyWithoutClinicNestedInput
 }
 
 export type ClinicUncheckedUpdateWithoutEscalationLogsInput = {
@@ -2232,6 +2709,7 @@ export type ClinicUncheckedUpdateWithoutEscalationLogsInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   timezone?: Prisma.StringFieldUpdateOperationsInput | string
+  twilioPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   subscriptionPlan?: Prisma.EnumSubscriptionPlanFieldUpdateOperationsInput | $Enums.SubscriptionPlan
   subscriptionExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2248,6 +2726,8 @@ export type ClinicUncheckedUpdateWithoutEscalationLogsInput = {
   campaigns?: Prisma.CampaignUncheckedUpdateManyWithoutClinicNestedInput
   clinicSettings?: Prisma.ClinicSettingsUncheckedUpdateOneWithoutClinicNestedInput
   businessHours?: Prisma.BusinessHoursUncheckedUpdateManyWithoutClinicNestedInput
+  availableSlots?: Prisma.AvailableSlotUncheckedUpdateManyWithoutClinicNestedInput
+  conversationSessions?: Prisma.ConversationSessionUncheckedUpdateManyWithoutClinicNestedInput
 }
 
 
@@ -2267,6 +2747,8 @@ export type ClinicCountOutputType = {
   campaigns: number
   businessHours: number
   escalationLogs: number
+  availableSlots: number
+  conversationSessions: number
 }
 
 export type ClinicCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2281,6 +2763,8 @@ export type ClinicCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions
   campaigns?: boolean | ClinicCountOutputTypeCountCampaignsArgs
   businessHours?: boolean | ClinicCountOutputTypeCountBusinessHoursArgs
   escalationLogs?: boolean | ClinicCountOutputTypeCountEscalationLogsArgs
+  availableSlots?: boolean | ClinicCountOutputTypeCountAvailableSlotsArgs
+  conversationSessions?: boolean | ClinicCountOutputTypeCountConversationSessionsArgs
 }
 
 /**
@@ -2370,6 +2854,20 @@ export type ClinicCountOutputTypeCountEscalationLogsArgs<ExtArgs extends runtime
   where?: Prisma.EscalationLogWhereInput
 }
 
+/**
+ * ClinicCountOutputType without action
+ */
+export type ClinicCountOutputTypeCountAvailableSlotsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AvailableSlotWhereInput
+}
+
+/**
+ * ClinicCountOutputType without action
+ */
+export type ClinicCountOutputTypeCountConversationSessionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ConversationSessionWhereInput
+}
+
 
 export type ClinicSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -2380,6 +2878,7 @@ export type ClinicSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   email?: boolean
   website?: boolean
   timezone?: boolean
+  twilioPhoneNumber?: boolean
   isActive?: boolean
   subscriptionPlan?: boolean
   subscriptionExpiresAt?: boolean
@@ -2397,6 +2896,8 @@ export type ClinicSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   clinicSettings?: boolean | Prisma.Clinic$clinicSettingsArgs<ExtArgs>
   businessHours?: boolean | Prisma.Clinic$businessHoursArgs<ExtArgs>
   escalationLogs?: boolean | Prisma.Clinic$escalationLogsArgs<ExtArgs>
+  availableSlots?: boolean | Prisma.Clinic$availableSlotsArgs<ExtArgs>
+  conversationSessions?: boolean | Prisma.Clinic$conversationSessionsArgs<ExtArgs>
   _count?: boolean | Prisma.ClinicCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["clinic"]>
 
@@ -2409,6 +2910,7 @@ export type ClinicSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
   email?: boolean
   website?: boolean
   timezone?: boolean
+  twilioPhoneNumber?: boolean
   isActive?: boolean
   subscriptionPlan?: boolean
   subscriptionExpiresAt?: boolean
@@ -2425,6 +2927,7 @@ export type ClinicSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
   email?: boolean
   website?: boolean
   timezone?: boolean
+  twilioPhoneNumber?: boolean
   isActive?: boolean
   subscriptionPlan?: boolean
   subscriptionExpiresAt?: boolean
@@ -2441,6 +2944,7 @@ export type ClinicSelectScalar = {
   email?: boolean
   website?: boolean
   timezone?: boolean
+  twilioPhoneNumber?: boolean
   isActive?: boolean
   subscriptionPlan?: boolean
   subscriptionExpiresAt?: boolean
@@ -2448,7 +2952,7 @@ export type ClinicSelectScalar = {
   updatedAt?: boolean
 }
 
-export type ClinicOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "slug" | "address" | "phone" | "email" | "website" | "timezone" | "isActive" | "subscriptionPlan" | "subscriptionExpiresAt" | "createdAt" | "updatedAt", ExtArgs["result"]["clinic"]>
+export type ClinicOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "slug" | "address" | "phone" | "email" | "website" | "timezone" | "twilioPhoneNumber" | "isActive" | "subscriptionPlan" | "subscriptionExpiresAt" | "createdAt" | "updatedAt", ExtArgs["result"]["clinic"]>
 export type ClinicInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   memberships?: boolean | Prisma.Clinic$membershipsArgs<ExtArgs>
   doctors?: boolean | Prisma.Clinic$doctorsArgs<ExtArgs>
@@ -2462,6 +2966,8 @@ export type ClinicInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   clinicSettings?: boolean | Prisma.Clinic$clinicSettingsArgs<ExtArgs>
   businessHours?: boolean | Prisma.Clinic$businessHoursArgs<ExtArgs>
   escalationLogs?: boolean | Prisma.Clinic$escalationLogsArgs<ExtArgs>
+  availableSlots?: boolean | Prisma.Clinic$availableSlotsArgs<ExtArgs>
+  conversationSessions?: boolean | Prisma.Clinic$conversationSessionsArgs<ExtArgs>
   _count?: boolean | Prisma.ClinicCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ClinicIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -2482,6 +2988,8 @@ export type $ClinicPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     clinicSettings: Prisma.$ClinicSettingsPayload<ExtArgs> | null
     businessHours: Prisma.$BusinessHoursPayload<ExtArgs>[]
     escalationLogs: Prisma.$EscalationLogPayload<ExtArgs>[]
+    availableSlots: Prisma.$AvailableSlotPayload<ExtArgs>[]
+    conversationSessions: Prisma.$ConversationSessionPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -2492,6 +3000,7 @@ export type $ClinicPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     email: string | null
     website: string | null
     timezone: string
+    twilioPhoneNumber: string | null
     isActive: boolean
     subscriptionPlan: $Enums.SubscriptionPlan
     subscriptionExpiresAt: Date | null
@@ -2903,6 +3412,8 @@ export interface Prisma__ClinicClient<T, Null = never, ExtArgs extends runtime.T
   clinicSettings<T extends Prisma.Clinic$clinicSettingsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Clinic$clinicSettingsArgs<ExtArgs>>): Prisma.Prisma__ClinicSettingsClient<runtime.Types.Result.GetResult<Prisma.$ClinicSettingsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   businessHours<T extends Prisma.Clinic$businessHoursArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Clinic$businessHoursArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BusinessHoursPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   escalationLogs<T extends Prisma.Clinic$escalationLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Clinic$escalationLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EscalationLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  availableSlots<T extends Prisma.Clinic$availableSlotsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Clinic$availableSlotsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AvailableSlotPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  conversationSessions<T extends Prisma.Clinic$conversationSessionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Clinic$conversationSessionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ConversationSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2940,6 +3451,7 @@ export interface ClinicFieldRefs {
   readonly email: Prisma.FieldRef<"Clinic", 'String'>
   readonly website: Prisma.FieldRef<"Clinic", 'String'>
   readonly timezone: Prisma.FieldRef<"Clinic", 'String'>
+  readonly twilioPhoneNumber: Prisma.FieldRef<"Clinic", 'String'>
   readonly isActive: Prisma.FieldRef<"Clinic", 'Boolean'>
   readonly subscriptionPlan: Prisma.FieldRef<"Clinic", 'SubscriptionPlan'>
   readonly subscriptionExpiresAt: Prisma.FieldRef<"Clinic", 'DateTime'>
@@ -3618,6 +4130,54 @@ export type Clinic$escalationLogsArgs<ExtArgs extends runtime.Types.Extensions.I
   take?: number
   skip?: number
   distinct?: Prisma.EscalationLogScalarFieldEnum | Prisma.EscalationLogScalarFieldEnum[]
+}
+
+/**
+ * Clinic.availableSlots
+ */
+export type Clinic$availableSlotsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AvailableSlot
+   */
+  select?: Prisma.AvailableSlotSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the AvailableSlot
+   */
+  omit?: Prisma.AvailableSlotOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AvailableSlotInclude<ExtArgs> | null
+  where?: Prisma.AvailableSlotWhereInput
+  orderBy?: Prisma.AvailableSlotOrderByWithRelationInput | Prisma.AvailableSlotOrderByWithRelationInput[]
+  cursor?: Prisma.AvailableSlotWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.AvailableSlotScalarFieldEnum | Prisma.AvailableSlotScalarFieldEnum[]
+}
+
+/**
+ * Clinic.conversationSessions
+ */
+export type Clinic$conversationSessionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ConversationSession
+   */
+  select?: Prisma.ConversationSessionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ConversationSession
+   */
+  omit?: Prisma.ConversationSessionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ConversationSessionInclude<ExtArgs> | null
+  where?: Prisma.ConversationSessionWhereInput
+  orderBy?: Prisma.ConversationSessionOrderByWithRelationInput | Prisma.ConversationSessionOrderByWithRelationInput[]
+  cursor?: Prisma.ConversationSessionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ConversationSessionScalarFieldEnum | Prisma.ConversationSessionScalarFieldEnum[]
 }
 
 /**

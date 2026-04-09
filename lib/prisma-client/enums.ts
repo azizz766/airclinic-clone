@@ -57,7 +57,8 @@ export type Channel = (typeof Channel)[keyof typeof Channel]
 export const SenderType = {
   patient: 'patient',
   clinic: 'clinic',
-  system: 'system'
+  system: 'system',
+  assistant: 'assistant'
 } as const
 
 export type SenderType = (typeof SenderType)[keyof typeof SenderType]
@@ -152,3 +153,49 @@ export const EntityType = {
 } as const
 
 export type EntityType = (typeof EntityType)[keyof typeof EntityType]
+
+
+export const ConversationState = {
+  IDLE: 'IDLE',
+  LANGUAGE_DETECTION: 'LANGUAGE_DETECTION',
+  INTENT_DISAMBIGUATION: 'INTENT_DISAMBIGUATION',
+  SLOT_COLLECTION_SERVICE: 'SLOT_COLLECTION_SERVICE',
+  SLOT_COLLECTION_DATE: 'SLOT_COLLECTION_DATE',
+  SLOT_COLLECTION_TIME: 'SLOT_COLLECTION_TIME',
+  SLOT_COLLECTION_PATIENT_NAME: 'SLOT_COLLECTION_PATIENT_NAME',
+  SLOT_COLLECTION_PATIENT_DOB: 'SLOT_COLLECTION_PATIENT_DOB',
+  SLOT_COLLECTION_PHONE_CONFIRM: 'SLOT_COLLECTION_PHONE_CONFIRM',
+  CONFIRMATION_PENDING: 'CONFIRMATION_PENDING',
+  BOOKING_PROCESSING: 'BOOKING_PROCESSING',
+  BOOKING_CONFIRMED: 'BOOKING_CONFIRMED',
+  BOOKING_FAILED: 'BOOKING_FAILED',
+  CANCELLATION_PENDING: 'CANCELLATION_PENDING',
+  CANCELLATION_CONFIRMED: 'CANCELLATION_CONFIRMED',
+  HUMAN_ESCALATION_PENDING: 'HUMAN_ESCALATION_PENDING',
+  HUMAN_ESCALATION_ACTIVE: 'HUMAN_ESCALATION_ACTIVE',
+  EXPIRED: 'EXPIRED',
+  CORRUPTED: 'CORRUPTED'
+} as const
+
+export type ConversationState = (typeof ConversationState)[keyof typeof ConversationState]
+
+
+export const DetectedLanguage = {
+  AR: 'AR',
+  EN: 'EN',
+  AR_EN: 'AR_EN',
+  UNKNOWN: 'UNKNOWN'
+} as const
+
+export type DetectedLanguage = (typeof DetectedLanguage)[keyof typeof DetectedLanguage]
+
+
+export const EscalationReason = {
+  USER_REQUESTED: 'USER_REQUESTED',
+  MAX_RETRIES_EXCEEDED: 'MAX_RETRIES_EXCEEDED',
+  INVALID_INPUT_LOOP: 'INVALID_INPUT_LOOP',
+  BOOKING_FAILED_UNRECOVERABLE: 'BOOKING_FAILED_UNRECOVERABLE',
+  CORRUPTED_STATE: 'CORRUPTED_STATE'
+} as const
+
+export type EscalationReason = (typeof EscalationReason)[keyof typeof EscalationReason]

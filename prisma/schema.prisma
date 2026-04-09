@@ -7,9 +7,7 @@ generator client {
 }
 
 datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
+  provider = "postgresql"
 }
 
 // Enums
@@ -50,6 +48,7 @@ enum SenderType {
   patient
   clinic
   system
+  assistant
 }
 
 enum MessageType {
@@ -116,6 +115,43 @@ enum EntityType {
   system
 }
 
+enum ConversationState {
+  IDLE
+  LANGUAGE_DETECTION
+  INTENT_DISAMBIGUATION
+  SLOT_COLLECTION_SERVICE
+  SLOT_COLLECTION_DATE
+  SLOT_COLLECTION_TIME
+  SLOT_COLLECTION_PATIENT_NAME
+  SLOT_COLLECTION_PATIENT_DOB
+  SLOT_COLLECTION_PHONE_CONFIRM
+  CONFIRMATION_PENDING
+  BOOKING_PROCESSING
+  BOOKING_CONFIRMED
+  BOOKING_FAILED
+  CANCELLATION_PENDING
+  CANCELLATION_CONFIRMED
+  HUMAN_ESCALATION_PENDING
+  HUMAN_ESCALATION_ACTIVE
+  EXPIRED
+  CORRUPTED
+}
+
+enum DetectedLanguage {
+  AR
+  EN
+  AR_EN
+  UNKNOWN
+}
+
+enum EscalationReason {
+  USER_REQUESTED
+  MAX_RETRIES_EXCEEDED
+  INVALID_INPUT_LOOP
+  BOOKING_FAILED_UNRECOVERABLE
+  CORRUPTED_STATE
+}
+
 // Models
 model Clinic {
   id                    String           @id @default(cuid())
@@ -126,6 +162,7 @@ model Clinic {
   email                 String?          @unique
   website               String?
   timezone              String           @default("UTC")
+  twilioPhoneNumber     String?
   isActive              Boolean          @default(true)
   subscriptionPlan      SubscriptionPlan @default(free)
   subscriptionExpiresAt DateTime?
@@ -144,7 +181,9 @@ model Clinic {
   campaigns      Campaign[]
   clinicSettings ClinicSettings?
   businessHours  BusinessHours[]
-  escalationLogs EscalationLog[]
+  escalationLogs       EscalationLog[]
+  availableSlots       AvailableSlot[]
+  conversationSessions ConversationSession[]
 
   @@map("clinics")
 }
@@ -231,10 +270,116 @@ model Service {
   updatedAt       DateTime @updatedAt
 
   // Relations
-  clinic       Clinic        @relation(fields: [clinicId], references: [id], onDelete: Cascade)
-  appointments Appointment[]
+  clinic               Clinic                @relation(fields: [clinicId], references: [id], onDelete: Cascade)
+  appointments         Appointment[]
+  availableSlots       AvailableSlot[]
+  conversationSessions ConversationSession[] @relation("SessionService")
 
   @@map("services")
+}
+
+model AvailableSlot {
+  id              String       @id @default(cuid())
+  clinicId        String
+  serviceId       String
+  startTime       DateTime
+  endTime         DateTime
+  isHeld          Boolean      @default(false)
+  heldBySessionId String?
+  heldAt          DateTime?
+  isBooked        Boolean      @default(false)
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+
+  clinic          Clinic       @relation(fields: [clinicId], references: [id], onDelete: Restrict)
+  service         Service      @relation(fields: [serviceId], references: [id], onDelete: Restrict)
+  sessions        ConversationSession[]
+
+  @@index([clinicId, serviceId, startTime])
+  @@index([isHeld, heldAt])
+  @@map("available_slots")
+}
+
+model ConversationSession {
+  id                  String             @id @default(cuid())
+  clinicId            String
+  phoneNumber         String
+  currentState        ConversationState  @default(IDLE)
+  previousState       ConversationState?
+  slotServiceId       String?
+  slotDate            DateTime?
+  slotTimeId          String?
+  slotPatientName     String?
+  slotPatientDob      DateTime?
+  slotPhoneConfirmed  String?
+  detectedLanguage    DetectedLanguage   @default(UNKNOWN)
+  retryCount          Int                @default(0)
+  maxRetriesPerState  Int                @default(3)
+  invalidInputCount   Int                @default(0)
+  ambiguousIntents    Json?
+  escalationReason    EscalationReason?
+  escalationClaimedBy String?
+  escalationClaimedAt DateTime?
+  bookingId           String?
+  expiresAt           DateTime
+  createdAt           DateTime           @default(now())
+  updatedAt           DateTime           @updatedAt
+  resolvedAt          DateTime?
+
+  clinic           Clinic               @relation(fields: [clinicId], references: [id], onDelete: Restrict)
+  slotService      Service?             @relation("SessionService", fields: [slotServiceId], references: [id])
+  slotTime         AvailableSlot?       @relation(fields: [slotTimeId], references: [id])
+  messages         ConversationMessage[]
+  stateTransitions StateTransitionLog[]
+
+  @@unique([phoneNumber, clinicId])
+  @@index([clinicId, currentState])
+  @@index([expiresAt])
+  @@index([phoneNumber])
+  @@map("conversation_sessions")
+}
+
+model ConversationMessage {
+  id                  String             @id @default(cuid())
+  sessionId           String
+  clinicId            String
+  role                SenderType
+  channel             Channel
+  content             String
+  contentNormalized   String?
+  twilioMessageSid    String?
+  twilioStatus        String?
+  claudeModel         String?
+  claudeInputTokens   Int?
+  claudeOutputTokens  Int?
+  claudeToolsUsed     Json?
+  sessionStateAtSend  ConversationState
+  createdAt           DateTime           @default(now())
+
+  session ConversationSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@index([sessionId, createdAt])
+  @@index([twilioMessageSid])
+  @@index([clinicId, createdAt])
+  @@map("conversation_messages")
+}
+
+model StateTransitionLog {
+  id             String             @id @default(cuid())
+  sessionId      String
+  clinicId       String
+  fromState      ConversationState
+  toState        ConversationState
+  triggerType    String
+  triggerPayload Json?
+  triggeredBy    String?
+  createdAt      DateTime           @default(now())
+
+  session ConversationSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@index([sessionId, createdAt])
+  @@index([clinicId, toState])
+  @@map("state_transition_logs")
 }
 
 model Patient {

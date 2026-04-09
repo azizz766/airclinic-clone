@@ -262,6 +262,8 @@ export type ServiceWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"Service"> | Date | string
   clinic?: Prisma.XOR<Prisma.ClinicScalarRelationFilter, Prisma.ClinicWhereInput>
   appointments?: Prisma.AppointmentListRelationFilter
+  availableSlots?: Prisma.AvailableSlotListRelationFilter
+  conversationSessions?: Prisma.ConversationSessionListRelationFilter
 }
 
 export type ServiceOrderByWithRelationInput = {
@@ -277,6 +279,8 @@ export type ServiceOrderByWithRelationInput = {
   updatedAt?: Prisma.SortOrder
   clinic?: Prisma.ClinicOrderByWithRelationInput
   appointments?: Prisma.AppointmentOrderByRelationAggregateInput
+  availableSlots?: Prisma.AvailableSlotOrderByRelationAggregateInput
+  conversationSessions?: Prisma.ConversationSessionOrderByRelationAggregateInput
 }
 
 export type ServiceWhereUniqueInput = Prisma.AtLeast<{
@@ -295,6 +299,8 @@ export type ServiceWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"Service"> | Date | string
   clinic?: Prisma.XOR<Prisma.ClinicScalarRelationFilter, Prisma.ClinicWhereInput>
   appointments?: Prisma.AppointmentListRelationFilter
+  availableSlots?: Prisma.AvailableSlotListRelationFilter
+  conversationSessions?: Prisma.ConversationSessionListRelationFilter
 }, "id">
 
 export type ServiceOrderByWithAggregationInput = {
@@ -343,6 +349,8 @@ export type ServiceCreateInput = {
   updatedAt?: Date | string
   clinic: Prisma.ClinicCreateNestedOneWithoutServicesInput
   appointments?: Prisma.AppointmentCreateNestedManyWithoutServiceInput
+  availableSlots?: Prisma.AvailableSlotCreateNestedManyWithoutServiceInput
+  conversationSessions?: Prisma.ConversationSessionCreateNestedManyWithoutSlotServiceInput
 }
 
 export type ServiceUncheckedCreateInput = {
@@ -357,6 +365,8 @@ export type ServiceUncheckedCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutServiceInput
+  availableSlots?: Prisma.AvailableSlotUncheckedCreateNestedManyWithoutServiceInput
+  conversationSessions?: Prisma.ConversationSessionUncheckedCreateNestedManyWithoutSlotServiceInput
 }
 
 export type ServiceUpdateInput = {
@@ -371,6 +381,8 @@ export type ServiceUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   clinic?: Prisma.ClinicUpdateOneRequiredWithoutServicesNestedInput
   appointments?: Prisma.AppointmentUpdateManyWithoutServiceNestedInput
+  availableSlots?: Prisma.AvailableSlotUpdateManyWithoutServiceNestedInput
+  conversationSessions?: Prisma.ConversationSessionUpdateManyWithoutSlotServiceNestedInput
 }
 
 export type ServiceUncheckedUpdateInput = {
@@ -385,6 +397,8 @@ export type ServiceUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutServiceNestedInput
+  availableSlots?: Prisma.AvailableSlotUncheckedUpdateManyWithoutServiceNestedInput
+  conversationSessions?: Prisma.ConversationSessionUncheckedUpdateManyWithoutSlotServiceNestedInput
 }
 
 export type ServiceCreateManyInput = {
@@ -489,6 +503,11 @@ export type ServiceScalarRelationFilter = {
   isNot?: Prisma.ServiceWhereInput
 }
 
+export type ServiceNullableScalarRelationFilter = {
+  is?: Prisma.ServiceWhereInput | null
+  isNot?: Prisma.ServiceWhereInput | null
+}
+
 export type ServiceCreateNestedManyWithoutClinicInput = {
   create?: Prisma.XOR<Prisma.ServiceCreateWithoutClinicInput, Prisma.ServiceUncheckedCreateWithoutClinicInput> | Prisma.ServiceCreateWithoutClinicInput[] | Prisma.ServiceUncheckedCreateWithoutClinicInput[]
   connectOrCreate?: Prisma.ServiceCreateOrConnectWithoutClinicInput | Prisma.ServiceCreateOrConnectWithoutClinicInput[]
@@ -547,6 +566,36 @@ export type NullableFloatFieldUpdateOperationsInput = {
   divide?: number
 }
 
+export type ServiceCreateNestedOneWithoutAvailableSlotsInput = {
+  create?: Prisma.XOR<Prisma.ServiceCreateWithoutAvailableSlotsInput, Prisma.ServiceUncheckedCreateWithoutAvailableSlotsInput>
+  connectOrCreate?: Prisma.ServiceCreateOrConnectWithoutAvailableSlotsInput
+  connect?: Prisma.ServiceWhereUniqueInput
+}
+
+export type ServiceUpdateOneRequiredWithoutAvailableSlotsNestedInput = {
+  create?: Prisma.XOR<Prisma.ServiceCreateWithoutAvailableSlotsInput, Prisma.ServiceUncheckedCreateWithoutAvailableSlotsInput>
+  connectOrCreate?: Prisma.ServiceCreateOrConnectWithoutAvailableSlotsInput
+  upsert?: Prisma.ServiceUpsertWithoutAvailableSlotsInput
+  connect?: Prisma.ServiceWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ServiceUpdateToOneWithWhereWithoutAvailableSlotsInput, Prisma.ServiceUpdateWithoutAvailableSlotsInput>, Prisma.ServiceUncheckedUpdateWithoutAvailableSlotsInput>
+}
+
+export type ServiceCreateNestedOneWithoutConversationSessionsInput = {
+  create?: Prisma.XOR<Prisma.ServiceCreateWithoutConversationSessionsInput, Prisma.ServiceUncheckedCreateWithoutConversationSessionsInput>
+  connectOrCreate?: Prisma.ServiceCreateOrConnectWithoutConversationSessionsInput
+  connect?: Prisma.ServiceWhereUniqueInput
+}
+
+export type ServiceUpdateOneWithoutConversationSessionsNestedInput = {
+  create?: Prisma.XOR<Prisma.ServiceCreateWithoutConversationSessionsInput, Prisma.ServiceUncheckedCreateWithoutConversationSessionsInput>
+  connectOrCreate?: Prisma.ServiceCreateOrConnectWithoutConversationSessionsInput
+  upsert?: Prisma.ServiceUpsertWithoutConversationSessionsInput
+  disconnect?: Prisma.ServiceWhereInput | boolean
+  delete?: Prisma.ServiceWhereInput | boolean
+  connect?: Prisma.ServiceWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ServiceUpdateToOneWithWhereWithoutConversationSessionsInput, Prisma.ServiceUpdateWithoutConversationSessionsInput>, Prisma.ServiceUncheckedUpdateWithoutConversationSessionsInput>
+}
+
 export type ServiceCreateNestedOneWithoutAppointmentsInput = {
   create?: Prisma.XOR<Prisma.ServiceCreateWithoutAppointmentsInput, Prisma.ServiceUncheckedCreateWithoutAppointmentsInput>
   connectOrCreate?: Prisma.ServiceCreateOrConnectWithoutAppointmentsInput
@@ -572,6 +621,8 @@ export type ServiceCreateWithoutClinicInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   appointments?: Prisma.AppointmentCreateNestedManyWithoutServiceInput
+  availableSlots?: Prisma.AvailableSlotCreateNestedManyWithoutServiceInput
+  conversationSessions?: Prisma.ConversationSessionCreateNestedManyWithoutSlotServiceInput
 }
 
 export type ServiceUncheckedCreateWithoutClinicInput = {
@@ -585,6 +636,8 @@ export type ServiceUncheckedCreateWithoutClinicInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutServiceInput
+  availableSlots?: Prisma.AvailableSlotUncheckedCreateNestedManyWithoutServiceInput
+  conversationSessions?: Prisma.ConversationSessionUncheckedCreateNestedManyWithoutSlotServiceInput
 }
 
 export type ServiceCreateOrConnectWithoutClinicInput = {
@@ -629,6 +682,158 @@ export type ServiceScalarWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"Service"> | Date | string
 }
 
+export type ServiceCreateWithoutAvailableSlotsInput = {
+  id?: string
+  name: string
+  description?: string | null
+  durationMinutes: number
+  price?: number | null
+  category?: string | null
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  clinic: Prisma.ClinicCreateNestedOneWithoutServicesInput
+  appointments?: Prisma.AppointmentCreateNestedManyWithoutServiceInput
+  conversationSessions?: Prisma.ConversationSessionCreateNestedManyWithoutSlotServiceInput
+}
+
+export type ServiceUncheckedCreateWithoutAvailableSlotsInput = {
+  id?: string
+  clinicId: string
+  name: string
+  description?: string | null
+  durationMinutes: number
+  price?: number | null
+  category?: string | null
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutServiceInput
+  conversationSessions?: Prisma.ConversationSessionUncheckedCreateNestedManyWithoutSlotServiceInput
+}
+
+export type ServiceCreateOrConnectWithoutAvailableSlotsInput = {
+  where: Prisma.ServiceWhereUniqueInput
+  create: Prisma.XOR<Prisma.ServiceCreateWithoutAvailableSlotsInput, Prisma.ServiceUncheckedCreateWithoutAvailableSlotsInput>
+}
+
+export type ServiceUpsertWithoutAvailableSlotsInput = {
+  update: Prisma.XOR<Prisma.ServiceUpdateWithoutAvailableSlotsInput, Prisma.ServiceUncheckedUpdateWithoutAvailableSlotsInput>
+  create: Prisma.XOR<Prisma.ServiceCreateWithoutAvailableSlotsInput, Prisma.ServiceUncheckedCreateWithoutAvailableSlotsInput>
+  where?: Prisma.ServiceWhereInput
+}
+
+export type ServiceUpdateToOneWithWhereWithoutAvailableSlotsInput = {
+  where?: Prisma.ServiceWhereInput
+  data: Prisma.XOR<Prisma.ServiceUpdateWithoutAvailableSlotsInput, Prisma.ServiceUncheckedUpdateWithoutAvailableSlotsInput>
+}
+
+export type ServiceUpdateWithoutAvailableSlotsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  durationMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  price?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  clinic?: Prisma.ClinicUpdateOneRequiredWithoutServicesNestedInput
+  appointments?: Prisma.AppointmentUpdateManyWithoutServiceNestedInput
+  conversationSessions?: Prisma.ConversationSessionUpdateManyWithoutSlotServiceNestedInput
+}
+
+export type ServiceUncheckedUpdateWithoutAvailableSlotsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  clinicId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  durationMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  price?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutServiceNestedInput
+  conversationSessions?: Prisma.ConversationSessionUncheckedUpdateManyWithoutSlotServiceNestedInput
+}
+
+export type ServiceCreateWithoutConversationSessionsInput = {
+  id?: string
+  name: string
+  description?: string | null
+  durationMinutes: number
+  price?: number | null
+  category?: string | null
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  clinic: Prisma.ClinicCreateNestedOneWithoutServicesInput
+  appointments?: Prisma.AppointmentCreateNestedManyWithoutServiceInput
+  availableSlots?: Prisma.AvailableSlotCreateNestedManyWithoutServiceInput
+}
+
+export type ServiceUncheckedCreateWithoutConversationSessionsInput = {
+  id?: string
+  clinicId: string
+  name: string
+  description?: string | null
+  durationMinutes: number
+  price?: number | null
+  category?: string | null
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutServiceInput
+  availableSlots?: Prisma.AvailableSlotUncheckedCreateNestedManyWithoutServiceInput
+}
+
+export type ServiceCreateOrConnectWithoutConversationSessionsInput = {
+  where: Prisma.ServiceWhereUniqueInput
+  create: Prisma.XOR<Prisma.ServiceCreateWithoutConversationSessionsInput, Prisma.ServiceUncheckedCreateWithoutConversationSessionsInput>
+}
+
+export type ServiceUpsertWithoutConversationSessionsInput = {
+  update: Prisma.XOR<Prisma.ServiceUpdateWithoutConversationSessionsInput, Prisma.ServiceUncheckedUpdateWithoutConversationSessionsInput>
+  create: Prisma.XOR<Prisma.ServiceCreateWithoutConversationSessionsInput, Prisma.ServiceUncheckedCreateWithoutConversationSessionsInput>
+  where?: Prisma.ServiceWhereInput
+}
+
+export type ServiceUpdateToOneWithWhereWithoutConversationSessionsInput = {
+  where?: Prisma.ServiceWhereInput
+  data: Prisma.XOR<Prisma.ServiceUpdateWithoutConversationSessionsInput, Prisma.ServiceUncheckedUpdateWithoutConversationSessionsInput>
+}
+
+export type ServiceUpdateWithoutConversationSessionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  durationMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  price?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  clinic?: Prisma.ClinicUpdateOneRequiredWithoutServicesNestedInput
+  appointments?: Prisma.AppointmentUpdateManyWithoutServiceNestedInput
+  availableSlots?: Prisma.AvailableSlotUpdateManyWithoutServiceNestedInput
+}
+
+export type ServiceUncheckedUpdateWithoutConversationSessionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  clinicId?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  durationMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  price?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutServiceNestedInput
+  availableSlots?: Prisma.AvailableSlotUncheckedUpdateManyWithoutServiceNestedInput
+}
+
 export type ServiceCreateWithoutAppointmentsInput = {
   id?: string
   name: string
@@ -640,6 +845,8 @@ export type ServiceCreateWithoutAppointmentsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   clinic: Prisma.ClinicCreateNestedOneWithoutServicesInput
+  availableSlots?: Prisma.AvailableSlotCreateNestedManyWithoutServiceInput
+  conversationSessions?: Prisma.ConversationSessionCreateNestedManyWithoutSlotServiceInput
 }
 
 export type ServiceUncheckedCreateWithoutAppointmentsInput = {
@@ -653,6 +860,8 @@ export type ServiceUncheckedCreateWithoutAppointmentsInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  availableSlots?: Prisma.AvailableSlotUncheckedCreateNestedManyWithoutServiceInput
+  conversationSessions?: Prisma.ConversationSessionUncheckedCreateNestedManyWithoutSlotServiceInput
 }
 
 export type ServiceCreateOrConnectWithoutAppointmentsInput = {
@@ -682,6 +891,8 @@ export type ServiceUpdateWithoutAppointmentsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   clinic?: Prisma.ClinicUpdateOneRequiredWithoutServicesNestedInput
+  availableSlots?: Prisma.AvailableSlotUpdateManyWithoutServiceNestedInput
+  conversationSessions?: Prisma.ConversationSessionUpdateManyWithoutSlotServiceNestedInput
 }
 
 export type ServiceUncheckedUpdateWithoutAppointmentsInput = {
@@ -695,6 +906,8 @@ export type ServiceUncheckedUpdateWithoutAppointmentsInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  availableSlots?: Prisma.AvailableSlotUncheckedUpdateManyWithoutServiceNestedInput
+  conversationSessions?: Prisma.ConversationSessionUncheckedUpdateManyWithoutSlotServiceNestedInput
 }
 
 export type ServiceCreateManyClinicInput = {
@@ -720,6 +933,8 @@ export type ServiceUpdateWithoutClinicInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   appointments?: Prisma.AppointmentUpdateManyWithoutServiceNestedInput
+  availableSlots?: Prisma.AvailableSlotUpdateManyWithoutServiceNestedInput
+  conversationSessions?: Prisma.ConversationSessionUpdateManyWithoutSlotServiceNestedInput
 }
 
 export type ServiceUncheckedUpdateWithoutClinicInput = {
@@ -733,6 +948,8 @@ export type ServiceUncheckedUpdateWithoutClinicInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutServiceNestedInput
+  availableSlots?: Prisma.AvailableSlotUncheckedUpdateManyWithoutServiceNestedInput
+  conversationSessions?: Prisma.ConversationSessionUncheckedUpdateManyWithoutSlotServiceNestedInput
 }
 
 export type ServiceUncheckedUpdateManyWithoutClinicInput = {
@@ -754,10 +971,14 @@ export type ServiceUncheckedUpdateManyWithoutClinicInput = {
 
 export type ServiceCountOutputType = {
   appointments: number
+  availableSlots: number
+  conversationSessions: number
 }
 
 export type ServiceCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   appointments?: boolean | ServiceCountOutputTypeCountAppointmentsArgs
+  availableSlots?: boolean | ServiceCountOutputTypeCountAvailableSlotsArgs
+  conversationSessions?: boolean | ServiceCountOutputTypeCountConversationSessionsArgs
 }
 
 /**
@@ -777,6 +998,20 @@ export type ServiceCountOutputTypeCountAppointmentsArgs<ExtArgs extends runtime.
   where?: Prisma.AppointmentWhereInput
 }
 
+/**
+ * ServiceCountOutputType without action
+ */
+export type ServiceCountOutputTypeCountAvailableSlotsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AvailableSlotWhereInput
+}
+
+/**
+ * ServiceCountOutputType without action
+ */
+export type ServiceCountOutputTypeCountConversationSessionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ConversationSessionWhereInput
+}
+
 
 export type ServiceSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -791,6 +1026,8 @@ export type ServiceSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   updatedAt?: boolean
   clinic?: boolean | Prisma.ClinicDefaultArgs<ExtArgs>
   appointments?: boolean | Prisma.Service$appointmentsArgs<ExtArgs>
+  availableSlots?: boolean | Prisma.Service$availableSlotsArgs<ExtArgs>
+  conversationSessions?: boolean | Prisma.Service$conversationSessionsArgs<ExtArgs>
   _count?: boolean | Prisma.ServiceCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["service"]>
 
@@ -839,6 +1076,8 @@ export type ServiceOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
 export type ServiceInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   clinic?: boolean | Prisma.ClinicDefaultArgs<ExtArgs>
   appointments?: boolean | Prisma.Service$appointmentsArgs<ExtArgs>
+  availableSlots?: boolean | Prisma.Service$availableSlotsArgs<ExtArgs>
+  conversationSessions?: boolean | Prisma.Service$conversationSessionsArgs<ExtArgs>
   _count?: boolean | Prisma.ServiceCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ServiceIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -853,6 +1092,8 @@ export type $ServicePayload<ExtArgs extends runtime.Types.Extensions.InternalArg
   objects: {
     clinic: Prisma.$ClinicPayload<ExtArgs>
     appointments: Prisma.$AppointmentPayload<ExtArgs>[]
+    availableSlots: Prisma.$AvailableSlotPayload<ExtArgs>[]
+    conversationSessions: Prisma.$ConversationSessionPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1261,6 +1502,8 @@ export interface Prisma__ServiceClient<T, Null = never, ExtArgs extends runtime.
   readonly [Symbol.toStringTag]: "PrismaPromise"
   clinic<T extends Prisma.ClinicDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ClinicDefaultArgs<ExtArgs>>): Prisma.Prisma__ClinicClient<runtime.Types.Result.GetResult<Prisma.$ClinicPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   appointments<T extends Prisma.Service$appointmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Service$appointmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AppointmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  availableSlots<T extends Prisma.Service$availableSlotsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Service$availableSlotsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AvailableSlotPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  conversationSessions<T extends Prisma.Service$conversationSessionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Service$conversationSessionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ConversationSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1722,6 +1965,54 @@ export type Service$appointmentsArgs<ExtArgs extends runtime.Types.Extensions.In
   take?: number
   skip?: number
   distinct?: Prisma.AppointmentScalarFieldEnum | Prisma.AppointmentScalarFieldEnum[]
+}
+
+/**
+ * Service.availableSlots
+ */
+export type Service$availableSlotsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AvailableSlot
+   */
+  select?: Prisma.AvailableSlotSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the AvailableSlot
+   */
+  omit?: Prisma.AvailableSlotOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AvailableSlotInclude<ExtArgs> | null
+  where?: Prisma.AvailableSlotWhereInput
+  orderBy?: Prisma.AvailableSlotOrderByWithRelationInput | Prisma.AvailableSlotOrderByWithRelationInput[]
+  cursor?: Prisma.AvailableSlotWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.AvailableSlotScalarFieldEnum | Prisma.AvailableSlotScalarFieldEnum[]
+}
+
+/**
+ * Service.conversationSessions
+ */
+export type Service$conversationSessionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ConversationSession
+   */
+  select?: Prisma.ConversationSessionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ConversationSession
+   */
+  omit?: Prisma.ConversationSessionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ConversationSessionInclude<ExtArgs> | null
+  where?: Prisma.ConversationSessionWhereInput
+  orderBy?: Prisma.ConversationSessionOrderByWithRelationInput | Prisma.ConversationSessionOrderByWithRelationInput[]
+  cursor?: Prisma.ConversationSessionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ConversationSessionScalarFieldEnum | Prisma.ConversationSessionScalarFieldEnum[]
 }
 
 /**

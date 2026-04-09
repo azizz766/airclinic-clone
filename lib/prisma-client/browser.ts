@@ -43,6 +43,26 @@ export type Doctor = Prisma.DoctorModel
  */
 export type Service = Prisma.ServiceModel
 /**
+ * Model AvailableSlot
+ * 
+ */
+export type AvailableSlot = Prisma.AvailableSlotModel
+/**
+ * Model ConversationSession
+ * 
+ */
+export type ConversationSession = Prisma.ConversationSessionModel
+/**
+ * Model ConversationMessage
+ * 
+ */
+export type ConversationMessage = Prisma.ConversationMessageModel
+/**
+ * Model StateTransitionLog
+ * 
+ */
+export type StateTransitionLog = Prisma.StateTransitionLogModel
+/**
  * Model Patient
  * 
  */

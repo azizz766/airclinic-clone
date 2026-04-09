@@ -1,0 +1,126 @@
+import { ConversationState } from '@/lib/prisma-client/enums'
+
+export class InvalidTransitionError extends Error {
+  constructor(public currentState: ConversationState, public trigger: string) {
+    super(`Invalid transition: ${currentState} + ${trigger}`)
+    this.name = 'InvalidTransitionError'
+  }
+}
+
+export const TERMINAL_STATES: ConversationState[] = [
+  'BOOKING_CONFIRMED',
+  'CANCELLATION_CONFIRMED',
+  'BOOKING_FAILED',
+  'EXPIRED',
+  'CORRUPTED',
+]
+
+type TransitionMap = Partial<Record<ConversationState, Partial<Record<string, ConversationState>>>>
+
+export const FSM_TRANSITIONS: TransitionMap = {
+  IDLE: {
+    MESSAGE_RECEIVED: 'LANGUAGE_DETECTION',
+  },
+  LANGUAGE_DETECTION: {
+    LANGUAGE_DETECTED:     'INTENT_DISAMBIGUATION',
+    LANGUAGE_UNDETECTABLE: 'INTENT_DISAMBIGUATION',
+  },
+  INTENT_DISAMBIGUATION: {
+    INTENT_BOOKING:     'SLOT_COLLECTION_SERVICE',
+    INTENT_CANCEL:      'CANCELLATION_PENDING',
+    INTENT_ESCALATE:    'HUMAN_ESCALATION_PENDING',
+    INTENT_SELECTED:    'SLOT_COLLECTION_SERVICE',
+    MAX_RETRIES:        'HUMAN_ESCALATION_PENDING',
+    INVALID_INPUT:      'INTENT_DISAMBIGUATION',
+  },
+  SLOT_COLLECTION_SERVICE: {
+    SLOT_VALID:   'SLOT_COLLECTION_DATE',
+    MAX_RETRIES:  'HUMAN_ESCALATION_PENDING',
+    INVALID_INPUT:'SLOT_COLLECTION_SERVICE',
+  },
+  SLOT_COLLECTION_DATE: {
+    SLOT_VALID:      'SLOT_COLLECTION_TIME',
+    NO_AVAILABILITY: 'SLOT_COLLECTION_DATE',
+    MAX_RETRIES:     'HUMAN_ESCALATION_PENDING',
+    INVALID_INPUT:   'SLOT_COLLECTION_DATE',
+  },
+  SLOT_COLLECTION_TIME: {
+    SLOT_VALID:   'SLOT_COLLECTION_PATIENT_NAME',
+    MAX_RETRIES:  'HUMAN_ESCALATION_PENDING',
+    INVALID_INPUT:'SLOT_COLLECTION_TIME',
+  },
+  SLOT_COLLECTION_PATIENT_NAME: {
+    SLOT_VALID:   'SLOT_COLLECTION_PATIENT_DOB',
+    MAX_RETRIES:  'HUMAN_ESCALATION_PENDING',
+    INVALID_INPUT:'SLOT_COLLECTION_PATIENT_NAME',
+  },
+  SLOT_COLLECTION_PATIENT_DOB: {
+    SLOT_VALID:   'SLOT_COLLECTION_PHONE_CONFIRM',
+    MAX_RETRIES:  'HUMAN_ESCALATION_PENDING',
+    INVALID_INPUT:'SLOT_COLLECTION_PATIENT_DOB',
+  },
+  SLOT_COLLECTION_PHONE_CONFIRM: {
+    CONFIRMED:    'CONFIRMATION_PENDING',
+    ALT_PHONE:    'CONFIRMATION_PENDING',
+    MAX_RETRIES:  'HUMAN_ESCALATION_PENDING',
+    INVALID_INPUT:'SLOT_COLLECTION_PHONE_CONFIRM',
+  },
+  CONFIRMATION_PENDING: {
+    AFFIRM:   'BOOKING_PROCESSING',
+    DENY:     'SLOT_COLLECTION_SERVICE',
+    TIMEOUT:  'EXPIRED',
+  },
+  BOOKING_PROCESSING: {
+    BOOKING_SUCCESS:   'BOOKING_CONFIRMED',
+    SLOT_CONFLICT:     'SLOT_COLLECTION_TIME',
+    BOOKING_ERROR:     'BOOKING_FAILED',
+    HOLD_EXPIRED:      'BOOKING_FAILED',
+  },
+  BOOKING_CONFIRMED:   {},
+  BOOKING_FAILED: {
+    MESSAGE_RECEIVED: 'IDLE',
+  },
+  CANCELLATION_PENDING: {
+    AFFIRM:   'CANCELLATION_CONFIRMED',
+    DENY:     'IDLE',
+    TIMEOUT:  'EXPIRED',
+  },
+  CANCELLATION_CONFIRMED: {},
+  HUMAN_ESCALATION_PENDING: {
+    STAFF_CLAIMED: 'HUMAN_ESCALATION_ACTIVE',
+    TIMEOUT:       'EXPIRED',
+  },
+  HUMAN_ESCALATION_ACTIVE: {
+    STAFF_RELEASED:  'IDLE',
+    STAFF_RESOLVED:  'BOOKING_CONFIRMED',
+  },
+  EXPIRED: {
+    MESSAGE_RECEIVED: 'IDLE',
+  },
+  CORRUPTED: {
+    MESSAGE_RECEIVED: 'IDLE',
+  },
+}
+
+export function transition(
+  currentState: ConversationState,
+  trigger: string
+): ConversationState {
+  const stateMap = FSM_TRANSITIONS[currentState]
+
+  if (!stateMap) {
+    throw new InvalidTransitionError(currentState, trigger)
+  }
+
+  const nextState = stateMap[trigger]
+
+  if (!nextState) {
+    throw new InvalidTransitionError(currentState, trigger)
+  }
+
+  return nextState
+}
+
+export function isTerminal(state: ConversationState): boolean {
+  return TERMINAL_STATES.includes(state)
+}

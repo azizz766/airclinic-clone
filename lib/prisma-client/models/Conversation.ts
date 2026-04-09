@@ -569,10 +569,6 @@ export type ConversationUncheckedUpdateManyWithoutPatientNestedInput = {
   deleteMany?: Prisma.ConversationScalarWhereInput | Prisma.ConversationScalarWhereInput[]
 }
 
-export type EnumChannelFieldUpdateOperationsInput = {
-  set?: $Enums.Channel
-}
-
 export type ConversationCreateNestedOneWithoutMessagesInput = {
   create?: Prisma.XOR<Prisma.ConversationCreateWithoutMessagesInput, Prisma.ConversationUncheckedCreateWithoutMessagesInput>
   connectOrCreate?: Prisma.ConversationCreateOrConnectWithoutMessagesInput

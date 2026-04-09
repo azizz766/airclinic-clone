@@ -270,6 +270,7 @@ export type MessageOrderByWithRelationInput = {
 
 export type MessageWhereUniqueInput = Prisma.AtLeast<{
   id?: string
+  externalId?: string
   AND?: Prisma.MessageWhereInput | Prisma.MessageWhereInput[]
   OR?: Prisma.MessageWhereInput[]
   NOT?: Prisma.MessageWhereInput | Prisma.MessageWhereInput[]
@@ -278,7 +279,6 @@ export type MessageWhereUniqueInput = Prisma.AtLeast<{
   senderId?: Prisma.StringNullableFilter<"Message"> | string | null
   content?: Prisma.StringFilter<"Message"> | string
   messageType?: Prisma.EnumMessageTypeFilter<"Message"> | $Enums.MessageType
-  externalId?: Prisma.StringNullableFilter<"Message"> | string | null
   status?: Prisma.EnumMessageStatusFilter<"Message"> | $Enums.MessageStatus
   sentAt?: Prisma.DateTimeNullableFilter<"Message"> | Date | string | null
   deliveredAt?: Prisma.DateTimeNullableFilter<"Message"> | Date | string | null
@@ -287,7 +287,7 @@ export type MessageWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"Message"> | Date | string
   conversation?: Prisma.XOR<Prisma.ConversationScalarRelationFilter, Prisma.ConversationWhereInput>
   sender?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
-}, "id">
+}, "id" | "externalId">
 
 export type MessageOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -577,10 +577,6 @@ export type MessageUncheckedUpdateManyWithoutConversationNestedInput = {
   update?: Prisma.MessageUpdateWithWhereUniqueWithoutConversationInput | Prisma.MessageUpdateWithWhereUniqueWithoutConversationInput[]
   updateMany?: Prisma.MessageUpdateManyWithWhereWithoutConversationInput | Prisma.MessageUpdateManyWithWhereWithoutConversationInput[]
   deleteMany?: Prisma.MessageScalarWhereInput | Prisma.MessageScalarWhereInput[]
-}
-
-export type EnumSenderTypeFieldUpdateOperationsInput = {
-  set?: $Enums.SenderType
 }
 
 export type EnumMessageTypeFieldUpdateOperationsInput = {

@@ -149,7 +149,7 @@ export async function findSafeRecentNotificationJobFallback(fromRaw: string) {
   }
 }
 
-export async function findLatestActiveAppointmentByPhone(fromRaw: string) {
+export async function findLatestActiveAppointmentByPhone(fromRaw: string, clinicId?: string) {
   const phone = normalizePhone(fromRaw)
   const last8 = phone.replace(/\D/g, '').slice(-8)
 
@@ -166,6 +166,7 @@ export async function findLatestActiveAppointmentByPhone(fromRaw: string) {
       status: {
         in: ['scheduled', 'confirmation_pending', 'confirmed'],
       },
+      ...(clinicId ? { clinicId } : {}),
       patient: {
         phone: {
           endsWith: last8,

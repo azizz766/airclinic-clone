@@ -56,6 +56,10 @@ export const ModelName = {
   Membership: 'Membership',
   Doctor: 'Doctor',
   Service: 'Service',
+  AvailableSlot: 'AvailableSlot',
+  ConversationSession: 'ConversationSession',
+  ConversationMessage: 'ConversationMessage',
+  StateTransitionLog: 'StateTransitionLog',
   Patient: 'Patient',
   Appointment: 'Appointment',
   Conversation: 'Conversation',
@@ -93,6 +97,7 @@ export const ClinicScalarFieldEnum = {
   email: 'email',
   website: 'website',
   timezone: 'timezone',
+  twilioPhoneNumber: 'twilioPhoneNumber',
   isActive: 'isActive',
   subscriptionPlan: 'subscriptionPlan',
   subscriptionExpiresAt: 'subscriptionExpiresAt',
@@ -168,6 +173,89 @@ export const ServiceScalarFieldEnum = {
 } as const
 
 export type ServiceScalarFieldEnum = (typeof ServiceScalarFieldEnum)[keyof typeof ServiceScalarFieldEnum]
+
+
+export const AvailableSlotScalarFieldEnum = {
+  id: 'id',
+  clinicId: 'clinicId',
+  serviceId: 'serviceId',
+  startTime: 'startTime',
+  endTime: 'endTime',
+  isHeld: 'isHeld',
+  heldBySessionId: 'heldBySessionId',
+  heldAt: 'heldAt',
+  isBooked: 'isBooked',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AvailableSlotScalarFieldEnum = (typeof AvailableSlotScalarFieldEnum)[keyof typeof AvailableSlotScalarFieldEnum]
+
+
+export const ConversationSessionScalarFieldEnum = {
+  id: 'id',
+  clinicId: 'clinicId',
+  phoneNumber: 'phoneNumber',
+  currentState: 'currentState',
+  previousState: 'previousState',
+  slotServiceId: 'slotServiceId',
+  slotDate: 'slotDate',
+  slotTimeId: 'slotTimeId',
+  slotPatientName: 'slotPatientName',
+  slotPatientDob: 'slotPatientDob',
+  slotPhoneConfirmed: 'slotPhoneConfirmed',
+  detectedLanguage: 'detectedLanguage',
+  retryCount: 'retryCount',
+  maxRetriesPerState: 'maxRetriesPerState',
+  invalidInputCount: 'invalidInputCount',
+  ambiguousIntents: 'ambiguousIntents',
+  escalationReason: 'escalationReason',
+  escalationClaimedBy: 'escalationClaimedBy',
+  escalationClaimedAt: 'escalationClaimedAt',
+  bookingId: 'bookingId',
+  expiresAt: 'expiresAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  resolvedAt: 'resolvedAt'
+} as const
+
+export type ConversationSessionScalarFieldEnum = (typeof ConversationSessionScalarFieldEnum)[keyof typeof ConversationSessionScalarFieldEnum]
+
+
+export const ConversationMessageScalarFieldEnum = {
+  id: 'id',
+  sessionId: 'sessionId',
+  clinicId: 'clinicId',
+  role: 'role',
+  channel: 'channel',
+  content: 'content',
+  contentNormalized: 'contentNormalized',
+  twilioMessageSid: 'twilioMessageSid',
+  twilioStatus: 'twilioStatus',
+  claudeModel: 'claudeModel',
+  claudeInputTokens: 'claudeInputTokens',
+  claudeOutputTokens: 'claudeOutputTokens',
+  claudeToolsUsed: 'claudeToolsUsed',
+  sessionStateAtSend: 'sessionStateAtSend',
+  createdAt: 'createdAt'
+} as const
+
+export type ConversationMessageScalarFieldEnum = (typeof ConversationMessageScalarFieldEnum)[keyof typeof ConversationMessageScalarFieldEnum]
+
+
+export const StateTransitionLogScalarFieldEnum = {
+  id: 'id',
+  sessionId: 'sessionId',
+  clinicId: 'clinicId',
+  fromState: 'fromState',
+  toState: 'toState',
+  triggerType: 'triggerType',
+  triggerPayload: 'triggerPayload',
+  triggeredBy: 'triggeredBy',
+  createdAt: 'createdAt'
+} as const
+
+export type StateTransitionLogScalarFieldEnum = (typeof StateTransitionLogScalarFieldEnum)[keyof typeof StateTransitionLogScalarFieldEnum]
 
 
 export const PatientScalarFieldEnum = {

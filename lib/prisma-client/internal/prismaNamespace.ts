@@ -389,6 +389,10 @@ export const ModelName = {
   Membership: 'Membership',
   Doctor: 'Doctor',
   Service: 'Service',
+  AvailableSlot: 'AvailableSlot',
+  ConversationSession: 'ConversationSession',
+  ConversationMessage: 'ConversationMessage',
+  StateTransitionLog: 'StateTransitionLog',
   Patient: 'Patient',
   Appointment: 'Appointment',
   Conversation: 'Conversation',
@@ -414,7 +418,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "clinic" | "user" | "membership" | "doctor" | "service" | "patient" | "appointment" | "conversation" | "message" | "reminder" | "notificationJob" | "campaign" | "clinicSettings" | "businessHours" | "escalationLog"
+    modelProps: "clinic" | "user" | "membership" | "doctor" | "service" | "availableSlot" | "conversationSession" | "conversationMessage" | "stateTransitionLog" | "patient" | "appointment" | "conversation" | "message" | "reminder" | "notificationJob" | "campaign" | "clinicSettings" | "businessHours" | "escalationLog"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -785,6 +789,302 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.ServiceCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.ServiceCountAggregateOutputType> | number
+        }
+      }
+    }
+    AvailableSlot: {
+      payload: Prisma.$AvailableSlotPayload<ExtArgs>
+      fields: Prisma.AvailableSlotFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.AvailableSlotFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AvailableSlotPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.AvailableSlotFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AvailableSlotPayload>
+        }
+        findFirst: {
+          args: Prisma.AvailableSlotFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AvailableSlotPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.AvailableSlotFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AvailableSlotPayload>
+        }
+        findMany: {
+          args: Prisma.AvailableSlotFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AvailableSlotPayload>[]
+        }
+        create: {
+          args: Prisma.AvailableSlotCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AvailableSlotPayload>
+        }
+        createMany: {
+          args: Prisma.AvailableSlotCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.AvailableSlotCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AvailableSlotPayload>[]
+        }
+        delete: {
+          args: Prisma.AvailableSlotDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AvailableSlotPayload>
+        }
+        update: {
+          args: Prisma.AvailableSlotUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AvailableSlotPayload>
+        }
+        deleteMany: {
+          args: Prisma.AvailableSlotDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.AvailableSlotUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.AvailableSlotUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AvailableSlotPayload>[]
+        }
+        upsert: {
+          args: Prisma.AvailableSlotUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AvailableSlotPayload>
+        }
+        aggregate: {
+          args: Prisma.AvailableSlotAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateAvailableSlot>
+        }
+        groupBy: {
+          args: Prisma.AvailableSlotGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AvailableSlotGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.AvailableSlotCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AvailableSlotCountAggregateOutputType> | number
+        }
+      }
+    }
+    ConversationSession: {
+      payload: Prisma.$ConversationSessionPayload<ExtArgs>
+      fields: Prisma.ConversationSessionFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ConversationSessionFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ConversationSessionPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ConversationSessionFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ConversationSessionPayload>
+        }
+        findFirst: {
+          args: Prisma.ConversationSessionFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ConversationSessionPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ConversationSessionFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ConversationSessionPayload>
+        }
+        findMany: {
+          args: Prisma.ConversationSessionFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ConversationSessionPayload>[]
+        }
+        create: {
+          args: Prisma.ConversationSessionCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ConversationSessionPayload>
+        }
+        createMany: {
+          args: Prisma.ConversationSessionCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ConversationSessionCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ConversationSessionPayload>[]
+        }
+        delete: {
+          args: Prisma.ConversationSessionDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ConversationSessionPayload>
+        }
+        update: {
+          args: Prisma.ConversationSessionUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ConversationSessionPayload>
+        }
+        deleteMany: {
+          args: Prisma.ConversationSessionDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ConversationSessionUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ConversationSessionUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ConversationSessionPayload>[]
+        }
+        upsert: {
+          args: Prisma.ConversationSessionUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ConversationSessionPayload>
+        }
+        aggregate: {
+          args: Prisma.ConversationSessionAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateConversationSession>
+        }
+        groupBy: {
+          args: Prisma.ConversationSessionGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ConversationSessionGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ConversationSessionCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ConversationSessionCountAggregateOutputType> | number
+        }
+      }
+    }
+    ConversationMessage: {
+      payload: Prisma.$ConversationMessagePayload<ExtArgs>
+      fields: Prisma.ConversationMessageFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ConversationMessageFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ConversationMessagePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ConversationMessageFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ConversationMessagePayload>
+        }
+        findFirst: {
+          args: Prisma.ConversationMessageFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ConversationMessagePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ConversationMessageFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ConversationMessagePayload>
+        }
+        findMany: {
+          args: Prisma.ConversationMessageFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ConversationMessagePayload>[]
+        }
+        create: {
+          args: Prisma.ConversationMessageCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ConversationMessagePayload>
+        }
+        createMany: {
+          args: Prisma.ConversationMessageCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ConversationMessageCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ConversationMessagePayload>[]
+        }
+        delete: {
+          args: Prisma.ConversationMessageDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ConversationMessagePayload>
+        }
+        update: {
+          args: Prisma.ConversationMessageUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ConversationMessagePayload>
+        }
+        deleteMany: {
+          args: Prisma.ConversationMessageDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ConversationMessageUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ConversationMessageUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ConversationMessagePayload>[]
+        }
+        upsert: {
+          args: Prisma.ConversationMessageUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ConversationMessagePayload>
+        }
+        aggregate: {
+          args: Prisma.ConversationMessageAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateConversationMessage>
+        }
+        groupBy: {
+          args: Prisma.ConversationMessageGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ConversationMessageGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ConversationMessageCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ConversationMessageCountAggregateOutputType> | number
+        }
+      }
+    }
+    StateTransitionLog: {
+      payload: Prisma.$StateTransitionLogPayload<ExtArgs>
+      fields: Prisma.StateTransitionLogFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.StateTransitionLogFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StateTransitionLogPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.StateTransitionLogFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StateTransitionLogPayload>
+        }
+        findFirst: {
+          args: Prisma.StateTransitionLogFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StateTransitionLogPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.StateTransitionLogFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StateTransitionLogPayload>
+        }
+        findMany: {
+          args: Prisma.StateTransitionLogFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StateTransitionLogPayload>[]
+        }
+        create: {
+          args: Prisma.StateTransitionLogCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StateTransitionLogPayload>
+        }
+        createMany: {
+          args: Prisma.StateTransitionLogCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.StateTransitionLogCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StateTransitionLogPayload>[]
+        }
+        delete: {
+          args: Prisma.StateTransitionLogDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StateTransitionLogPayload>
+        }
+        update: {
+          args: Prisma.StateTransitionLogUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StateTransitionLogPayload>
+        }
+        deleteMany: {
+          args: Prisma.StateTransitionLogDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.StateTransitionLogUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.StateTransitionLogUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StateTransitionLogPayload>[]
+        }
+        upsert: {
+          args: Prisma.StateTransitionLogUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StateTransitionLogPayload>
+        }
+        aggregate: {
+          args: Prisma.StateTransitionLogAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateStateTransitionLog>
+        }
+        groupBy: {
+          args: Prisma.StateTransitionLogGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.StateTransitionLogGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.StateTransitionLogCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.StateTransitionLogCountAggregateOutputType> | number
         }
       }
     }
@@ -1576,6 +1876,7 @@ export const ClinicScalarFieldEnum = {
   email: 'email',
   website: 'website',
   timezone: 'timezone',
+  twilioPhoneNumber: 'twilioPhoneNumber',
   isActive: 'isActive',
   subscriptionPlan: 'subscriptionPlan',
   subscriptionExpiresAt: 'subscriptionExpiresAt',
@@ -1651,6 +1952,89 @@ export const ServiceScalarFieldEnum = {
 } as const
 
 export type ServiceScalarFieldEnum = (typeof ServiceScalarFieldEnum)[keyof typeof ServiceScalarFieldEnum]
+
+
+export const AvailableSlotScalarFieldEnum = {
+  id: 'id',
+  clinicId: 'clinicId',
+  serviceId: 'serviceId',
+  startTime: 'startTime',
+  endTime: 'endTime',
+  isHeld: 'isHeld',
+  heldBySessionId: 'heldBySessionId',
+  heldAt: 'heldAt',
+  isBooked: 'isBooked',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AvailableSlotScalarFieldEnum = (typeof AvailableSlotScalarFieldEnum)[keyof typeof AvailableSlotScalarFieldEnum]
+
+
+export const ConversationSessionScalarFieldEnum = {
+  id: 'id',
+  clinicId: 'clinicId',
+  phoneNumber: 'phoneNumber',
+  currentState: 'currentState',
+  previousState: 'previousState',
+  slotServiceId: 'slotServiceId',
+  slotDate: 'slotDate',
+  slotTimeId: 'slotTimeId',
+  slotPatientName: 'slotPatientName',
+  slotPatientDob: 'slotPatientDob',
+  slotPhoneConfirmed: 'slotPhoneConfirmed',
+  detectedLanguage: 'detectedLanguage',
+  retryCount: 'retryCount',
+  maxRetriesPerState: 'maxRetriesPerState',
+  invalidInputCount: 'invalidInputCount',
+  ambiguousIntents: 'ambiguousIntents',
+  escalationReason: 'escalationReason',
+  escalationClaimedBy: 'escalationClaimedBy',
+  escalationClaimedAt: 'escalationClaimedAt',
+  bookingId: 'bookingId',
+  expiresAt: 'expiresAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  resolvedAt: 'resolvedAt'
+} as const
+
+export type ConversationSessionScalarFieldEnum = (typeof ConversationSessionScalarFieldEnum)[keyof typeof ConversationSessionScalarFieldEnum]
+
+
+export const ConversationMessageScalarFieldEnum = {
+  id: 'id',
+  sessionId: 'sessionId',
+  clinicId: 'clinicId',
+  role: 'role',
+  channel: 'channel',
+  content: 'content',
+  contentNormalized: 'contentNormalized',
+  twilioMessageSid: 'twilioMessageSid',
+  twilioStatus: 'twilioStatus',
+  claudeModel: 'claudeModel',
+  claudeInputTokens: 'claudeInputTokens',
+  claudeOutputTokens: 'claudeOutputTokens',
+  claudeToolsUsed: 'claudeToolsUsed',
+  sessionStateAtSend: 'sessionStateAtSend',
+  createdAt: 'createdAt'
+} as const
+
+export type ConversationMessageScalarFieldEnum = (typeof ConversationMessageScalarFieldEnum)[keyof typeof ConversationMessageScalarFieldEnum]
+
+
+export const StateTransitionLogScalarFieldEnum = {
+  id: 'id',
+  sessionId: 'sessionId',
+  clinicId: 'clinicId',
+  fromState: 'fromState',
+  toState: 'toState',
+  triggerType: 'triggerType',
+  triggerPayload: 'triggerPayload',
+  triggeredBy: 'triggeredBy',
+  createdAt: 'createdAt'
+} as const
+
+export type StateTransitionLogScalarFieldEnum = (typeof StateTransitionLogScalarFieldEnum)[keyof typeof StateTransitionLogScalarFieldEnum]
 
 
 export const PatientScalarFieldEnum = {
@@ -1998,16 +2382,58 @@ export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaMode
 
 
 /**
- * Reference to a field of type 'AppointmentStatus'
+ * Reference to a field of type 'ConversationState'
  */
-export type EnumAppointmentStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AppointmentStatus'>
+export type EnumConversationStateFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ConversationState'>
     
 
 
 /**
- * Reference to a field of type 'AppointmentStatus[]'
+ * Reference to a field of type 'ConversationState[]'
  */
-export type ListEnumAppointmentStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AppointmentStatus[]'>
+export type ListEnumConversationStateFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ConversationState[]'>
+    
+
+
+/**
+ * Reference to a field of type 'DetectedLanguage'
+ */
+export type EnumDetectedLanguageFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DetectedLanguage'>
+    
+
+
+/**
+ * Reference to a field of type 'DetectedLanguage[]'
+ */
+export type ListEnumDetectedLanguageFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DetectedLanguage[]'>
+    
+
+
+/**
+ * Reference to a field of type 'EscalationReason'
+ */
+export type EnumEscalationReasonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'EscalationReason'>
+    
+
+
+/**
+ * Reference to a field of type 'EscalationReason[]'
+ */
+export type ListEnumEscalationReasonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'EscalationReason[]'>
+    
+
+
+/**
+ * Reference to a field of type 'SenderType'
+ */
+export type EnumSenderTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SenderType'>
+    
+
+
+/**
+ * Reference to a field of type 'SenderType[]'
+ */
+export type ListEnumSenderTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SenderType[]'>
     
 
 
@@ -2026,16 +2452,16 @@ export type ListEnumChannelFieldRefInput<$PrismaModel> = FieldRefInputType<$Pris
 
 
 /**
- * Reference to a field of type 'SenderType'
+ * Reference to a field of type 'AppointmentStatus'
  */
-export type EnumSenderTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SenderType'>
+export type EnumAppointmentStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AppointmentStatus'>
     
 
 
 /**
- * Reference to a field of type 'SenderType[]'
+ * Reference to a field of type 'AppointmentStatus[]'
  */
-export type ListEnumSenderTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SenderType[]'>
+export type ListEnumAppointmentStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AppointmentStatus[]'>
     
 
 
@@ -2264,6 +2690,10 @@ export type GlobalOmitConfig = {
   membership?: Prisma.MembershipOmit
   doctor?: Prisma.DoctorOmit
   service?: Prisma.ServiceOmit
+  availableSlot?: Prisma.AvailableSlotOmit
+  conversationSession?: Prisma.ConversationSessionOmit
+  conversationMessage?: Prisma.ConversationMessageOmit
+  stateTransitionLog?: Prisma.StateTransitionLogOmit
   patient?: Prisma.PatientOmit
   appointment?: Prisma.AppointmentOmit
   conversation?: Prisma.ConversationOmit
