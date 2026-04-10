@@ -1561,6 +1561,21 @@ export async function POST(request: NextRequest) {
   const llmFallbackUsed = aiDecision.llmFallbackUsed
   const llmFallbackNotes = aiDecision.llmFallbackNotes
   const finalIntent = aiInterpretation.intent
+
+  // ── Rule-based Booking Intent Fallback ───────────────────────────────────
+  const BOOKING_KEYWORDS = [
+    'حجز', 'احجز', 'ابي احجز', 'ابغى موعد', 'ابي موعد', 'موعد جديد',
+    'ابغى احجز', 'ابغى اسوي موعد', 'ابي اسوي موعد', 'بغيت موعد',
+    'ودي احجز', 'ودي موعد', 'اريد موعد', 'اريد احجز',
+  ]
+  const isBookingKeyword = BOOKING_KEYWORDS.some(k => bodyRaw.includes(k))
+  if (isBookingKeyword && aiInterpretation.intent === 'unknown') {
+    aiInterpretation.intent = 'new_booking'
+    aiInterpretation.confidence = 'high'
+    console.log('[force-booking-intent]', { input: bodyRaw, reason: 'keyword_match' })
+  }
+  // ─────────────────────────────────────────────────────────────────────────
+
   const logFlowDecision = (actionTaken: string) => {
     console.log('[FLOW DECISION]', { finalIntent, actionTaken })
   }
