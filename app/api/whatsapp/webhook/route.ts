@@ -8,10 +8,10 @@ import {
   findSingleClinicContextFromPhone as resolveSingleClinicContextFromPhone,
 } from '@/lib/whatsapp/context-resolution'
 import { ensureConversation, persistInboundMessage } from '@/lib/whatsapp/persist-message'
-import { resolveSession, persistMessage, transitionSession } from '@/lib/whatsapp/session'
+import { resolveSession, persistMessage, transitionSession, getMessageHistory } from '@/lib/whatsapp/session'
 import { runAiInterpretationPipeline } from '@/lib/whatsapp/ai-interpretation-pipeline'
 import { sendWhatsAppWithOutcomeLogging } from '@/lib/whatsapp/delivery-outcome'
-import { routeMessage } from '@/lib/whatsapp/message-router'
+import { routeMessageWithContext } from '@/lib/whatsapp/context-router'
 import {
   buildDoctorAvailableSlots,
   isDateWithinDoctorAvailability,
@@ -1551,22 +1551,38 @@ export async function POST(request: NextRequest) {
     return twilioXmlResponse()
   }
 
-  // ── FSM-aware message routing ─────────────────────────────────────────────
-  const routeDecision = routeMessage(
-    fsmSession?.currentState ?? null,
-    false // human_active already handled above with early return
-  )
+  // ── Context-Aware AI Routing ──────────────────────────────────────────────
+  if (fsmSession && !['IDLE', 'EXPIRED', 'CORRUPTED', 'BOOKING_CONFIRMED', 'CANCELLATION_CONFIRMED', 'BOOKING_FAILED'].includes(fsmSession.currentState)) {
+    try {
+      const messageHistory = await getMessageHistory(fsmSession.id)
+      const collectedSlots: Record<string, string | null> = {
+        'الخدمة': fsmSession.slotServiceId ?? null,
+        'التاريخ': fsmSession.slotDate?.toISOString().split('T')[0] ?? null,
+        'اسم المريض': fsmSession.slotPatientName ?? null,
+      }
 
-  if (routeDecision.action === 'human_suppressed') {
-    return twilioXmlResponse()
-  }
+      const contextDecision = await routeMessageWithContext(
+        bodyRaw,
+        messageHistory.map(m => ({ role: m.role, content: m.content })),
+        fsmSession.currentState,
+        collectedSlots
+      )
 
-  if (routeDecision.action === 'fsm_slot_input') {
-    // Patient is mid-booking — treat any message as slot input for current state
-    // Pass through to existing session handlers below (normalizedReply logic)
-    // Override intent to prevent AI from hijacking the flow
-    aiInterpretation.intent = 'unknown'
-    aiInterpretation.confidence = 'high'
+      console.log('[whatsapp-webhook] context-router', {
+        fsmState: fsmSession.currentState,
+        intent: contextDecision.intent,
+        confidence: contextDecision.confidence,
+        shouldContinueFlow: contextDecision.shouldContinueFlow,
+        reasoning: contextDecision.reasoning,
+      })
+
+      if (contextDecision.shouldContinueFlow && contextDecision.intent !== 'new_booking' && contextDecision.intent !== 'cancel_booking') {
+        aiInterpretation.intent = 'unknown'
+        aiInterpretation.confidence = 'high'
+      }
+    } catch (contextErr) {
+      console.error('[whatsapp-webhook] context-router-failed', { error: contextErr })
+    }
   }
   // ─────────────────────────────────────────────────────────────────────────
 
