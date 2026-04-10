@@ -1708,6 +1708,40 @@ export async function POST(request: NextRequest) {
     return twilioXmlMessageResponse('أكيد، أبشرك 🙏\nوش تفضّل؟\n- حجز موعد جديد\n- معرفة الأوقات المتاحة\n- تغيير موعد موجود')
   }
 
+  // ── FSM Date/Time Collection Handler ─────────────────────────────────────
+  if (
+    fsmSession &&
+    fsmSession.currentState === 'SLOT_COLLECTION_DATE' &&
+    fsmSession.slotServiceId &&
+    inboundContext?.clinicId
+  ) {
+    console.log('[fsm-slot-date]', { input: bodyRaw, sessionId: fsmSession.id })
+
+    // Pass bodyRaw directly into the existing booking options builder
+    // by injecting it as the AI interpretation fields
+    aiInterpretation.intent = 'new_booking'
+    aiInterpretation.confidence = 'high'
+
+    // Keep pendingServiceId available for the downstream booking flow
+    // by saving it in the old session format so existing logic picks it up
+    await saveConversationSession({
+      flow: 'booking_flow',
+      clinicId: inboundContext.clinicId,
+      appointmentId: null,
+      notificationJobId: null,
+      phoneNormalized: normalizePhone(from),
+      providerMessageId: null,
+      options: [],
+      pendingServiceId: fsmSession.slotServiceId,
+    })
+
+    console.log('[fsm-slot-date-bridged]', {
+      serviceId: fsmSession.slotServiceId,
+      input: bodyRaw,
+    })
+  }
+  // ─────────────────────────────────────────────────────────────────────────
+
   const conversationSession = await readActiveConversationSession({
     fromRaw: from,
     repliedSid: originalRepliedSid,
