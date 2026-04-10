@@ -1786,28 +1786,36 @@ export async function POST(request: NextRequest) {
   ) {
     console.log('[fsm-slot-date]', { input: bodyRaw, sessionId: fsmSession.id })
 
-    // Pass bodyRaw directly into the existing booking options builder
-    // by injecting it as the AI interpretation fields
-    aiInterpretation.intent = 'new_booking'
-    aiInterpretation.confidence = 'high'
+    // User is in time selection — if they send text (not a number),
+    // treat it as a new time preference and re-run slot search
+    if (numericSelection === null && fsmSession.slotServiceId) {
+      // Bridge into booking flow with the stored service
+      aiInterpretation.intent = 'new_booking'
+      aiInterpretation.confidence = 'high'
 
-    // Keep pendingServiceId available for the downstream booking flow
-    // by saving it in the old session format so existing logic picks it up
-    await saveConversationSession({
-      flow: 'booking_flow',
-      clinicId: inboundContext.clinicId,
-      appointmentId: null,
-      notificationJobId: null,
-      phoneNormalized: normalizePhone(from),
-      providerMessageId: null,
-      options: [],
-      pendingServiceId: fsmSession.slotServiceId,
-    })
+      await saveConversationSession({
+        flow: 'booking_flow',
+        clinicId: inboundContext.clinicId,
+        appointmentId: null,
+        notificationJobId: null,
+        phoneNormalized: normalizePhone(from),
+        providerMessageId: null,
+        options: [],
+        pendingServiceId: fsmSession.slotServiceId,
+      })
 
-    console.log('[fsm-slot-date-bridged]', {
-      serviceId: fsmSession.slotServiceId,
-      input: bodyRaw,
-    })
+      await transitionSession(
+        fsmSession.id,
+        inboundContext.clinicId,
+        'SLOT_COLLECTION_DATE',
+        'SLOT_VALID'
+      )
+
+      console.log('[fsm-slot-date-bridged]', {
+        serviceId: fsmSession.slotServiceId,
+        input: bodyRaw,
+      })
+    }
   }
   // ─────────────────────────────────────────────────────────────────────────
 

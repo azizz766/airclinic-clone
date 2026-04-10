@@ -3,5 +3,8 @@
   "javascript.tsserver.experimental.enableProjectDiagnostics": false,
   "problems.exclude": {
     "**/node_modules/**": true
+  },
+  "chat.tools.terminal.autoApprove": {
+    "git push": true
   }
 }
