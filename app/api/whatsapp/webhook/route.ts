@@ -1665,7 +1665,11 @@ export async function POST(request: NextRequest) {
     }
   }
 
-  if (normalizedReply === null && aiInterpretation.intent === 'unknown') {
+  if (
+    normalizedReply === null &&
+    aiInterpretation.intent === 'unknown' &&
+    (!fsmSession || !ACTIVE_FLOW_STATES.includes(fsmSession.currentState))
+  ) {
     // ── Smart clarification based on patient context ───────────────────────
     if (inboundContext?.clinicId && inboundContext?.patientId) {
       try {
