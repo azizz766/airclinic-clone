@@ -13,12 +13,24 @@ import { runAiInterpretationPipeline } from '@/lib/whatsapp/ai-interpretation-pi
 import { sendWhatsAppWithOutcomeLogging } from '@/lib/whatsapp/delivery-outcome'
 import { routeMessageWithContext } from '@/lib/whatsapp/context-router'
 import { resolvePatientContext } from '@/lib/whatsapp/patient-context'
+import { parseNumericInput } from '@/lib/whatsapp/numeric-parser'
 import {
   buildDoctorAvailableSlots,
   isDateWithinDoctorAvailability,
 } from '@/lib/doctor-availability'
 
 
+
+const ACTIVE_FLOW_STATES = [
+  'SLOT_COLLECTION_SERVICE',
+  'SLOT_COLLECTION_DATE',
+  'SLOT_COLLECTION_TIME',
+  'SLOT_COLLECTION_PATIENT_NAME',
+  'SLOT_COLLECTION_PATIENT_DOB',
+  'SLOT_COLLECTION_PHONE_CONFIRM',
+  'CONFIRMATION_PENDING',
+  'CANCELLATION_PENDING',
+]
 
 function twilioXmlResponse() {
   return new NextResponse('<?xml version="1.0" encoding="UTF-8"?><Response></Response>', {
@@ -1490,6 +1502,53 @@ export async function POST(request: NextRequest) {
   }
   // ─────────────────────────────────────────────────────────────────────────────
 
+  // ── Numeric Selection Parser ──────────────────────────────────────────────
+  let numericSelection: number | null = null
+  if (fsmSession) {
+    numericSelection = parseNumericInput(bodyRaw)
+    if (numericSelection !== null) {
+      console.log('[numeric-selection]', {
+        input: bodyRaw,
+        parsedIndex: numericSelection,
+        fsmState: fsmSession.currentState,
+      })
+    }
+  }
+
+  // Handle numeric service selection
+  if (
+    fsmSession?.currentState === 'SLOT_COLLECTION_SERVICE' &&
+    numericSelection !== null &&
+    inboundContext?.clinicId
+  ) {
+    const services = await prisma.service.findMany({
+      where: { clinicId: inboundContext.clinicId, isActive: true },
+      orderBy: { name: 'asc' },
+      take: 10,
+    })
+    const index = numericSelection === -1 ? services.length - 1 : numericSelection - 1
+    const selected = services[index]
+    if (selected) {
+      console.log('[numeric-selection-service]', { serviceName: selected.name, serviceId: selected.id })
+      await prisma.conversationSession.update({
+        where: { id: fsmSession.id },
+        data: { slotServiceId: selected.id },
+      })
+      await transitionSession(fsmSession.id, inboundContext.clinicId, 'SLOT_COLLECTION_DATE', 'SLOT_VALID')
+      await persistMessage({
+        sessionId: fsmSession.id,
+        clinicId: inboundContext.clinicId,
+        role: 'assistant',
+        channel: 'whatsapp',
+        content: 'وش الوقت المناسب لك؟ (صباح / مساء / يوم معين)',
+        currentState: 'SLOT_COLLECTION_DATE',
+      })
+      clearTimeout(slowProcessingTimer)
+      return twilioXmlMessageResponse('وش الوقت المناسب لك؟ (صباح / مساء / يوم معين)')
+    }
+  }
+  // ─────────────────────────────────────────────────────────────────────────
+
   const aiDecision = await runAiInterpretationPipeline({
     bodyRaw,
     from,
@@ -1586,6 +1645,25 @@ export async function POST(request: NextRequest) {
     }
   }
   // ─────────────────────────────────────────────────────────────────────────
+
+  if (fsmSession && ACTIVE_FLOW_STATES.includes(fsmSession.currentState)) {
+    const OVERRIDE_INTENTS = ['cancel', 'cancel_booking', 'new_booking', 'reschedule']
+    if (!OVERRIDE_INTENTS.includes(aiInterpretation.intent)) {
+      const suppressedIntent = aiInterpretation.intent
+      aiInterpretation.intent = 'unknown'
+      aiInterpretation.confidence = 'high'
+      console.log('[whatsapp-webhook] flow-priority-guard', {
+        fsmState: fsmSession.currentState,
+        suppressedIntent,
+        action: 'flow_continues',
+      })
+    } else {
+      console.log('[whatsapp-webhook] flow-override-intent-allowed', {
+        fsmState: fsmSession.currentState,
+        intent: aiInterpretation.intent,
+      })
+    }
+  }
 
   if (normalizedReply === null && aiInterpretation.intent === 'unknown') {
     // ── Smart clarification based on patient context ───────────────────────
