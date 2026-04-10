@@ -11,6 +11,7 @@ import { ensureConversation, persistInboundMessage } from '@/lib/whatsapp/persis
 import { resolveSession, persistMessage, transitionSession } from '@/lib/whatsapp/session'
 import { runAiInterpretationPipeline } from '@/lib/whatsapp/ai-interpretation-pipeline'
 import { sendWhatsAppWithOutcomeLogging } from '@/lib/whatsapp/delivery-outcome'
+import { routeMessage } from '@/lib/whatsapp/message-router'
 import {
   buildDoctorAvailableSlots,
   isDateWithinDoctorAvailability,
@@ -1549,6 +1550,25 @@ export async function POST(request: NextRequest) {
     // ─────────────────────────────────────────────────────────────────────────
     return twilioXmlResponse()
   }
+
+  // ── FSM-aware message routing ─────────────────────────────────────────────
+  const routeDecision = routeMessage(
+    fsmSession?.currentState ?? null,
+    false // human_active already handled above with early return
+  )
+
+  if (routeDecision.action === 'human_suppressed') {
+    return twilioXmlResponse()
+  }
+
+  if (routeDecision.action === 'fsm_slot_input') {
+    // Patient is mid-booking — treat any message as slot input for current state
+    // Pass through to existing session handlers below (normalizedReply logic)
+    // Override intent to prevent AI from hijacking the flow
+    aiInterpretation.intent = 'unknown'
+    aiInterpretation.confidence = 'high'
+  }
+  // ─────────────────────────────────────────────────────────────────────────
 
   if (normalizedReply === null && aiInterpretation.intent === 'unknown') {
     logFlowDecision('clarify_vague_intent')
