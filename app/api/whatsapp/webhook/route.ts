@@ -1574,6 +1574,60 @@ export async function POST(request: NextRequest) {
     aiInterpretation.confidence = 'high'
     console.log('[force-booking-intent]', { input: bodyRaw, reason: 'keyword_match' })
   }
+
+  // ── Direct booking flow entry (no FSM session) ────────────────────────────
+  if (
+    aiInterpretation.intent === 'new_booking' &&
+    (!fsmSession || ['IDLE', 'EXPIRED', 'CORRUPTED', 'BOOKING_CONFIRMED', 'CANCELLATION_CONFIRMED', 'BOOKING_FAILED'].includes(fsmSession.currentState)) &&
+    inboundContext?.clinicId
+  ) {
+    const activeServices = await prisma.service.findMany({
+      where: { clinicId: inboundContext.clinicId, isActive: true },
+      orderBy: { name: 'asc' },
+      take: 10,
+      select: { id: true, name: true },
+    })
+
+    if (activeServices.length > 0) {
+      const serviceListMsg = [
+        'اختَر الخدمة المطلوبة:',
+        ...activeServices.map((svc, idx) => `${idx + 1}) ${svc.name}`),
+      ].join('\n')
+
+      if (fsmSession) {
+        await transitionSession(fsmSession.id, inboundContext.clinicId, 'SLOT_COLLECTION_SERVICE', 'INTENT_BOOKING')
+        await persistMessage({
+          sessionId: fsmSession.id,
+          clinicId: inboundContext.clinicId,
+          role: 'assistant',
+          channel: 'whatsapp',
+          content: serviceListMsg,
+          currentState: 'SLOT_COLLECTION_SERVICE',
+        })
+      }
+
+      await saveConversationSession({
+        flow: 'service_selection_flow',
+        clinicId: inboundContext.clinicId,
+        appointmentId: null,
+        notificationJobId: null,
+        phoneNormalized: normalizePhone(from),
+        providerMessageId: null,
+        options: activeServices.map((svc, idx) => ({
+          index: idx + 1,
+          label: svc.name,
+          serviceId: svc.id,
+          scheduledAtIso: '',
+          doctorName: '',
+          doctorId: '',
+        })),
+      })
+
+      console.log('[direct-booking-entry]', { clinicId: inboundContext.clinicId, serviceCount: activeServices.length })
+      clearTimeout(slowProcessingTimer)
+      return twilioXmlMessageResponse(serviceListMsg)
+    }
+  }
   // ─────────────────────────────────────────────────────────────────────────
 
   const logFlowDecision = (actionTaken: string) => {
