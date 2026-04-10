@@ -12,6 +12,7 @@ import { resolveSession, persistMessage, transitionSession, getMessageHistory } 
 import { runAiInterpretationPipeline } from '@/lib/whatsapp/ai-interpretation-pipeline'
 import { sendWhatsAppWithOutcomeLogging } from '@/lib/whatsapp/delivery-outcome'
 import { routeMessageWithContext } from '@/lib/whatsapp/context-router'
+import { resolvePatientContext } from '@/lib/whatsapp/patient-context'
 import {
   buildDoctorAvailableSlots,
   isDateWithinDoctorAvailability,
@@ -1587,6 +1588,40 @@ export async function POST(request: NextRequest) {
   // ─────────────────────────────────────────────────────────────────────────
 
   if (normalizedReply === null && aiInterpretation.intent === 'unknown') {
+    // ── Smart clarification based on patient context ───────────────────────
+    if (inboundContext?.clinicId && inboundContext?.patientId) {
+      try {
+        const patientCtx = await resolvePatientContext(
+          normalizePhone(from),
+          inboundContext.clinicId
+        )
+
+        if (patientCtx.hasUpcomingAppointment && patientCtx.upcomingAppointment) {
+          const appt = patientCtx.upcomingAppointment
+          const apptDate = appt.scheduledAt.toLocaleDateString('ar-SA', {
+            weekday: 'long',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            timeZone: 'Asia/Riyadh',
+          })
+          const apptTime = appt.scheduledAt.toLocaleTimeString('ar-SA', {
+            hour: '2-digit',
+            minute: '2-digit',
+            timeZone: 'Asia/Riyadh',
+          })
+          const doctorPart = appt.doctorName ? ` مع ${appt.doctorName}` : ''
+
+          logFlowDecision('smart_clarify_with_appointment_context')
+          return twilioXmlMessageResponse(
+            `عندك موعد قائم ${apptDate} الساعة ${apptTime}${doctorPart}.\n\nتقصد تعدّله، أو تبغى حجز موعد إضافي؟`
+          )
+        }
+      } catch (ctxErr) {
+        console.error('[whatsapp-webhook] patient-context-failed', { error: ctxErr })
+      }
+    }
+
     logFlowDecision('clarify_vague_intent')
     return twilioXmlMessageResponse('أكيد، أبشرك 🙏\nوش تفضّل؟\n- حجز موعد جديد\n- معرفة الأوقات المتاحة\n- تغيير موعد موجود')
   }
