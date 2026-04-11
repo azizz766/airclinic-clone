@@ -1594,36 +1594,16 @@ export async function POST(request: NextRequest) {
         ...activeServices.map((svc, idx) => `${idx + 1}) ${svc.name}`),
       ].join('\n')
 
-      if (fsmSession) {
-        await transitionSession(fsmSession.id, inboundContext.clinicId, 'SLOT_COLLECTION_SERVICE', 'INTENT_BOOKING')
-        await persistMessage({
-          sessionId: fsmSession.id,
-          clinicId: inboundContext.clinicId,
-          role: 'assistant',
-          channel: 'whatsapp',
-          content: serviceListMsg,
-          currentState: 'SLOT_COLLECTION_SERVICE',
-        })
-      }
-
-      await saveConversationSession({
-        flow: 'service_selection_flow',
+      const sessionForBooking = fsmSession ?? await resolveSession(normalizePhone(from), inboundContext.clinicId)
+      await transitionSession(sessionForBooking.id, inboundContext.clinicId, 'SLOT_COLLECTION_SERVICE', 'INTENT_BOOKING')
+      await persistMessage({
+        sessionId: sessionForBooking.id,
         clinicId: inboundContext.clinicId,
-        appointmentId: null,
-        notificationJobId: null,
-        phoneNormalized: normalizePhone(from),
-        providerMessageId: null,
-        options: activeServices.map((svc, idx) => ({
-          index: idx + 1,
-          label: svc.name,
-          serviceId: svc.id,
-          scheduledAtIso: '',
-          doctorName: '',
-          doctorId: '',
-        })),
+        role: 'assistant',
+        channel: 'whatsapp',
+        content: serviceListMsg,
+        currentState: 'SLOT_COLLECTION_SERVICE',
       })
-
-      console.log('[direct-booking-entry]', { clinicId: inboundContext.clinicId, serviceCount: activeServices.length })
       clearTimeout(slowProcessingTimer)
       return twilioXmlMessageResponse(serviceListMsg)
     }
