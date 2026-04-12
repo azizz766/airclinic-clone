@@ -809,6 +809,9 @@ async function handleConfirmation(
         })
       : 'غير محدد'
 
+    // Auto-reset session to IDLE after booking
+    await new Promise(resolve => setTimeout(resolve, 2000))
+    await transitionSession(session.id, clinicId, 'IDLE', 'SESSION_RESET_AFTER_BOOKING')
     return {
       reply:
         '✅ *تم الحجز بنجاح!*\n\n' +
@@ -991,6 +994,9 @@ async function handleCancellationConfirm(
     'AFFIRM',
   )
 
+  // Auto-reset session to IDLE after cancellation
+  await new Promise(resolve => setTimeout(resolve, 2000))
+  await transitionSession(session.id, clinicId, 'IDLE', 'SESSION_RESET_AFTER_CANCELLATION')
   return {
     reply:
       'تم إلغاء حجزك بنجاح ✅\n' +
