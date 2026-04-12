@@ -1,4 +1,6 @@
+
 import { prisma } from '@/lib/prisma'
+import { regenerateAppointmentReminderJobs } from '@/lib/notifications/reminder-jobs'
 
 export class SlotConflictError extends Error {
   constructor() {
@@ -104,6 +106,37 @@ export async function processBooking(sessionId: string) {
             triggerType: 'BOOKING_SUCCESS',
           },
         })
+
+        // Fetch clinic and service for reminder job
+        const clinic = await tx.clinic.findUniqueOrThrow({
+          where: { id: session.clinicId },
+          select: { name: true },
+        })
+        const service = await tx.service.findUniqueOrThrow({
+          where: { id: session.slotServiceId! },
+          select: { name: true },
+        })
+
+        try {
+          await regenerateAppointmentReminderJobs(tx, {
+            clinicId: session.clinicId,
+            clinic: { name: clinic.name },
+            appointmentId: appointment.id,
+            appointmentScheduledAt: slot.startTime,
+            patient: {
+              id: patient.id,
+              firstName: patient.firstName,
+              lastName: patient.lastName,
+              phone: patient.phone,
+              email: patient.email ?? null,
+            },
+            doctor: { firstName: '', lastName: '' },
+            service: { name: service.name },
+            includeImmediateConfirmation: false,
+          })
+        } catch (reminderErr) {
+          console.error('[booking-handler] reminder generation failed', { reminderErr })
+        }
 
         return appointment
       })
