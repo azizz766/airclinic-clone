@@ -128,17 +128,19 @@ export async function POST(
       return NextResponse.json({ error: 'Please select a different time slot' }, { status: 400 })
     }
 
-    const doctor = await prisma.doctor.findFirst({
-      where: {
-        id: appointment.doctorId,
-        clinicId: appointment.clinicId,
-        isActive: true,
-      },
-      select: {
-        id: true,
-        availabilitySchedule: true,
-      },
-    })
+    const doctor = appointment.doctorId
+      ? await prisma.doctor.findFirst({
+          where: {
+            id: appointment.doctorId,
+            clinicId: appointment.clinicId,
+            isActive: true,
+          },
+          select: {
+            id: true,
+            availabilitySchedule: true,
+          },
+        })
+      : null
 
     if (!doctor) {
       return NextResponse.json({ error: 'Doctor not found for this clinic' }, { status: 400 })
@@ -242,7 +244,7 @@ export async function POST(
         appointmentId: updatedAppointment.id,
         appointmentScheduledAt: updatedAppointment.scheduledAt,
         patient: appointmentData.patient,
-        doctor: appointmentData.doctor,
+        doctor: appointmentData.doctor ?? { firstName: '', lastName: '' },
         service: appointmentData.service,
         includeImmediateConfirmation: true,
       })

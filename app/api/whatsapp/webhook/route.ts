@@ -41,11 +41,13 @@ function twilioXmlResponse() {
   })
 }
 
-function twilioXmlMessageResponse(message: string) {
+      const options: RescheduleOption[] = []
+      const now = new Date()
+
   const escaped = message
-    .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
+  for (let dayOffset = 0; dayOffset < 14 && options.length < 3; dayOffset += 1) {
 
   return new NextResponse(`<?xml version="1.0" encoding="UTF-8"?><Response><Message>${escaped}</Message></Response>`, {
     status: 200,
@@ -744,7 +746,7 @@ async function buildNewBookingOptions(params: {
   preferredPeriod: PreferredPeriod | null
   doctorHint: string | null
 }) {
-  const service = params.serviceId
+    const service = params.serviceId
     ? await prisma.service.findFirst({
         where: { id: params.serviceId, clinicId: params.clinicId, isActive: true },
         select: { durationMinutes: true, id: true, name: true },
@@ -2114,7 +2116,7 @@ export async function POST(request: NextRequest) {
     const available = isDateWithinDoctorAvailability(
       newScheduledAt,
       appointment.durationMinutes,
-      appointment.doctor.availabilitySchedule
+      appointment.doctor?.availabilitySchedule
     )
 
     if (!available) {
@@ -2189,7 +2191,7 @@ export async function POST(request: NextRequest) {
       'تمام 👍 تغيّر موعدك',
       '',
       `📅 ${formatOptionLabel(newScheduledAt)}`,
-      `👨‍⚕️ ${appointment.doctor.firstName} ${appointment.doctor.lastName}`,
+      `👨‍⚕️ ${appointment.doctor?.firstName ?? ''} ${appointment.doctor?.lastName ?? ''}`,
       '',
       'إذا مناسبك تمام، وإذا تبغى نغيّره مرة ثانية اكتب: غير الموعد',
     ].join('\n')
@@ -2844,11 +2846,11 @@ export async function POST(request: NextRequest) {
   const options = await buildNextRescheduleOptions({
     id: appointmentForReschedule.id,
     clinicId: appointmentForReschedule.clinicId,
-    doctorId: appointmentForReschedule.doctorId,
+    doctorId: appointmentForReschedule.doctorId ?? '',
     durationMinutes: appointmentForReschedule.durationMinutes,
     scheduledAt: appointmentForReschedule.scheduledAt,
     doctor: {
-      availabilitySchedule: appointmentForReschedule.doctor.availabilitySchedule,
+      availabilitySchedule: appointmentForReschedule.doctor?.availabilitySchedule,
     },
   })
 
@@ -2919,8 +2921,8 @@ export async function POST(request: NextRequest) {
       index: opt.index,
       scheduledAtIso: opt.scheduledAtIso,
       label: opt.label,
-      doctorName: `${appointmentForReschedule.doctor.firstName} ${appointmentForReschedule.doctor.lastName}`,
-      doctorId: appointmentForReschedule.doctorId,
+      doctorName: `${appointmentForReschedule.doctor?.firstName ?? ''} ${appointmentForReschedule.doctor?.lastName ?? ''}`,
+      doctorId: appointmentForReschedule.doctorId ?? '',
       serviceId: appointmentForReschedule.serviceId,
     })),
   })

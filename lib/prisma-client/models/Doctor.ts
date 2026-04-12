@@ -496,9 +496,9 @@ export type DoctorMinOrderByAggregateInput = {
   updatedAt?: Prisma.SortOrder
 }
 
-export type DoctorScalarRelationFilter = {
-  is?: Prisma.DoctorWhereInput
-  isNot?: Prisma.DoctorWhereInput
+export type DoctorNullableScalarRelationFilter = {
+  is?: Prisma.DoctorWhereInput | null
+  isNot?: Prisma.DoctorWhereInput | null
 }
 
 export type DoctorCreateNestedManyWithoutClinicInput = {
@@ -591,10 +591,12 @@ export type DoctorCreateNestedOneWithoutAppointmentsInput = {
   connect?: Prisma.DoctorWhereUniqueInput
 }
 
-export type DoctorUpdateOneRequiredWithoutAppointmentsNestedInput = {
+export type DoctorUpdateOneWithoutAppointmentsNestedInput = {
   create?: Prisma.XOR<Prisma.DoctorCreateWithoutAppointmentsInput, Prisma.DoctorUncheckedCreateWithoutAppointmentsInput>
   connectOrCreate?: Prisma.DoctorCreateOrConnectWithoutAppointmentsInput
   upsert?: Prisma.DoctorUpsertWithoutAppointmentsInput
+  disconnect?: Prisma.DoctorWhereInput | boolean
+  delete?: Prisma.DoctorWhereInput | boolean
   connect?: Prisma.DoctorWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.DoctorUpdateToOneWithWhereWithoutAppointmentsInput, Prisma.DoctorUpdateWithoutAppointmentsInput>, Prisma.DoctorUncheckedUpdateWithoutAppointmentsInput>
 }

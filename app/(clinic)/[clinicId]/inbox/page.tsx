@@ -1000,8 +1000,8 @@ export default async function InboxPage({ params, searchParams }: InboxPageProps
     ? {
         id: sidebarAppointmentRaw.id,
         scheduledAtIso: sidebarAppointmentRaw.scheduledAt.toISOString(),
-        doctorId: sidebarAppointmentRaw.doctor.id,
-        doctorName: `${sidebarAppointmentRaw.doctor.firstName} ${sidebarAppointmentRaw.doctor.lastName}`.trim() || 'Unknown doctor',
+        doctorId: sidebarAppointmentRaw.doctor?.id ?? '',
+        doctorName: `${sidebarAppointmentRaw.doctor?.firstName ?? ''} ${sidebarAppointmentRaw.doctor?.lastName ?? ''}`.trim() || 'Unknown doctor',
         serviceId: sidebarAppointmentRaw.service.id,
         serviceName: sidebarAppointmentRaw.service.name,
         status: sidebarAppointmentRaw.status,

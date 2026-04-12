@@ -414,7 +414,7 @@ model Appointment {
   id                 String            @id @default(cuid())
   clinicId           String
   patientId          String
-  doctorId           String
+  doctorId           String?
   serviceId          String
   scheduledAt        DateTime
   durationMinutes    Int
@@ -435,7 +435,7 @@ model Appointment {
   // Relations
   clinic          Clinic        @relation(fields: [clinicId], references: [id], onDelete: Cascade)
   patient         Patient       @relation(fields: [patientId], references: [id], onDelete: Cascade)
-  doctor          Doctor        @relation(fields: [doctorId], references: [id], onDelete: Cascade)
+  doctor          Doctor?       @relation(fields: [doctorId], references: [id], onDelete: SetNull)
   service         Service       @relation(fields: [serviceId], references: [id], onDelete: Cascade)
   creator         User          @relation(fields: [createdBy], references: [id])
   rescheduledFrom Appointment?  @relation("AppointmentReschedule", fields: [rescheduledFromId], references: [id])

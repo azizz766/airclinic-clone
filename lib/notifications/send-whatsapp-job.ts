@@ -130,7 +130,7 @@ export async function sendWhatsAppNotificationJob(input: SendWhatsAppNotificatio
   }
 
   const patientName = `${notificationJob.patient.firstName} ${notificationJob.patient.lastName}`.trim()
-  const doctorName = `${notificationJob.appointment.doctor.firstName} ${notificationJob.appointment.doctor.lastName}`.trim()
+  const doctorName = `${notificationJob.appointment.doctor?.firstName ?? ''} ${notificationJob.appointment.doctor?.lastName ?? ''}`.trim()
   const template = notificationJob.reminder.template ?? 'appointment_reminder_24h'
 
   const senderInput = {

@@ -234,8 +234,8 @@ export default async function AppointmentsPage() {
                               <p className="text-sm font-medium text-gray-900">
                                 {formatTime(appointment.scheduledAt)} - {appointment.patient.firstName} {appointment.patient.lastName}
                               </p>
-                              <p className="text-sm text-gray-600">
-                                Dr. {appointment.doctor.firstName} {appointment.doctor.lastName} · {appointment.service.name}
+                                <p className="text-sm text-gray-600">
+                                  Dr. {(appointment.doctor?.firstName ?? '')} {(appointment.doctor?.lastName ?? '')} · {appointment.service.name}
                               </p>
                             </div>
 
@@ -302,7 +302,7 @@ export default async function AppointmentsPage() {
                             {appointment.patient.firstName} {appointment.patient.lastName}
                           </td>
                           <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-600">
-                            {appointment.doctor.firstName} {appointment.doctor.lastName}
+                             {(appointment.doctor?.firstName ?? '')} {(appointment.doctor?.lastName ?? '')}
                           </td>
                           <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-600">{appointment.service.name}</td>
                           <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-600">{formatDateTime(appointment.scheduledAt)}</td>
@@ -358,7 +358,7 @@ export default async function AppointmentsPage() {
                             {reminder.appointment.patient.firstName} {reminder.appointment.patient.lastName}
                           </td>
                           <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-600">
-                            {reminder.appointment.doctor.firstName} {reminder.appointment.doctor.lastName}
+                            {(reminder.appointment.doctor?.firstName ?? '')} {(reminder.appointment.doctor?.lastName ?? '')}
                           </td>
                           <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-600">{reminder.appointment.service.name}</td>
                           <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-600">{reminder.type}</td>

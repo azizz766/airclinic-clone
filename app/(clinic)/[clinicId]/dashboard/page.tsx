@@ -533,7 +533,7 @@ export default async function ClinicDashboardPage({ params, searchParams }: Dash
                       {apt.patient.firstName} {apt.patient.lastName}
                     </td>
                     <td className="px-5 py-3 whitespace-nowrap text-stone-700">
-                      {apt.doctor.firstName} {apt.doctor.lastName}
+                      {(apt.doctor?.firstName ?? '')} {(apt.doctor?.lastName ?? '')}
                     </td>
                     <td className="px-5 py-3 whitespace-nowrap text-stone-700">{apt.service.name}</td>
                     <td className="px-5 py-3 whitespace-nowrap text-stone-700">{formatDateTime(apt.scheduledAt)}</td>

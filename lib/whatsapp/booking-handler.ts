@@ -82,7 +82,6 @@ export async function processBooking(sessionId: string) {
             clinicId: session.clinicId,
             patientId: patient.id,
             serviceId: session.slotServiceId!,
-            doctorId: slot.serviceId,
             scheduledAt: slot.startTime,
             durationMinutes: Math.round(
               (slot.endTime.getTime() - slot.startTime.getTime()) / 60000

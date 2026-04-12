@@ -125,7 +125,7 @@ export default async function RemindersPage({ params }: RemindersPageProps) {
                           {reminder.appointment.patient.firstName} {reminder.appointment.patient.lastName}
                         </td>
                         <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-600">
-                          {reminder.appointment.doctor.firstName} {reminder.appointment.doctor.lastName}
+                          {(reminder.appointment.doctor?.firstName ?? '')} {(reminder.appointment.doctor?.lastName ?? '')}
                         </td>
                         <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-600">{reminder.type}</td>
                       </tr>

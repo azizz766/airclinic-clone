@@ -192,7 +192,7 @@ export default async function AppointmentsPage({ params, searchParams }: Appoint
                       {appointment.patient.firstName} {appointment.patient.lastName}
                     </td>
                     <td className="whitespace-nowrap px-4 py-3 text-sm text-gray-700">
-                      {appointment.doctor.firstName} {appointment.doctor.lastName}
+                      {(appointment.doctor?.firstName ?? '')} {(appointment.doctor?.lastName ?? '')}
                     </td>
                     <td className="whitespace-nowrap px-4 py-3 text-sm text-gray-700">{appointment.service.name}</td>
                     <td className="whitespace-nowrap px-4 py-3 text-sm text-gray-700">{formatDateTime(appointment.scheduledAt)}</td>
