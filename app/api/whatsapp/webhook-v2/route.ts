@@ -422,6 +422,7 @@ async function handleDateCollection(
     ? (hourRanges[interpretation.preferredPeriod] ?? [0, 23])
     : [0, 23]
 
+
   const slots = await prisma.availableSlot.findMany({
     where: {
       clinicId,
@@ -432,17 +433,23 @@ async function handleDateCollection(
     },
     select: { id: true, startTime: true },
     orderBy: { startTime: 'asc' },
-    take: 10, // fetch more, filter in-memory
+    take: 20, // fetch more, filter in-memory
   })
 
+  // Day-of-week filter
+  let dayFiltered = slots
+  if (interpretation.preferredDayOfWeek != null) {
+    dayFiltered = dayFiltered.filter((s) => s.startTime.getDay() === interpretation.preferredDayOfWeek)
+  }
+
   // Apply hour-of-day filter in-memory to avoid DB timezone arithmetic
-  const filtered = slots.filter((s) => {
+  const filtered = dayFiltered.filter((s) => {
     const h = s.startTime.getHours()
     return h >= hourStart && h <= hourEnd
   })
 
   // Fall back to unfiltered if preference yields nothing
-  const candidates = filtered.length > 0 ? filtered.slice(0, 5) : slots.slice(0, 5)
+  const candidates = filtered.length > 0 ? filtered.slice(0, 5) : dayFiltered.slice(0, 5)
 
   if (candidates.length === 0) {
     const escalation = await checkRetryLimit(session, clinicId)
