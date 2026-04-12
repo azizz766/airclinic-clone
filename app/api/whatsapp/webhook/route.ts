@@ -2844,7 +2844,7 @@ export async function POST(request: NextRequest) {
   const options = await buildNextRescheduleOptions({
     id: appointmentForReschedule.id,
     clinicId: appointmentForReschedule.clinicId,
-    doctorId: appointmentForReschedule.doctorId,
+    doctorId: appointmentForReschedule.doctorId ?? '',
     durationMinutes: appointmentForReschedule.durationMinutes,
     scheduledAt: appointmentForReschedule.scheduledAt,
     doctor: {
