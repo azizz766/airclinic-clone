@@ -195,6 +195,22 @@ export async function POST(request: NextRequest) {
     let confirmationJobId: string | null = null
 
     const appointment = await prisma.$transaction(async (tx) => {
+      // Find and lock matching available slot
+      const matchingSlot = await tx.availableSlot.findFirst({
+        where: {
+          clinicId,
+          serviceId: service.id,
+          startTime: scheduledAtDate,
+          isBooked: false,
+        },
+      })
+      if (matchingSlot) {
+        await tx.availableSlot.update({
+          where: { id: matchingSlot.id },
+          data: { isBooked: true, isHeld: false, heldBySessionId: null, heldAt: null },
+        })
+      }
+
       const createdAppointment = await tx.appointment.create({
         data: {
           clinicId,

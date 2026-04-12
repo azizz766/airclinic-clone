@@ -170,6 +170,22 @@ export async function POST(request: NextRequest) {
       const patientPhone = typeof patient.phone === 'string' ? patient.phone.trim() : ''
       const shouldRequestConfirmation = Boolean(patientPhone) && scheduledAtDate.getTime() > now.getTime()
 
+      // Find and lock matching available slot
+      const matchingSlot = await tx.availableSlot.findFirst({
+        where: {
+          clinicId,
+          serviceId: service.id,
+          startTime: scheduledAtDate,
+          isBooked: false,
+        },
+      })
+      if (matchingSlot) {
+        await tx.availableSlot.update({
+          where: { id: matchingSlot.id },
+          data: { isBooked: true, isHeld: false, heldBySessionId: null, heldAt: null },
+        })
+      }
+
       const createdAppointment = await tx.appointment.create({
         data: {
           clinicId,
