@@ -134,6 +134,9 @@ function isEscalationRequest(text: string): boolean {
 }
 
 function parseDateInput(raw: string): Date | null {
+
+  // Normalize Arabic-Indic digits to Latin
+  raw = raw.replace(/[٠-٩]/g, (d) => String(d.charCodeAt(0) - 0x0660))
   const t = raw.trim()
 
   // DD/MM/YYYY or DD-MM-YYYY
