@@ -370,7 +370,7 @@ async function handleServiceSelection(
 
   return {
     reply:
-      `ممتاز! اخترت: *${selected.nameAr}* ✅\n\n` +
+      `ممتاز! اخترت: *${selected.name}* ✅\n\n` +
       'متى تفضل الموعد؟\n' +
       'مثال: بكره، هذا الأسبوع، صباح الثلاثاء، مساء',
   }
