@@ -428,7 +428,7 @@ model Appointment {
   notes              String?
   cancellationReason String?
   rescheduledFromId  String?
-  createdBy          String
+  createdBy          String?
   createdAt          DateTime          @default(now())
   updatedAt          DateTime          @updatedAt
 
@@ -437,7 +437,7 @@ model Appointment {
   patient         Patient       @relation(fields: [patientId], references: [id], onDelete: Cascade)
   doctor          Doctor?       @relation(fields: [doctorId], references: [id], onDelete: SetNull)
   service         Service       @relation(fields: [serviceId], references: [id], onDelete: Cascade)
-  creator         User          @relation(fields: [createdBy], references: [id])
+  creator         User?         @relation(fields: [createdBy], references: [id], onDelete: SetNull)
   rescheduledFrom Appointment?  @relation("AppointmentReschedule", fields: [rescheduledFromId], references: [id])
   rescheduledTo   Appointment[] @relation("AppointmentReschedule")
   reminders       Reminder[]

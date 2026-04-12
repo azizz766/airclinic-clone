@@ -533,10 +533,12 @@ export type UserCreateNestedOneWithoutAppointmentsInput = {
   connect?: Prisma.UserWhereUniqueInput
 }
 
-export type UserUpdateOneRequiredWithoutAppointmentsNestedInput = {
+export type UserUpdateOneWithoutAppointmentsNestedInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutAppointmentsInput, Prisma.UserUncheckedCreateWithoutAppointmentsInput>
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutAppointmentsInput
   upsert?: Prisma.UserUpsertWithoutAppointmentsInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
   connect?: Prisma.UserWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutAppointmentsInput, Prisma.UserUpdateWithoutAppointmentsInput>, Prisma.UserUncheckedUpdateWithoutAppointmentsInput>
 }

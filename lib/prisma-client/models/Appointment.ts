@@ -287,7 +287,7 @@ export type AppointmentGroupByOutputType = {
   notes: string | null
   cancellationReason: string | null
   rescheduledFromId: string | null
-  createdBy: string
+  createdBy: string | null
   createdAt: Date
   updatedAt: Date
   _count: AppointmentCountAggregateOutputType | null
@@ -333,14 +333,14 @@ export type AppointmentWhereInput = {
   notes?: Prisma.StringNullableFilter<"Appointment"> | string | null
   cancellationReason?: Prisma.StringNullableFilter<"Appointment"> | string | null
   rescheduledFromId?: Prisma.StringNullableFilter<"Appointment"> | string | null
-  createdBy?: Prisma.StringFilter<"Appointment"> | string
+  createdBy?: Prisma.StringNullableFilter<"Appointment"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Appointment"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Appointment"> | Date | string
   clinic?: Prisma.XOR<Prisma.ClinicScalarRelationFilter, Prisma.ClinicWhereInput>
   patient?: Prisma.XOR<Prisma.PatientScalarRelationFilter, Prisma.PatientWhereInput>
   doctor?: Prisma.XOR<Prisma.DoctorNullableScalarRelationFilter, Prisma.DoctorWhereInput> | null
   service?: Prisma.XOR<Prisma.ServiceScalarRelationFilter, Prisma.ServiceWhereInput>
-  creator?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  creator?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   rescheduledFrom?: Prisma.XOR<Prisma.AppointmentNullableScalarRelationFilter, Prisma.AppointmentWhereInput> | null
   rescheduledTo?: Prisma.AppointmentListRelationFilter
   reminders?: Prisma.ReminderListRelationFilter
@@ -365,7 +365,7 @@ export type AppointmentOrderByWithRelationInput = {
   notes?: Prisma.SortOrderInput | Prisma.SortOrder
   cancellationReason?: Prisma.SortOrderInput | Prisma.SortOrder
   rescheduledFromId?: Prisma.SortOrderInput | Prisma.SortOrder
-  createdBy?: Prisma.SortOrder
+  createdBy?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   clinic?: Prisma.ClinicOrderByWithRelationInput
@@ -400,14 +400,14 @@ export type AppointmentWhereUniqueInput = Prisma.AtLeast<{
   notes?: Prisma.StringNullableFilter<"Appointment"> | string | null
   cancellationReason?: Prisma.StringNullableFilter<"Appointment"> | string | null
   rescheduledFromId?: Prisma.StringNullableFilter<"Appointment"> | string | null
-  createdBy?: Prisma.StringFilter<"Appointment"> | string
+  createdBy?: Prisma.StringNullableFilter<"Appointment"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Appointment"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Appointment"> | Date | string
   clinic?: Prisma.XOR<Prisma.ClinicScalarRelationFilter, Prisma.ClinicWhereInput>
   patient?: Prisma.XOR<Prisma.PatientScalarRelationFilter, Prisma.PatientWhereInput>
   doctor?: Prisma.XOR<Prisma.DoctorNullableScalarRelationFilter, Prisma.DoctorWhereInput> | null
   service?: Prisma.XOR<Prisma.ServiceScalarRelationFilter, Prisma.ServiceWhereInput>
-  creator?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  creator?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   rescheduledFrom?: Prisma.XOR<Prisma.AppointmentNullableScalarRelationFilter, Prisma.AppointmentWhereInput> | null
   rescheduledTo?: Prisma.AppointmentListRelationFilter
   reminders?: Prisma.ReminderListRelationFilter
@@ -432,7 +432,7 @@ export type AppointmentOrderByWithAggregationInput = {
   notes?: Prisma.SortOrderInput | Prisma.SortOrder
   cancellationReason?: Prisma.SortOrderInput | Prisma.SortOrder
   rescheduledFromId?: Prisma.SortOrderInput | Prisma.SortOrder
-  createdBy?: Prisma.SortOrder
+  createdBy?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.AppointmentCountOrderByAggregateInput
@@ -463,7 +463,7 @@ export type AppointmentScalarWhereWithAggregatesInput = {
   notes?: Prisma.StringNullableWithAggregatesFilter<"Appointment"> | string | null
   cancellationReason?: Prisma.StringNullableWithAggregatesFilter<"Appointment"> | string | null
   rescheduledFromId?: Prisma.StringNullableWithAggregatesFilter<"Appointment"> | string | null
-  createdBy?: Prisma.StringWithAggregatesFilter<"Appointment"> | string
+  createdBy?: Prisma.StringNullableWithAggregatesFilter<"Appointment"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Appointment"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Appointment"> | Date | string
 }
@@ -487,7 +487,7 @@ export type AppointmentCreateInput = {
   patient: Prisma.PatientCreateNestedOneWithoutAppointmentsInput
   doctor?: Prisma.DoctorCreateNestedOneWithoutAppointmentsInput
   service: Prisma.ServiceCreateNestedOneWithoutAppointmentsInput
-  creator: Prisma.UserCreateNestedOneWithoutAppointmentsInput
+  creator?: Prisma.UserCreateNestedOneWithoutAppointmentsInput
   rescheduledFrom?: Prisma.AppointmentCreateNestedOneWithoutRescheduledToInput
   rescheduledTo?: Prisma.AppointmentCreateNestedManyWithoutRescheduledFromInput
   reminders?: Prisma.ReminderCreateNestedManyWithoutAppointmentInput
@@ -512,7 +512,7 @@ export type AppointmentUncheckedCreateInput = {
   notes?: string | null
   cancellationReason?: string | null
   rescheduledFromId?: string | null
-  createdBy: string
+  createdBy?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   rescheduledTo?: Prisma.AppointmentUncheckedCreateNestedManyWithoutRescheduledFromInput
@@ -539,7 +539,7 @@ export type AppointmentUpdateInput = {
   patient?: Prisma.PatientUpdateOneRequiredWithoutAppointmentsNestedInput
   doctor?: Prisma.DoctorUpdateOneWithoutAppointmentsNestedInput
   service?: Prisma.ServiceUpdateOneRequiredWithoutAppointmentsNestedInput
-  creator?: Prisma.UserUpdateOneRequiredWithoutAppointmentsNestedInput
+  creator?: Prisma.UserUpdateOneWithoutAppointmentsNestedInput
   rescheduledFrom?: Prisma.AppointmentUpdateOneWithoutRescheduledToNestedInput
   rescheduledTo?: Prisma.AppointmentUpdateManyWithoutRescheduledFromNestedInput
   reminders?: Prisma.ReminderUpdateManyWithoutAppointmentNestedInput
@@ -564,7 +564,7 @@ export type AppointmentUncheckedUpdateInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   cancellationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rescheduledFromId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdBy?: Prisma.StringFieldUpdateOperationsInput | string
+  createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   rescheduledTo?: Prisma.AppointmentUncheckedUpdateManyWithoutRescheduledFromNestedInput
@@ -590,7 +590,7 @@ export type AppointmentCreateManyInput = {
   notes?: string | null
   cancellationReason?: string | null
   rescheduledFromId?: string | null
-  createdBy: string
+  createdBy?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -630,7 +630,7 @@ export type AppointmentUncheckedUpdateManyInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   cancellationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rescheduledFromId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdBy?: Prisma.StringFieldUpdateOperationsInput | string
+  createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1050,7 +1050,7 @@ export type AppointmentCreateWithoutClinicInput = {
   patient: Prisma.PatientCreateNestedOneWithoutAppointmentsInput
   doctor?: Prisma.DoctorCreateNestedOneWithoutAppointmentsInput
   service: Prisma.ServiceCreateNestedOneWithoutAppointmentsInput
-  creator: Prisma.UserCreateNestedOneWithoutAppointmentsInput
+  creator?: Prisma.UserCreateNestedOneWithoutAppointmentsInput
   rescheduledFrom?: Prisma.AppointmentCreateNestedOneWithoutRescheduledToInput
   rescheduledTo?: Prisma.AppointmentCreateNestedManyWithoutRescheduledFromInput
   reminders?: Prisma.ReminderCreateNestedManyWithoutAppointmentInput
@@ -1074,7 +1074,7 @@ export type AppointmentUncheckedCreateWithoutClinicInput = {
   notes?: string | null
   cancellationReason?: string | null
   rescheduledFromId?: string | null
-  createdBy: string
+  createdBy?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   rescheduledTo?: Prisma.AppointmentUncheckedCreateNestedManyWithoutRescheduledFromInput
@@ -1129,7 +1129,7 @@ export type AppointmentScalarWhereInput = {
   notes?: Prisma.StringNullableFilter<"Appointment"> | string | null
   cancellationReason?: Prisma.StringNullableFilter<"Appointment"> | string | null
   rescheduledFromId?: Prisma.StringNullableFilter<"Appointment"> | string | null
-  createdBy?: Prisma.StringFilter<"Appointment"> | string
+  createdBy?: Prisma.StringNullableFilter<"Appointment"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Appointment"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Appointment"> | Date | string
 }
@@ -1228,7 +1228,7 @@ export type AppointmentCreateWithoutDoctorInput = {
   clinic: Prisma.ClinicCreateNestedOneWithoutAppointmentsInput
   patient: Prisma.PatientCreateNestedOneWithoutAppointmentsInput
   service: Prisma.ServiceCreateNestedOneWithoutAppointmentsInput
-  creator: Prisma.UserCreateNestedOneWithoutAppointmentsInput
+  creator?: Prisma.UserCreateNestedOneWithoutAppointmentsInput
   rescheduledFrom?: Prisma.AppointmentCreateNestedOneWithoutRescheduledToInput
   rescheduledTo?: Prisma.AppointmentCreateNestedManyWithoutRescheduledFromInput
   reminders?: Prisma.ReminderCreateNestedManyWithoutAppointmentInput
@@ -1252,7 +1252,7 @@ export type AppointmentUncheckedCreateWithoutDoctorInput = {
   notes?: string | null
   cancellationReason?: string | null
   rescheduledFromId?: string | null
-  createdBy: string
+  createdBy?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   rescheduledTo?: Prisma.AppointmentUncheckedCreateNestedManyWithoutRescheduledFromInput
@@ -1304,7 +1304,7 @@ export type AppointmentCreateWithoutServiceInput = {
   clinic: Prisma.ClinicCreateNestedOneWithoutAppointmentsInput
   patient: Prisma.PatientCreateNestedOneWithoutAppointmentsInput
   doctor?: Prisma.DoctorCreateNestedOneWithoutAppointmentsInput
-  creator: Prisma.UserCreateNestedOneWithoutAppointmentsInput
+  creator?: Prisma.UserCreateNestedOneWithoutAppointmentsInput
   rescheduledFrom?: Prisma.AppointmentCreateNestedOneWithoutRescheduledToInput
   rescheduledTo?: Prisma.AppointmentCreateNestedManyWithoutRescheduledFromInput
   reminders?: Prisma.ReminderCreateNestedManyWithoutAppointmentInput
@@ -1328,7 +1328,7 @@ export type AppointmentUncheckedCreateWithoutServiceInput = {
   notes?: string | null
   cancellationReason?: string | null
   rescheduledFromId?: string | null
-  createdBy: string
+  createdBy?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   rescheduledTo?: Prisma.AppointmentUncheckedCreateNestedManyWithoutRescheduledFromInput
@@ -1380,7 +1380,7 @@ export type AppointmentCreateWithoutPatientInput = {
   clinic: Prisma.ClinicCreateNestedOneWithoutAppointmentsInput
   doctor?: Prisma.DoctorCreateNestedOneWithoutAppointmentsInput
   service: Prisma.ServiceCreateNestedOneWithoutAppointmentsInput
-  creator: Prisma.UserCreateNestedOneWithoutAppointmentsInput
+  creator?: Prisma.UserCreateNestedOneWithoutAppointmentsInput
   rescheduledFrom?: Prisma.AppointmentCreateNestedOneWithoutRescheduledToInput
   rescheduledTo?: Prisma.AppointmentCreateNestedManyWithoutRescheduledFromInput
   reminders?: Prisma.ReminderCreateNestedManyWithoutAppointmentInput
@@ -1404,7 +1404,7 @@ export type AppointmentUncheckedCreateWithoutPatientInput = {
   notes?: string | null
   cancellationReason?: string | null
   rescheduledFromId?: string | null
-  createdBy: string
+  createdBy?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   rescheduledTo?: Prisma.AppointmentUncheckedCreateNestedManyWithoutRescheduledFromInput
@@ -1457,7 +1457,7 @@ export type AppointmentCreateWithoutRescheduledToInput = {
   patient: Prisma.PatientCreateNestedOneWithoutAppointmentsInput
   doctor?: Prisma.DoctorCreateNestedOneWithoutAppointmentsInput
   service: Prisma.ServiceCreateNestedOneWithoutAppointmentsInput
-  creator: Prisma.UserCreateNestedOneWithoutAppointmentsInput
+  creator?: Prisma.UserCreateNestedOneWithoutAppointmentsInput
   rescheduledFrom?: Prisma.AppointmentCreateNestedOneWithoutRescheduledToInput
   reminders?: Prisma.ReminderCreateNestedManyWithoutAppointmentInput
   notificationJobs?: Prisma.NotificationJobCreateNestedManyWithoutAppointmentInput
@@ -1481,7 +1481,7 @@ export type AppointmentUncheckedCreateWithoutRescheduledToInput = {
   notes?: string | null
   cancellationReason?: string | null
   rescheduledFromId?: string | null
-  createdBy: string
+  createdBy?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   reminders?: Prisma.ReminderUncheckedCreateNestedManyWithoutAppointmentInput
@@ -1512,7 +1512,7 @@ export type AppointmentCreateWithoutRescheduledFromInput = {
   patient: Prisma.PatientCreateNestedOneWithoutAppointmentsInput
   doctor?: Prisma.DoctorCreateNestedOneWithoutAppointmentsInput
   service: Prisma.ServiceCreateNestedOneWithoutAppointmentsInput
-  creator: Prisma.UserCreateNestedOneWithoutAppointmentsInput
+  creator?: Prisma.UserCreateNestedOneWithoutAppointmentsInput
   rescheduledTo?: Prisma.AppointmentCreateNestedManyWithoutRescheduledFromInput
   reminders?: Prisma.ReminderCreateNestedManyWithoutAppointmentInput
   notificationJobs?: Prisma.NotificationJobCreateNestedManyWithoutAppointmentInput
@@ -1535,7 +1535,7 @@ export type AppointmentUncheckedCreateWithoutRescheduledFromInput = {
   lastPatientMessageAt?: Date | string | null
   notes?: string | null
   cancellationReason?: string | null
-  createdBy: string
+  createdBy?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   rescheduledTo?: Prisma.AppointmentUncheckedCreateNestedManyWithoutRescheduledFromInput
@@ -1583,7 +1583,7 @@ export type AppointmentUpdateWithoutRescheduledToInput = {
   patient?: Prisma.PatientUpdateOneRequiredWithoutAppointmentsNestedInput
   doctor?: Prisma.DoctorUpdateOneWithoutAppointmentsNestedInput
   service?: Prisma.ServiceUpdateOneRequiredWithoutAppointmentsNestedInput
-  creator?: Prisma.UserUpdateOneRequiredWithoutAppointmentsNestedInput
+  creator?: Prisma.UserUpdateOneWithoutAppointmentsNestedInput
   rescheduledFrom?: Prisma.AppointmentUpdateOneWithoutRescheduledToNestedInput
   reminders?: Prisma.ReminderUpdateManyWithoutAppointmentNestedInput
   notificationJobs?: Prisma.NotificationJobUpdateManyWithoutAppointmentNestedInput
@@ -1607,7 +1607,7 @@ export type AppointmentUncheckedUpdateWithoutRescheduledToInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   cancellationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rescheduledFromId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdBy?: Prisma.StringFieldUpdateOperationsInput | string
+  createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   reminders?: Prisma.ReminderUncheckedUpdateManyWithoutAppointmentNestedInput
@@ -1649,7 +1649,7 @@ export type AppointmentCreateWithoutRemindersInput = {
   patient: Prisma.PatientCreateNestedOneWithoutAppointmentsInput
   doctor?: Prisma.DoctorCreateNestedOneWithoutAppointmentsInput
   service: Prisma.ServiceCreateNestedOneWithoutAppointmentsInput
-  creator: Prisma.UserCreateNestedOneWithoutAppointmentsInput
+  creator?: Prisma.UserCreateNestedOneWithoutAppointmentsInput
   rescheduledFrom?: Prisma.AppointmentCreateNestedOneWithoutRescheduledToInput
   rescheduledTo?: Prisma.AppointmentCreateNestedManyWithoutRescheduledFromInput
   notificationJobs?: Prisma.NotificationJobCreateNestedManyWithoutAppointmentInput
@@ -1673,7 +1673,7 @@ export type AppointmentUncheckedCreateWithoutRemindersInput = {
   notes?: string | null
   cancellationReason?: string | null
   rescheduledFromId?: string | null
-  createdBy: string
+  createdBy?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   rescheduledTo?: Prisma.AppointmentUncheckedCreateNestedManyWithoutRescheduledFromInput
@@ -1715,7 +1715,7 @@ export type AppointmentUpdateWithoutRemindersInput = {
   patient?: Prisma.PatientUpdateOneRequiredWithoutAppointmentsNestedInput
   doctor?: Prisma.DoctorUpdateOneWithoutAppointmentsNestedInput
   service?: Prisma.ServiceUpdateOneRequiredWithoutAppointmentsNestedInput
-  creator?: Prisma.UserUpdateOneRequiredWithoutAppointmentsNestedInput
+  creator?: Prisma.UserUpdateOneWithoutAppointmentsNestedInput
   rescheduledFrom?: Prisma.AppointmentUpdateOneWithoutRescheduledToNestedInput
   rescheduledTo?: Prisma.AppointmentUpdateManyWithoutRescheduledFromNestedInput
   notificationJobs?: Prisma.NotificationJobUpdateManyWithoutAppointmentNestedInput
@@ -1739,7 +1739,7 @@ export type AppointmentUncheckedUpdateWithoutRemindersInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   cancellationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rescheduledFromId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdBy?: Prisma.StringFieldUpdateOperationsInput | string
+  createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   rescheduledTo?: Prisma.AppointmentUncheckedUpdateManyWithoutRescheduledFromNestedInput
@@ -1765,7 +1765,7 @@ export type AppointmentCreateWithoutNotificationJobsInput = {
   patient: Prisma.PatientCreateNestedOneWithoutAppointmentsInput
   doctor?: Prisma.DoctorCreateNestedOneWithoutAppointmentsInput
   service: Prisma.ServiceCreateNestedOneWithoutAppointmentsInput
-  creator: Prisma.UserCreateNestedOneWithoutAppointmentsInput
+  creator?: Prisma.UserCreateNestedOneWithoutAppointmentsInput
   rescheduledFrom?: Prisma.AppointmentCreateNestedOneWithoutRescheduledToInput
   rescheduledTo?: Prisma.AppointmentCreateNestedManyWithoutRescheduledFromInput
   reminders?: Prisma.ReminderCreateNestedManyWithoutAppointmentInput
@@ -1789,7 +1789,7 @@ export type AppointmentUncheckedCreateWithoutNotificationJobsInput = {
   notes?: string | null
   cancellationReason?: string | null
   rescheduledFromId?: string | null
-  createdBy: string
+  createdBy?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   rescheduledTo?: Prisma.AppointmentUncheckedCreateNestedManyWithoutRescheduledFromInput
@@ -1831,7 +1831,7 @@ export type AppointmentUpdateWithoutNotificationJobsInput = {
   patient?: Prisma.PatientUpdateOneRequiredWithoutAppointmentsNestedInput
   doctor?: Prisma.DoctorUpdateOneWithoutAppointmentsNestedInput
   service?: Prisma.ServiceUpdateOneRequiredWithoutAppointmentsNestedInput
-  creator?: Prisma.UserUpdateOneRequiredWithoutAppointmentsNestedInput
+  creator?: Prisma.UserUpdateOneWithoutAppointmentsNestedInput
   rescheduledFrom?: Prisma.AppointmentUpdateOneWithoutRescheduledToNestedInput
   rescheduledTo?: Prisma.AppointmentUpdateManyWithoutRescheduledFromNestedInput
   reminders?: Prisma.ReminderUpdateManyWithoutAppointmentNestedInput
@@ -1855,7 +1855,7 @@ export type AppointmentUncheckedUpdateWithoutNotificationJobsInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   cancellationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rescheduledFromId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdBy?: Prisma.StringFieldUpdateOperationsInput | string
+  createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   rescheduledTo?: Prisma.AppointmentUncheckedUpdateManyWithoutRescheduledFromNestedInput
@@ -1879,7 +1879,7 @@ export type AppointmentCreateManyClinicInput = {
   notes?: string | null
   cancellationReason?: string | null
   rescheduledFromId?: string | null
-  createdBy: string
+  createdBy?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1902,7 +1902,7 @@ export type AppointmentUpdateWithoutClinicInput = {
   patient?: Prisma.PatientUpdateOneRequiredWithoutAppointmentsNestedInput
   doctor?: Prisma.DoctorUpdateOneWithoutAppointmentsNestedInput
   service?: Prisma.ServiceUpdateOneRequiredWithoutAppointmentsNestedInput
-  creator?: Prisma.UserUpdateOneRequiredWithoutAppointmentsNestedInput
+  creator?: Prisma.UserUpdateOneWithoutAppointmentsNestedInput
   rescheduledFrom?: Prisma.AppointmentUpdateOneWithoutRescheduledToNestedInput
   rescheduledTo?: Prisma.AppointmentUpdateManyWithoutRescheduledFromNestedInput
   reminders?: Prisma.ReminderUpdateManyWithoutAppointmentNestedInput
@@ -1926,7 +1926,7 @@ export type AppointmentUncheckedUpdateWithoutClinicInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   cancellationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rescheduledFromId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdBy?: Prisma.StringFieldUpdateOperationsInput | string
+  createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   rescheduledTo?: Prisma.AppointmentUncheckedUpdateManyWithoutRescheduledFromNestedInput
@@ -1951,7 +1951,7 @@ export type AppointmentUncheckedUpdateManyWithoutClinicInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   cancellationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rescheduledFromId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdBy?: Prisma.StringFieldUpdateOperationsInput | string
+  createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -2067,7 +2067,7 @@ export type AppointmentCreateManyDoctorInput = {
   notes?: string | null
   cancellationReason?: string | null
   rescheduledFromId?: string | null
-  createdBy: string
+  createdBy?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -2090,7 +2090,7 @@ export type AppointmentUpdateWithoutDoctorInput = {
   clinic?: Prisma.ClinicUpdateOneRequiredWithoutAppointmentsNestedInput
   patient?: Prisma.PatientUpdateOneRequiredWithoutAppointmentsNestedInput
   service?: Prisma.ServiceUpdateOneRequiredWithoutAppointmentsNestedInput
-  creator?: Prisma.UserUpdateOneRequiredWithoutAppointmentsNestedInput
+  creator?: Prisma.UserUpdateOneWithoutAppointmentsNestedInput
   rescheduledFrom?: Prisma.AppointmentUpdateOneWithoutRescheduledToNestedInput
   rescheduledTo?: Prisma.AppointmentUpdateManyWithoutRescheduledFromNestedInput
   reminders?: Prisma.ReminderUpdateManyWithoutAppointmentNestedInput
@@ -2114,7 +2114,7 @@ export type AppointmentUncheckedUpdateWithoutDoctorInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   cancellationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rescheduledFromId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdBy?: Prisma.StringFieldUpdateOperationsInput | string
+  createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   rescheduledTo?: Prisma.AppointmentUncheckedUpdateManyWithoutRescheduledFromNestedInput
@@ -2139,7 +2139,7 @@ export type AppointmentUncheckedUpdateManyWithoutDoctorInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   cancellationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rescheduledFromId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdBy?: Prisma.StringFieldUpdateOperationsInput | string
+  createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -2161,7 +2161,7 @@ export type AppointmentCreateManyServiceInput = {
   notes?: string | null
   cancellationReason?: string | null
   rescheduledFromId?: string | null
-  createdBy: string
+  createdBy?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -2184,7 +2184,7 @@ export type AppointmentUpdateWithoutServiceInput = {
   clinic?: Prisma.ClinicUpdateOneRequiredWithoutAppointmentsNestedInput
   patient?: Prisma.PatientUpdateOneRequiredWithoutAppointmentsNestedInput
   doctor?: Prisma.DoctorUpdateOneWithoutAppointmentsNestedInput
-  creator?: Prisma.UserUpdateOneRequiredWithoutAppointmentsNestedInput
+  creator?: Prisma.UserUpdateOneWithoutAppointmentsNestedInput
   rescheduledFrom?: Prisma.AppointmentUpdateOneWithoutRescheduledToNestedInput
   rescheduledTo?: Prisma.AppointmentUpdateManyWithoutRescheduledFromNestedInput
   reminders?: Prisma.ReminderUpdateManyWithoutAppointmentNestedInput
@@ -2208,7 +2208,7 @@ export type AppointmentUncheckedUpdateWithoutServiceInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   cancellationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rescheduledFromId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdBy?: Prisma.StringFieldUpdateOperationsInput | string
+  createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   rescheduledTo?: Prisma.AppointmentUncheckedUpdateManyWithoutRescheduledFromNestedInput
@@ -2233,7 +2233,7 @@ export type AppointmentUncheckedUpdateManyWithoutServiceInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   cancellationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rescheduledFromId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdBy?: Prisma.StringFieldUpdateOperationsInput | string
+  createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -2255,7 +2255,7 @@ export type AppointmentCreateManyPatientInput = {
   notes?: string | null
   cancellationReason?: string | null
   rescheduledFromId?: string | null
-  createdBy: string
+  createdBy?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -2278,7 +2278,7 @@ export type AppointmentUpdateWithoutPatientInput = {
   clinic?: Prisma.ClinicUpdateOneRequiredWithoutAppointmentsNestedInput
   doctor?: Prisma.DoctorUpdateOneWithoutAppointmentsNestedInput
   service?: Prisma.ServiceUpdateOneRequiredWithoutAppointmentsNestedInput
-  creator?: Prisma.UserUpdateOneRequiredWithoutAppointmentsNestedInput
+  creator?: Prisma.UserUpdateOneWithoutAppointmentsNestedInput
   rescheduledFrom?: Prisma.AppointmentUpdateOneWithoutRescheduledToNestedInput
   rescheduledTo?: Prisma.AppointmentUpdateManyWithoutRescheduledFromNestedInput
   reminders?: Prisma.ReminderUpdateManyWithoutAppointmentNestedInput
@@ -2302,7 +2302,7 @@ export type AppointmentUncheckedUpdateWithoutPatientInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   cancellationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rescheduledFromId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdBy?: Prisma.StringFieldUpdateOperationsInput | string
+  createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   rescheduledTo?: Prisma.AppointmentUncheckedUpdateManyWithoutRescheduledFromNestedInput
@@ -2327,7 +2327,7 @@ export type AppointmentUncheckedUpdateManyWithoutPatientInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   cancellationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rescheduledFromId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdBy?: Prisma.StringFieldUpdateOperationsInput | string
+  createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -2349,7 +2349,7 @@ export type AppointmentCreateManyRescheduledFromInput = {
   lastPatientMessageAt?: Date | string | null
   notes?: string | null
   cancellationReason?: string | null
-  createdBy: string
+  createdBy?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -2373,7 +2373,7 @@ export type AppointmentUpdateWithoutRescheduledFromInput = {
   patient?: Prisma.PatientUpdateOneRequiredWithoutAppointmentsNestedInput
   doctor?: Prisma.DoctorUpdateOneWithoutAppointmentsNestedInput
   service?: Prisma.ServiceUpdateOneRequiredWithoutAppointmentsNestedInput
-  creator?: Prisma.UserUpdateOneRequiredWithoutAppointmentsNestedInput
+  creator?: Prisma.UserUpdateOneWithoutAppointmentsNestedInput
   rescheduledTo?: Prisma.AppointmentUpdateManyWithoutRescheduledFromNestedInput
   reminders?: Prisma.ReminderUpdateManyWithoutAppointmentNestedInput
   notificationJobs?: Prisma.NotificationJobUpdateManyWithoutAppointmentNestedInput
@@ -2396,7 +2396,7 @@ export type AppointmentUncheckedUpdateWithoutRescheduledFromInput = {
   lastPatientMessageAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   cancellationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdBy?: Prisma.StringFieldUpdateOperationsInput | string
+  createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   rescheduledTo?: Prisma.AppointmentUncheckedUpdateManyWithoutRescheduledFromNestedInput
@@ -2421,7 +2421,7 @@ export type AppointmentUncheckedUpdateManyWithoutRescheduledFromInput = {
   lastPatientMessageAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   cancellationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdBy?: Prisma.StringFieldUpdateOperationsInput | string
+  createdBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -2500,7 +2500,7 @@ export type AppointmentSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   patient?: boolean | Prisma.PatientDefaultArgs<ExtArgs>
   doctor?: boolean | Prisma.Appointment$doctorArgs<ExtArgs>
   service?: boolean | Prisma.ServiceDefaultArgs<ExtArgs>
-  creator?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  creator?: boolean | Prisma.Appointment$creatorArgs<ExtArgs>
   rescheduledFrom?: boolean | Prisma.Appointment$rescheduledFromArgs<ExtArgs>
   rescheduledTo?: boolean | Prisma.Appointment$rescheduledToArgs<ExtArgs>
   reminders?: boolean | Prisma.Appointment$remindersArgs<ExtArgs>
@@ -2533,7 +2533,7 @@ export type AppointmentSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
   patient?: boolean | Prisma.PatientDefaultArgs<ExtArgs>
   doctor?: boolean | Prisma.Appointment$doctorArgs<ExtArgs>
   service?: boolean | Prisma.ServiceDefaultArgs<ExtArgs>
-  creator?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  creator?: boolean | Prisma.Appointment$creatorArgs<ExtArgs>
   rescheduledFrom?: boolean | Prisma.Appointment$rescheduledFromArgs<ExtArgs>
 }, ExtArgs["result"]["appointment"]>
 
@@ -2562,7 +2562,7 @@ export type AppointmentSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
   patient?: boolean | Prisma.PatientDefaultArgs<ExtArgs>
   doctor?: boolean | Prisma.Appointment$doctorArgs<ExtArgs>
   service?: boolean | Prisma.ServiceDefaultArgs<ExtArgs>
-  creator?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  creator?: boolean | Prisma.Appointment$creatorArgs<ExtArgs>
   rescheduledFrom?: boolean | Prisma.Appointment$rescheduledFromArgs<ExtArgs>
 }, ExtArgs["result"]["appointment"]>
 
@@ -2595,7 +2595,7 @@ export type AppointmentInclude<ExtArgs extends runtime.Types.Extensions.Internal
   patient?: boolean | Prisma.PatientDefaultArgs<ExtArgs>
   doctor?: boolean | Prisma.Appointment$doctorArgs<ExtArgs>
   service?: boolean | Prisma.ServiceDefaultArgs<ExtArgs>
-  creator?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  creator?: boolean | Prisma.Appointment$creatorArgs<ExtArgs>
   rescheduledFrom?: boolean | Prisma.Appointment$rescheduledFromArgs<ExtArgs>
   rescheduledTo?: boolean | Prisma.Appointment$rescheduledToArgs<ExtArgs>
   reminders?: boolean | Prisma.Appointment$remindersArgs<ExtArgs>
@@ -2607,7 +2607,7 @@ export type AppointmentIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.
   patient?: boolean | Prisma.PatientDefaultArgs<ExtArgs>
   doctor?: boolean | Prisma.Appointment$doctorArgs<ExtArgs>
   service?: boolean | Prisma.ServiceDefaultArgs<ExtArgs>
-  creator?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  creator?: boolean | Prisma.Appointment$creatorArgs<ExtArgs>
   rescheduledFrom?: boolean | Prisma.Appointment$rescheduledFromArgs<ExtArgs>
 }
 export type AppointmentIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2615,7 +2615,7 @@ export type AppointmentIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.
   patient?: boolean | Prisma.PatientDefaultArgs<ExtArgs>
   doctor?: boolean | Prisma.Appointment$doctorArgs<ExtArgs>
   service?: boolean | Prisma.ServiceDefaultArgs<ExtArgs>
-  creator?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  creator?: boolean | Prisma.Appointment$creatorArgs<ExtArgs>
   rescheduledFrom?: boolean | Prisma.Appointment$rescheduledFromArgs<ExtArgs>
 }
 
@@ -2626,7 +2626,7 @@ export type $AppointmentPayload<ExtArgs extends runtime.Types.Extensions.Interna
     patient: Prisma.$PatientPayload<ExtArgs>
     doctor: Prisma.$DoctorPayload<ExtArgs> | null
     service: Prisma.$ServicePayload<ExtArgs>
-    creator: Prisma.$UserPayload<ExtArgs>
+    creator: Prisma.$UserPayload<ExtArgs> | null
     rescheduledFrom: Prisma.$AppointmentPayload<ExtArgs> | null
     rescheduledTo: Prisma.$AppointmentPayload<ExtArgs>[]
     reminders: Prisma.$ReminderPayload<ExtArgs>[]
@@ -2650,7 +2650,7 @@ export type $AppointmentPayload<ExtArgs extends runtime.Types.Extensions.Interna
     notes: string | null
     cancellationReason: string | null
     rescheduledFromId: string | null
-    createdBy: string
+    createdBy: string | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["appointment"]>
@@ -3051,7 +3051,7 @@ export interface Prisma__AppointmentClient<T, Null = never, ExtArgs extends runt
   patient<T extends Prisma.PatientDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PatientDefaultArgs<ExtArgs>>): Prisma.Prisma__PatientClient<runtime.Types.Result.GetResult<Prisma.$PatientPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   doctor<T extends Prisma.Appointment$doctorArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Appointment$doctorArgs<ExtArgs>>): Prisma.Prisma__DoctorClient<runtime.Types.Result.GetResult<Prisma.$DoctorPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   service<T extends Prisma.ServiceDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ServiceDefaultArgs<ExtArgs>>): Prisma.Prisma__ServiceClient<runtime.Types.Result.GetResult<Prisma.$ServicePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  creator<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  creator<T extends Prisma.Appointment$creatorArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Appointment$creatorArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   rescheduledFrom<T extends Prisma.Appointment$rescheduledFromArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Appointment$rescheduledFromArgs<ExtArgs>>): Prisma.Prisma__AppointmentClient<runtime.Types.Result.GetResult<Prisma.$AppointmentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   rescheduledTo<T extends Prisma.Appointment$rescheduledToArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Appointment$rescheduledToArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AppointmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   reminders<T extends Prisma.Appointment$remindersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Appointment$remindersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReminderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -3522,6 +3522,25 @@ export type Appointment$doctorArgs<ExtArgs extends runtime.Types.Extensions.Inte
    */
   include?: Prisma.DoctorInclude<ExtArgs> | null
   where?: Prisma.DoctorWhereInput
+}
+
+/**
+ * Appointment.creator
+ */
+export type Appointment$creatorArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the User
+   */
+  select?: Prisma.UserSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the User
+   */
+  omit?: Prisma.UserOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserInclude<ExtArgs> | null
+  where?: Prisma.UserWhereInput
 }
 
 /**
