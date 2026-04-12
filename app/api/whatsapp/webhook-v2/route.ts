@@ -317,7 +317,7 @@ async function handleServiceSelection(
 
   const storedServices = session.ambiguousIntents as Array<{
     id: string
-    nameAr: string
+    name: string
   }> | null
 
   if (!storedServices || storedServices.length === 0) {
@@ -345,7 +345,7 @@ async function handleServiceSelection(
     if (escalation) return escalation
 
     const list = storedServices
-      .map((s, i) => `${i + 1}. ${s.nameAr}`)
+      .map((s, i) => `${i + 1}. ${s.name}`)
       .join('\n')
     return { reply: `الرجاء اختيار رقم من القائمة:\n\n${list}` }
   }
