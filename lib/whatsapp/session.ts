@@ -1,4 +1,5 @@
 import { prisma } from '@/lib/prisma'
+import { Prisma } from '@/lib/prisma-client/client'
 import { ConversationState, DetectedLanguage } from '@/lib/prisma-client/enums'
 
 const TERMINAL_STATES: ConversationState[] = [
@@ -42,7 +43,7 @@ export async function resolveSession(phoneNumber: string, clinicId: string) {
         escalationReason: null,
         escalationClaimedBy: null,
         escalationClaimedAt: null,
-        ambiguousIntents: null,
+        ambiguousIntents: Prisma.JsonNull,
       },
     })
     await prisma.stateTransitionLog.create({
