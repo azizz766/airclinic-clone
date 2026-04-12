@@ -2114,7 +2114,7 @@ export async function POST(request: NextRequest) {
     const available = isDateWithinDoctorAvailability(
       newScheduledAt,
       appointment.durationMinutes,
-      appointment.doctor.availabilitySchedule
+      appointment.doctor?.availabilitySchedule
     )
 
     if (!available) {
@@ -2189,7 +2189,7 @@ export async function POST(request: NextRequest) {
       'تمام 👍 تغيّر موعدك',
       '',
       `📅 ${formatOptionLabel(newScheduledAt)}`,
-      `👨‍⚕️ ${appointment.doctor.firstName} ${appointment.doctor.lastName}`,
+      `👨‍⚕️ ${appointment.doctor?.firstName ?? ''} ${appointment.doctor?.lastName ?? ''}`,
       '',
       'إذا مناسبك تمام، وإذا تبغى نغيّره مرة ثانية اكتب: غير الموعد',
     ].join('\n')
@@ -2848,7 +2848,7 @@ export async function POST(request: NextRequest) {
     durationMinutes: appointmentForReschedule.durationMinutes,
     scheduledAt: appointmentForReschedule.scheduledAt,
     doctor: {
-      availabilitySchedule: appointmentForReschedule.doctor.availabilitySchedule,
+      availabilitySchedule: appointmentForReschedule.doctor?.availabilitySchedule,
     },
   })
 
@@ -2919,8 +2919,8 @@ export async function POST(request: NextRequest) {
       index: opt.index,
       scheduledAtIso: opt.scheduledAtIso,
       label: opt.label,
-      doctorName: `${appointmentForReschedule.doctor.firstName} ${appointmentForReschedule.doctor.lastName}`,
-      doctorId: appointmentForReschedule.doctorId,
+      doctorName: `${appointmentForReschedule.doctor?.firstName ?? ''} ${appointmentForReschedule.doctor?.lastName ?? ''}`,
+      doctorId: appointmentForReschedule.doctorId ?? '',
       serviceId: appointmentForReschedule.serviceId,
     })),
   })
