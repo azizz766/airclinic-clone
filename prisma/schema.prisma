@@ -429,6 +429,7 @@ model Appointment {
   cancellationReason String?
   rescheduledFromId  String?
   createdBy          String?
+  source             String            @default("dashboard")
   createdAt          DateTime          @default(now())
   updatedAt          DateTime          @updatedAt
 

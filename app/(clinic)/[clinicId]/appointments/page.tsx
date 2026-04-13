@@ -68,26 +68,25 @@ export default async function AppointmentsPage({ params, searchParams }: Appoint
   const statusFilter = parseStatusFilter(query.status)
 
   const appointmentsRaw = await prisma.appointment.findMany({
-    where: {
-      clinicId,
-      ...(statusFilter === 'all' ? {} : { status: statusFilter }),
-      ...(searchTerm
-        ? {
-            patient: {
-              OR: [
-                { firstName: { contains: searchTerm, mode: 'insensitive' } },
-                { lastName: { contains: searchTerm, mode: 'insensitive' } },
-              ],
-            },
-          }
-        : {}),
-    },
     include: {
       patient: {
         select: {
           firstName: true,
           lastName: true,
         },
+      },
+      doctor: {
+        select: {
+          firstName: true,
+          lastName: true,
+        },
+      },
+      service: {
+        select: {
+          name: true,
+        },
+      },
+    },
       },
       doctor: {
         select: {
