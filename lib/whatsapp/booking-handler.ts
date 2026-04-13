@@ -89,6 +89,7 @@ export async function processBooking(sessionId: string) {
               (slot.endTime.getTime() - slot.startTime.getTime()) / 60000
             ),
             status: 'scheduled',
+            source: 'whatsapp',
           },
         })
 
