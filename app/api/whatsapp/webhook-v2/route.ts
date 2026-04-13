@@ -1218,6 +1218,74 @@ export async function POST(req: NextRequest) {
     confidence: interpretation.confidence,
   })
 
+  // Prefill session fields from extractedFields (Phase 1, hardened)
+  // Insert after interpretation is set, before HandlerContext is built
+  try {
+    const ef = (interpretation as any).extractedFields;
+    const updates: Record<string, any> = {};
+    let didUpdate = false;
+
+    // patientName
+    if (
+      !session.slotPatientName &&
+      ef?.patientName &&
+      typeof ef.patientName === 'string'
+    ) {
+      const trimmedName = ef.patientName.trim();
+      if (trimmedName.length >= 3 && trimmedName.length <= 100) {
+        updates.slotPatientName = trimmedName;
+        didUpdate = true;
+      }
+    }
+
+    // patientDob
+    if (
+      !session.slotPatientDob &&
+      ef?.patientDob &&
+      typeof ef.patientDob === 'string'
+    ) {
+      const parsedDob = parseDateInput(ef.patientDob);
+      if (parsedDob) {
+        updates.slotPatientDob = parsedDob;
+        didUpdate = true;
+      }
+    }
+
+    // phone
+    if (
+      !session.slotPhoneConfirmed &&
+      ef?.phone &&
+      typeof ef.phone === 'string'
+    ) {
+      const normalizedPhone = ef.phone.replace(/[\s\-\(\)]/g, '');
+      if (/^\+?\d{9,15}$/.test(normalizedPhone)) {
+        updates.slotPhoneConfirmed = normalizedPhone;
+        didUpdate = true;
+      }
+    }
+
+    if (didUpdate) {
+      await prisma.conversationSession.update({
+        where: { id: session.id },
+        data: updates,
+      });
+      if (updates.slotPatientName) {
+        session.slotPatientName = updates.slotPatientName;
+        console.log('[prefill] slotPatientName set');
+      }
+      if (updates.slotPatientDob) {
+        session.slotPatientDob = updates.slotPatientDob;
+        console.log('[prefill] slotPatientDob set');
+      }
+      if (updates.slotPhoneConfirmed) {
+        session.slotPhoneConfirmed = updates.slotPhoneConfirmed;
+        console.log('[prefill] slotPhoneConfirmed set');
+      }
+    }
+  } catch (prefillErr) {
+    console.error('[prefill] error during extractedFields prefill', prefillErr);
+  }
+
   // ── 7. Dispatch to the correct state handler ──────────────────────────────
   const ctx: HandlerContext = {
     session,
