@@ -61,6 +61,8 @@ type AppointmentsPageProps = {
 
 export default async function AppointmentsPage({ params, searchParams }: AppointmentsPageProps) {
   const { clinicId } = await params
+export default async function AppointmentsPage({ params, searchParams }: AppointmentsPageProps) {
+  const { clinicId } = await params
   const query = await searchParams
 
   const searchRaw = typeof query.q === 'string' ? query.q : Array.isArray(query.q) ? query.q[0] : ''
@@ -68,25 +70,26 @@ export default async function AppointmentsPage({ params, searchParams }: Appoint
   const statusFilter = parseStatusFilter(query.status)
 
   const appointmentsRaw = await prisma.appointment.findMany({
+    where: {
+      clinicId,
+      ...(statusFilter === 'all' ? {} : { status: statusFilter }),
+      ...(searchTerm
+        ? {
+            patient: {
+              OR: [
+                { firstName: { contains: searchTerm, mode: 'insensitive' } },
+                { lastName: { contains: searchTerm, mode: 'insensitive' } },
+              ],
+            },
+          }
+        : {}),
+    },
     include: {
       patient: {
         select: {
           firstName: true,
           lastName: true,
         },
-      },
-      doctor: {
-        select: {
-          firstName: true,
-          lastName: true,
-        },
-      },
-      service: {
-        select: {
-          name: true,
-        },
-      },
-    },
       },
       doctor: {
         select: {
@@ -195,10 +198,15 @@ export default async function AppointmentsPage({ params, searchParams }: Appoint
                     </td>
                     <td className="whitespace-nowrap px-4 py-3 text-sm text-gray-700">{appointment.service.name}</td>
                     <td className="whitespace-nowrap px-4 py-3 text-sm text-gray-700">{formatDateTime(appointment.scheduledAt)}</td>
-                    <td className="whitespace-nowrap px-4 py-3 text-sm">
+                    <td className="whitespace-nowrap px-4 py-3 text-sm flex items-center gap-2">
                       <span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-medium ${statusBadgeClasses(appointment.status)}`}>
                         {statusLabel(appointment.status)}
                       </span>
+                      {appointment.source === 'whatsapp' && (
+                        <span className="inline-flex rounded-full px-2 py-1 text-xs font-bold bg-green-100 text-green-800 ml-2">
+                          واتساب
+                        </span>
+                      )}
                     </td>
                   </tr>
                 ))}
