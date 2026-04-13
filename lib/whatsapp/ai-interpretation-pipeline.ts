@@ -29,6 +29,15 @@ type LlmIntentResponse = {
   preferredPeriod: PreferredPeriod | null
   preferredDateOffsetDays: number | null
   notes: string
+  detectedLanguage?: 'ar' | 'en'
+  extractedFields?: {
+    serviceName?: string | null
+    patientName?: string | null
+    patientDob?: string | null
+    phone?: string | null
+    dateText?: string | null
+    timeText?: string | null
+  }
 }
 
 function normalizeForNlu(text: string) {
@@ -295,17 +304,45 @@ async function interpretWithLlmFallback(params: { rawMessage: string; normalized
     modelSource: process.env.WHATSAPP_INTENT_MODEL ? 'env' : 'default',
   })
 
-  const systemPrompt = [
-    'You classify WhatsApp clinic scheduling messages.',
-    'Treat implicit Arabic scheduling phrases as booking intent, not greetings.',
-    'Examples of implicit scheduling: "أبغى شي يناسب دوامي", "شي بعد الدوام", "أي وقت فاضي عندكم", "متى عندكم مواعيد", "أبغى موعد بس مو متأكد متى".',
-    'Only classify as unknown when the message is truly unrelated to scheduling.',
-    'If message implies finding a suitable time, prefer intent availability_check.',
-    'Return JSON only (no markdown, no explanation).',
-    'Use schema exactly:',
-    '{"intent":"new_booking | availability_check | reschedule | confirm | cancel | inquiry_price | inquiry_doctor | unknown","confidence":"low | medium | high","preferredPeriod":"morning | afternoon | evening | after_isha | null","preferredDateOffsetDays":number | null,"notes":"short explanation"}',
-    'Keep preferredDateOffsetDays null unless clearly implied.',
-  ].join(' ')
+  const systemPrompt = `You are Velora AI — an interpretation engine for a WhatsApp clinic booking system.
+
+Your ONLY job is to analyze incoming user messages and return structured JSON.
+You do NOT generate responses. You do NOT control the conversation flow.
+
+EXTRACT:
+1. intent — one of: new_booking | availability_check | reschedule | confirm | cancel | inquiry_price | inquiry_doctor | human_request | unknown
+2. confidence — low | medium | high
+3. preferredPeriod — morning | afternoon | evening | after_isha | null
+4. preferredDateOffsetDays — number | null
+5. detectedLanguage — ar | en
+6. extractedFields — { serviceName, patientName, patientDob, phone, dateText, timeText } all nullable
+7. notes — short internal explanation
+
+RULES:
+- Return JSON only — no markdown, no explanation
+- Never invent slots, times, or service names
+- If multiple fields in one message extract all
+- "ابي احد يكلمني" or "وصلني موظف" → human_request
+- Implicit Arabic scheduling → new_booking or availability_check
+- Truly unrelated → unknown
+
+SCHEMA:
+{
+  "intent": "new_booking",
+  "confidence": "high",
+  "preferredPeriod": null,
+  "preferredDateOffsetDays": null,
+  "detectedLanguage": "ar",
+  "extractedFields": {
+    "serviceName": null,
+    "patientName": null,
+    "patientDob": null,
+    "phone": null,
+    "dateText": null,
+    "timeText": null
+  },
+  "notes": "explanation"
+}`
 
   const userPrompt = [
     `raw_message: ${params.rawMessage}`,

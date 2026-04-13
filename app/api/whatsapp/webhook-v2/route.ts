@@ -483,6 +483,7 @@ async function handleDateCollection(
     'SLOT_VALID',
   )
 
+  const SLOT_NUMBERS = ['1️⃣','2️⃣','3️⃣','4️⃣','5️⃣','6️⃣','7️⃣','8️⃣','9️⃣','🔟']
   const list = candidates
     .map((s, i) => {
       const label = new Date(s.startTime).toLocaleDateString('ar-SA', {
@@ -492,7 +493,7 @@ async function handleDateCollection(
         hour: '2-digit',
         minute: '2-digit',
       })
-      return `${i + 1}. ${label}`
+      return `${SLOT_NUMBERS[i] ?? `${i + 1}.`} ${label}`
     })
     .join('\n')
 
@@ -585,8 +586,14 @@ async function handleTimeSelection(
  */
 async function handlePatientName(ctx: HandlerContext): Promise<HandlerResult> {
   const { session, clinicId, body } = ctx
-  const name = body.trim()
+  // Skip if already set
+  if (ctx.session.slotPatientName) {
+    await transitionSession(ctx.session.id, ctx.clinicId, 'SLOT_COLLECTION_PATIENT_DOB', 'SKIP_ALREADY_SET')
+    return { reply: `تمام، سجلناك باسم ${ctx.session.slotPatientName} 👍\nما هو تاريخ ميلادك؟ (مثال: 1990/05/15)` }
+  }
 
+  // Original validation — must stay
+  const name = body.trim()
   if (name.length < 3 || name.length > 100) {
     const escalation = await checkRetryLimit(session, clinicId)
     if (escalation) return escalation
@@ -619,8 +626,14 @@ async function handlePatientName(ctx: HandlerContext): Promise<HandlerResult> {
  */
 async function handlePatientDob(ctx: HandlerContext): Promise<HandlerResult> {
   const { session, clinicId, body } = ctx
-  const parsed = parseDateInput(body)
+  // Skip if already set
+  if (ctx.session.slotPatientDob) {
+    await transitionSession(ctx.session.id, ctx.clinicId, 'SLOT_COLLECTION_PHONE_CONFIRM', 'SKIP_ALREADY_SET')
+    return { reply: `تمام 👍 ننتقل لتأكيد رقم جوالك.` }
+  }
 
+  // Original validation — must stay
+  const parsed = parseDateInput(body)
   if (!parsed) {
     const escalation = await checkRetryLimit(session, clinicId)
     if (escalation) return escalation
@@ -661,9 +674,15 @@ async function handlePhoneConfirm(
   ctx: HandlerContext,
 ): Promise<HandlerResult> {
   const { session, clinicId, body, from } = ctx
+  if (ctx.session.slotPhoneConfirmed) {
+    await transitionSession(ctx.session.id, ctx.clinicId, 'CONFIRMATION_PENDING', 'SKIP_ALREADY_SET')
+    return { reply: `ممتاز 👍 جاهزين نأكد موعدك — اكتب "تأكيد" للمتابعة.` }
+  }
   const trimmed = body.trim()
 
   let confirmedPhone: string
+  const isAffirmative = (t: string) =>
+    ['نعم', 'yes', 'اه', 'أه', 'ايه', 'آه', 'ok', 'okay', 'يس', 'نعم.'].includes(t.toLowerCase())
 
   if (isAffirmative(trimmed)) {
     confirmedPhone = from
@@ -673,8 +692,7 @@ async function handlePhoneConfirm(
       const escalation = await checkRetryLimit(session, clinicId)
       if (escalation) return escalation
       return {
-        reply:
-          'اكتب *نعم* إذا كان الرقم صحيح، أو أرسل رقمك الصحيح.',
+        reply: 'اكتب *نعم* إذا كان الرقم صحيح، أو أرسل رقمك الصحيح.',
       }
     }
     confirmedPhone = digits
@@ -873,6 +891,7 @@ async function handleConfirmation(
             'SLOT_CONFLICT',
           )
 
+          const SLOT_NUMBERS = ['1️⃣','2️⃣','3️⃣','4️⃣','5️⃣','6️⃣','7️⃣','8️⃣','9️⃣','🔟']
           const list = freshSlots
             .map((s, i) => {
               const label = new Date(s.startTime).toLocaleDateString('ar-SA', {
@@ -882,7 +901,7 @@ async function handleConfirmation(
                 hour: '2-digit',
                 minute: '2-digit',
               })
-              return `${i + 1}. ${label}`
+              return `${SLOT_NUMBERS[i] ?? `${i + 1}.`} ${label}`
             })
             .join('\n')
 
