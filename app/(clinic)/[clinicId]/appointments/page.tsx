@@ -1,4 +1,5 @@
 import { prisma } from '@/lib/prisma'
+import { AutoRefresh } from './AutoRefresh'
 
 type AppointmentStatusFilter =
   | 'all'
@@ -215,6 +216,7 @@ export default async function AppointmentsPage({ params, searchParams }: Appoint
           </div>
         )}
       </section>
+      <AutoRefresh />
     </div>
   )
 }
