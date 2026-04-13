@@ -9,12 +9,21 @@ export const metadata: Metadata = {
   description: "Turn WhatsApp into a 24/7 booking machine for your clinic.",
 };
 
-function Section({ children, className = "", id }: { children: React.ReactNode; className?: string; id?: string }) {
-  // Section: reduced padding, dark bg, border
+type SectionProps = {
+  children: React.ReactNode;
+  className?: string;
+  id?: string;
+  bg?: boolean;
+  alt?: boolean;
+};
+function Section({ children, className = "", id, bg = false, alt = false }: SectionProps) {
+  let bgClass = "";
+  if (alt) bgClass = "bg-[#0d1421]";
+  else if (bg) bgClass = "bg-[#0d1117]";
   return (
     <section
       id={id}
-      className={`w-full max-w-6xl mx-auto px-4 md:px-8 py-16 md:py-16 bg-zinc-900/80 border border-zinc-800 rounded-2xl ${className}`}
+      className={`w-full max-w-6xl mx-auto px-4 md:px-8 py-16 md:py-20 ${bgClass} ${className}`}
     >
       {children}
     </section>
@@ -350,17 +359,19 @@ export default function VeloraLanding() {
       </Section>
 
       {/* Final CTA Section */}
-      <Section id="demo" className="mt-20 text-center">
-        <h2 className="text-3xl md:text-4xl font-extrabold mb-4 bg-gradient-to-r from-green-400 via-emerald-400 to-green-300 bg-clip-text text-transparent">
-          Let WhatsApp handle more of your bookings
-        </h2>
-        <p className="text-lg md:text-2xl text-neutral-200 mb-8 max-w-2xl mx-auto">
-          See how Velora AI can turn conversations into confirmed appointments.
-        </p>
-        <a href="#" className="inline-block px-10 py-4 rounded-full bg-green-500 hover:bg-green-400 text-neutral-950 font-semibold shadow transition text-lg">Book a Demo</a>
+      <Section id="demo" className="relative mt-20 overflow-hidden" bg>
+        {/* Subtle green radial gradient */}
+        <div className="absolute inset-0 pointer-events-none" style={{background: "radial-gradient(ellipse 80% 60% at 50% 0%, rgba(34,197,94,0.10) 0%, #0d1117 100%)"}} />
+        <div className="relative flex flex-col items-center justify-center py-16">
+          <h2 className="text-4xl md:text-5xl font-bold text-white mb-4 text-center">Ready to automate your bookings?</h2>
+          <p className="text-lg text-[#8b949e] mb-8 text-center max-w-2xl">Let Velora AI handle WhatsApp so your team can focus on care, not admin. See it in action or book a demo now.</p>
+          <a href="#demo" className="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-[#22c55e] hover:bg-green-400 text-black font-bold text-lg shadow transition">
+            Book a Demo <span className="text-2xl">→</span>
+          </a>
+        </div>
       </Section>
 
-      <footer className="text-center text-neutral-600 text-sm py-8 mt-8">
+      <footer className="text-center text-[#8b949e] text-sm py-8 mt-8">
         &copy; {new Date().getFullYear()} Velora AI. All rights reserved.
       </footer>
     </div>
