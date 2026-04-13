@@ -1,4 +1,5 @@
 
+import { sendStaffBookingNotification } from '@/lib/notifications/staff-whatsapp'
 import { prisma } from '@/lib/prisma'
 import { regenerateAppointmentReminderJobs } from '@/lib/notifications/reminder-jobs'
 
@@ -89,7 +90,6 @@ export async function processBooking(sessionId: string) {
               (slot.endTime.getTime() - slot.startTime.getTime()) / 60000
             ),
             status: 'scheduled',
-            source: 'whatsapp',
           },
         })
 
@@ -139,6 +139,16 @@ export async function processBooking(sessionId: string) {
           console.error('[booking-handler] reminder generation failed', { reminderErr })
         }
 
+        try {
+          await sendStaffBookingNotification({
+            patientName: `${patient.firstName} ${patient.lastName}`,
+            serviceName: service.name,
+            scheduledAt: slot.startTime,
+            phone: patient.phone ?? '',
+          })
+        } catch (err) {
+          console.error('[booking-handler] staff notification failed', { err })
+        }
         return appointment
       })
 
