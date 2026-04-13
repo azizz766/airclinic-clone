@@ -1,3 +1,4 @@
+// Updated: sync available_slots on manual booking
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { prisma } from '@/lib/prisma'
