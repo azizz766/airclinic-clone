@@ -10,16 +10,21 @@ export const metadata: Metadata = {
 };
 
 function Section({ children, className = "", id }: { children: React.ReactNode; className?: string; id?: string }) {
+  // Section: reduced padding, dark bg, border
   return (
-    <section id={id} className={`w-full max-w-6xl mx-auto px-4 md:px-8 py-16 md:py-28 ${className}`}>
+    <section
+      id={id}
+      className={`w-full max-w-6xl mx-auto px-4 md:px-8 py-16 md:py-16 bg-zinc-900/80 border border-zinc-800 rounded-2xl ${className}`}
+    >
       {children}
     </section>
   );
 }
 
 function Card({ children, className = "" }: { children: React.ReactNode; className?: string }) {
+  // Card: dark bg, border, consistent with section
   return (
-    <div className={`rounded-2xl bg-neutral-900/80 border border-neutral-800 shadow-xl p-6 md:p-8 ${className}`}>
+    <div className={`rounded-2xl bg-zinc-900/80 border border-zinc-800 shadow-xl p-6 md:p-8 ${className}`}>
       {children}
     </div>
   );
@@ -38,37 +43,55 @@ function Navbar() {
 }
 
 function WhatsAppMockup({ large = false }: { large?: boolean }) {
-  // Conversation bubbles
-  const base = "flex flex-col gap-2 w-full";
+  // Realistic WhatsApp mockup
   const phone = large
     ? "w-[370px] h-[600px]"
     : "w-[260px] h-[420px]";
-  const frame = `rounded-[2.5rem] bg-neutral-900 border-2 border-neutral-800 shadow-2xl p-4 flex flex-col justify-end ${phone}`;
-  const bubble = "px-4 py-2 rounded-2xl text-sm max-w-[80%]";
-  const ai = `self-end bg-gradient-to-br from-green-500/90 to-emerald-500/80 text-neutral-900 ${bubble}`;
-  const user = `self-start bg-neutral-800 text-neutral-100 ${bubble}`;
-  const time = "text-xs text-neutral-400 mt-1 ml-1";
   return (
-    <div className={frame} style={{ boxShadow: "0 8px 32px 0 rgba(0,0,0,0.35)" }}>
-      <div className={base}>
-        <div className={user}>
-          أبغى أحجز تنظيف أسنان بكرة الصبح
-          <div className={time}>09:01</div>
+    <div
+      className={`rounded-3xl border border-zinc-700 bg-zinc-900 shadow-2xl overflow-hidden flex flex-col ${phone}`}
+      style={{ boxShadow: "0 8px 32px 0 rgba(0,0,0,0.35)" }}
+    >
+      {/* WhatsApp header bar */}
+      <div className="bg-[#005c4b] px-4 py-3 flex items-center gap-3">
+        <div className="w-7 h-7 rounded-full bg-green-300" />
+        <div className="flex flex-col">
+          <span className="text-white font-semibold leading-tight text-sm">Velora AI 🤖</span>
+          <span className="text-green-200 text-xs leading-tight">online</span>
         </div>
-        <div className={ai}>
-          أهلاً! 😊 عندنا المواعيد التالية:<br />
-          1️⃣ الثلاثاء 9:00 ص<br />
-          2️⃣ الثلاثاء 11:00 ص<br />
-          3️⃣ الأربعاء 9:30 ص
-          <div className={time}>09:01</div>
+      </div>
+      {/* Chat area */}
+      <div className="flex-1 flex flex-col justify-end bg-[#0b141a] px-3 py-4 gap-2">
+        {/* User bubble */}
+        <div className="max-w-[80%] self-start">
+          <div className="bg-[#202c33] text-white rounded-2xl rounded-tl-sm px-4 py-2 text-sm">
+            أبغى أحجز تنظيف أسنان بكرة الصبح
+          </div>
+          <div className="text-[10px] text-zinc-400 mt-1 ml-1">09:01</div>
         </div>
-        <div className={user}>
-          1
-          <div className={time}>09:02</div>
+        {/* AI bubble */}
+        <div className="max-w-[80%] self-end ml-auto">
+          <div className="bg-[#005c4b] text-white rounded-2xl rounded-tr-sm px-4 py-2 text-sm">
+            أهلاً! 😊 عندنا المواعيد التالية:<br />
+            1️⃣ الثلاثاء 9:00 ص<br />
+            2️⃣ الثلاثاء 11:00 ص<br />
+            3️⃣ الأربعاء 9:30 ص
+          </div>
+          <div className="text-[10px] text-zinc-400 mt-1 ml-1">09:01</div>
         </div>
-        <div className={ai}>
-          ✅ تم الحجز!<br />الخدمة: تنظيف أسنان<br />الموعد: الثلاثاء 9:00 صباحاً
-          <div className={time}>09:02</div>
+        {/* User bubble */}
+        <div className="max-w-[80%] self-start">
+          <div className="bg-[#202c33] text-white rounded-2xl rounded-tl-sm px-4 py-2 text-sm">
+            1
+          </div>
+          <div className="text-[10px] text-zinc-400 mt-1 ml-1">09:02</div>
+        </div>
+        {/* AI bubble */}
+        <div className="max-w-[80%] self-end ml-auto">
+          <div className="bg-[#005c4b] text-white rounded-2xl rounded-tr-sm px-4 py-2 text-sm">
+            ✅ تم الحجز!<br />الخدمة: تنظيف أسنان<br />الموعد: الثلاثاء 9:00 صباحاً
+          </div>
+          <div className="text-[10px] text-zinc-400 mt-1 ml-1">09:02</div>
         </div>
       </div>
     </div>
@@ -116,7 +139,7 @@ export default function VeloraLanding() {
     <div className="bg-gradient-to-br from-neutral-950 via-neutral-900 to-neutral-950 min-h-screen text-white font-sans">
       <Navbar />
       {/* Hero Section */}
-      <Section className="pt-24 pb-16 md:pt-32 md:pb-24">
+      <Section className="pt-14 pb-14 md:pt-16 md:pb-16">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-12 md:gap-20">
           {/* Left: Headline & CTA */}
           <div className="flex-1 flex flex-col items-center md:items-start text-center md:text-left">
@@ -157,63 +180,81 @@ export default function VeloraLanding() {
       </Section>
 
       {/* Problem Section */}
-      <Section className="bg-neutral-950/80 rounded-2xl mt-16">
-        <h2 className="text-2xl md:text-3xl font-bold mb-4">WhatsApp is where your clients book — and where your team gets overwhelmed.</h2>
-        <p className="text-neutral-300 mb-6 max-w-2xl">
+      <Section className="mt-16">
+        <h2 className="text-2xl md:text-3xl font-bold mb-4 text-white">WhatsApp is where your clients book — and where your team gets overwhelmed.</h2>
+        <p className="text-zinc-300 mb-6 max-w-2xl">
           Most clinics still handle WhatsApp manually. That means:
         </p>
-        <ul className="grid grid-cols-1 md:grid-cols-2 gap-2 text-neutral-400 text-base mb-2 max-w-xl mx-auto">
-          <li>• Slow replies</li>
-          <li>• Missed inquiries</li>
-          <li>• Repeated questions</li>
-          <li>• Lost bookings</li>
-          <li>• Front desk overload</li>
-        </ul>
-        <p className="text-neutral-400 mt-4">Your clients expect fast answers. Your team cannot stay online 24/7.</p>
+        <div className="flex flex-wrap gap-3 mb-2 max-w-xl mx-auto">
+          {[
+            "Slow replies",
+            "Missed inquiries",
+            "Repeated questions",
+            "Lost bookings",
+            "Front desk overload",
+          ].map((text) => (
+            <span
+              key={text}
+              className="inline-flex items-center px-3 py-1 rounded-full bg-zinc-800 border border-zinc-700 text-sm text-zinc-300"
+            >
+              {text}
+            </span>
+          ))}
+        </div>
+        <p className="text-zinc-500 mt-4">Your clients expect fast answers. Your team cannot stay online 24/7.</p>
       </Section>
 
       {/* Solution Section */}
       <Section className="mt-16">
-        <h2 className="text-2xl md:text-3xl font-bold mb-4">Velora AI handles the conversation for you.</h2>
-        <p className="text-neutral-300 mb-6 max-w-2xl">
+        <h2 className="text-2xl md:text-3xl font-bold mb-4 text-white">Velora AI handles the conversation for you.</h2>
+        <p className="text-zinc-300 mb-6 max-w-2xl">
           Velora AI works like an AI receptionist inside your WhatsApp. It can:
         </p>
-        <ul className="grid grid-cols-1 md:grid-cols-2 gap-2 text-neutral-400 text-base mb-2 max-w-xl mx-auto">
-          <li>• Reply instantly</li>
-          <li>• Understand booking intent</li>
-          <li>• Collect client details</li>
-          <li>• Show available slots</li>
-          <li>• Confirm appointments</li>
-          <li>• Escalate to staff when needed</li>
-        </ul>
-        <p className="text-neutral-400 mt-4">It is fast, simple, and built to reduce friction in the booking journey.</p>
+        <div className="flex flex-wrap gap-3 mb-2 max-w-xl mx-auto">
+          {[
+            "Reply instantly",
+            "Understand booking intent",
+            "Collect client details",
+            "Show available slots",
+            "Confirm appointments",
+            "Escalate to staff when needed",
+          ].map((text) => (
+            <span
+              key={text}
+              className="inline-flex items-center px-3 py-1 rounded-full bg-zinc-800 border border-zinc-700 text-sm text-zinc-300"
+            >
+              {text}
+            </span>
+          ))}
+        </div>
+        <p className="text-zinc-500 mt-4">It is fast, simple, and built to reduce friction in the booking journey.</p>
       </Section>
 
       {/* How It Works Section */}
       <Section id="how" className="mt-16">
-        <h2 className="text-2xl md:text-3xl font-bold mb-12 text-center">How Velora AI works</h2>
+        <h2 className="text-2xl md:text-3xl font-bold mb-12 text-center text-white">How Velora AI works</h2>
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-8 md:gap-4">
           <div className="flex-1 flex flex-col items-center">
             <div className="relative flex flex-col items-center">
               <div className="flex items-center justify-center w-12 h-12 rounded-full bg-green-500 text-neutral-950 font-bold text-xl mb-2">1</div>
-              <div className="font-semibold text-lg mb-1">Client messages your WhatsApp</div>
-              <div className="text-neutral-400 text-base text-center mb-2">They ask to book, reschedule, confirm, or speak to someone.</div>
+              <div className="font-semibold text-lg mb-1 text-white">Client messages your WhatsApp</div>
+              <div className="text-zinc-300 text-base text-center mb-2">They ask to book, reschedule, confirm, or speak to someone.</div>
             </div>
           </div>
           <div className="hidden md:block w-12 h-1 bg-gradient-to-r from-green-400 via-emerald-400 to-green-300 rounded-full mx-2" />
           <div className="flex-1 flex flex-col items-center">
             <div className="relative flex flex-col items-center">
               <div className="flex items-center justify-center w-12 h-12 rounded-full bg-green-500 text-neutral-950 font-bold text-xl mb-2">2</div>
-              <div className="font-semibold text-lg mb-1">Velora AI handles the flow</div>
-              <div className="text-neutral-400 text-base text-center mb-2">It understands the message, collects missing details, and guides the client step by step.</div>
+              <div className="font-semibold text-lg mb-1 text-white">Velora AI handles the flow</div>
+              <div className="text-zinc-300 text-base text-center mb-2">It understands the message, collects missing details, and guides the client step by step.</div>
             </div>
           </div>
           <div className="hidden md:block w-12 h-1 bg-gradient-to-r from-green-400 via-emerald-400 to-green-300 rounded-full mx-2" />
           <div className="flex-1 flex flex-col items-center">
             <div className="relative flex flex-col items-center">
               <div className="flex items-center justify-center w-12 h-12 rounded-full bg-green-500 text-neutral-950 font-bold text-xl mb-2">3</div>
-              <div className="font-semibold text-lg mb-1">Appointment gets booked</div>
-              <div className="text-neutral-400 text-base text-center mb-2">The system confirms the booking, updates the session, and keeps the process moving.</div>
+              <div className="font-semibold text-lg mb-1 text-white">Appointment gets booked</div>
+              <div className="text-zinc-300 text-base text-center mb-2">The system confirms the booking, updates the session, and keeps the process moving.</div>
             </div>
           </div>
         </div>
@@ -221,64 +262,91 @@ export default function VeloraLanding() {
 
       {/* Benefits Section */}
       <Section className="mt-16">
-        <h2 className="text-2xl md:text-3xl font-bold mb-8">Why clinics use Velora AI</h2>
+        <h2 className="text-2xl md:text-3xl font-bold mb-8 text-white">Why clinics use Velora AI</h2>
         <div className="grid md:grid-cols-3 gap-6">
           <Card>
-            <h3 className="font-semibold text-lg mb-2">Respond in seconds, not hours</h3>
-            <p className="text-neutral-300 text-base">No more waiting hours to answer booking inquiries.</p>
+            <h3 className="font-semibold text-lg mb-2 text-white">Respond in seconds, not hours</h3>
+            <p className="text-zinc-300 text-base">No more waiting hours to answer booking inquiries.</p>
           </Card>
           <Card>
-            <h3 className="font-semibold text-lg mb-2">Stop answering the same questions manually</h3>
-            <p className="text-neutral-300 text-base">Your team stops wasting time on repetitive WhatsApp messages.</p>
+            <h3 className="font-semibold text-lg mb-2 text-white">Stop answering the same questions manually</h3>
+            <p className="text-zinc-300 text-base">Your team stops wasting time on repetitive WhatsApp messages.</p>
           </Card>
           <Card>
-            <h3 className="font-semibold text-lg mb-2">Less drop-off, more completed bookings</h3>
-            <p className="text-neutral-300 text-base">Guide clients from message to appointment with less drop-off.</p>
+            <h3 className="font-semibold text-lg mb-2 text-white">Less drop-off, more completed bookings</h3>
+            <p className="text-zinc-300 text-base">Guide clients from message to appointment with less drop-off.</p>
           </Card>
           <Card>
-            <h3 className="font-semibold text-lg mb-2">Capture demand even after working hours</h3>
-            <p className="text-neutral-300 text-base">Capture booking intent even outside working hours.</p>
+            <h3 className="font-semibold text-lg mb-2 text-white">Capture demand even after working hours</h3>
+            <p className="text-zinc-300 text-base">Capture booking intent even outside working hours.</p>
           </Card>
           <Card>
-            <h3 className="font-semibold text-lg mb-2">Your team focuses on care, not admin</h3>
-            <p className="text-neutral-300 text-base">Human staff step in only for exceptions, not every message.</p>
+            <h3 className="font-semibold text-lg mb-2 text-white">Your team focuses on care, not admin</h3>
+            <p className="text-zinc-300 text-base">Human staff step in only for exceptions, not every message.</p>
           </Card>
         </div>
       </Section>
 
       {/* Use Cases Section */}
       <Section className="mt-16">
-        <h2 className="text-2xl md:text-3xl font-bold mb-4">Built for clinics now. Ready for every booking-based business next.</h2>
-        <p className="text-neutral-300 mb-4 max-w-2xl">
+        <h2 className="text-2xl md:text-3xl font-bold mb-4 text-white">Built for clinics now. Ready for every booking-based business next.</h2>
+        <p className="text-zinc-300 mb-4 max-w-2xl">
           Velora AI is starting with:
         </p>
-        <ul className="text-neutral-400 text-base mb-2 max-w-xl mx-auto">
-          <li>• Dental clinics</li>
-        </ul>
-        <p className="text-neutral-300 mt-4 mb-2">And expanding into:</p>
-        <ul className="text-neutral-400 text-base mb-2 max-w-xl mx-auto">
-          <li>• Beauty clinics</li>
-          <li>• Dermatology clinics</li>
-          <li>• Salons</li>
-          <li>• Wellness businesses</li>
-          <li>• Any business that books through WhatsApp</li>
-        </ul>
+        <div className="flex flex-wrap gap-4 mb-4">
+          {/* Dental clinics: live now */}
+          <div className="flex flex-col items-start border border-green-500/50 bg-green-950/30 rounded-2xl p-4 min-w-[180px] max-w-xs">
+            <div className="flex items-center gap-2 mb-2">
+              <span className="font-semibold text-white">Dental clinics</span>
+              <span className="inline-flex items-center px-2 py-0.5 rounded-full bg-green-900 border border-green-500/50 text-xs text-green-200 font-medium">Live now</span>
+            </div>
+            <span className="text-zinc-300 text-sm">Automated bookings, reminders, follow-ups</span>
+          </div>
+        </div>
+        <p className="text-zinc-300 mt-4 mb-2">And expanding into:</p>
+        <div className="flex flex-wrap gap-4">
+          {/* Other use cases: coming soon */}
+          {[
+            "Beauty clinics",
+            "Dermatology clinics",
+            "Salons",
+            "Wellness businesses",
+            "Any business that books through WhatsApp",
+          ].map((name) => (
+            <div key={name} className="flex flex-col items-start border border-zinc-700 bg-zinc-900 rounded-2xl p-4 min-w-[180px] max-w-xs">
+              <div className="flex items-center gap-2 mb-2">
+                <span className="font-semibold text-white">{name}</span>
+                <span className="inline-flex items-center px-2 py-0.5 rounded-full bg-zinc-800 border border-zinc-700 text-xs text-zinc-500 font-medium">Coming soon</span>
+              </div>
+              <span className="text-zinc-300 text-sm">Automated bookings, reminders, follow-ups</span>
+            </div>
+          ))}
+        </div>
       </Section>
 
       {/* Credibility Section */}
       <Section className="mt-16">
-        <h2 className="text-2xl md:text-3xl font-bold mb-4">Designed for real booking workflows — not just chatbot demos</h2>
-        <p className="text-neutral-300 mb-4 max-w-2xl">
+        <h2 className="text-2xl md:text-3xl font-bold mb-4 text-white">Designed for real booking workflows — not just chatbot demos</h2>
+        <p className="text-zinc-300 mb-4 max-w-2xl">
           Velora AI is built around actual appointment flows:
         </p>
-        <ul className="text-neutral-400 text-base mb-2 max-w-xl mx-auto">
-          <li>• booking</li>
-          <li>• rescheduling</li>
-          <li>• confirmation</li>
-          <li>• human escalation</li>
-          <li>• structured client data collection</li>
-        </ul>
-        <p className="text-neutral-400 mt-4">This is not a generic chatbot.<br/>It is an AI receptionist built for operational use.</p>
+        <div className="flex flex-wrap gap-3 mb-2 max-w-xl mx-auto">
+          {[
+            "booking",
+            "rescheduling",
+            "confirmation",
+            "human escalation",
+            "structured client data collection",
+          ].map((text) => (
+            <span
+              key={text}
+              className="inline-flex items-center px-3 py-1 rounded-full bg-zinc-800 border border-zinc-700 text-sm text-zinc-300"
+            >
+              {text}
+            </span>
+          ))}
+        </div>
+        <p className="text-zinc-500 mt-4">This is not a generic chatbot.<br/>It is an AI receptionist built for operational use.</p>
       </Section>
 
       {/* Final CTA Section */}
