@@ -60,7 +60,7 @@ function Navbar() {
 
 function WhatsAppMockup() {
   return (
-    <div className="max-w-sm w-full rounded-2xl overflow-hidden shadow-lg border border-[#E5E7EB]">
+    <div className="max-w-md w-full rounded-2xl overflow-hidden shadow-lg border border-[#E5E7EB]">
       {/* Header */}
       <div className="bg-[#075E54] px-4 py-3 flex items-center gap-3">
         <div className="w-8 h-8 rounded-full bg-[#25D366] flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
@@ -73,51 +73,51 @@ function WhatsAppMockup() {
       </div>
 
       {/* Chat area */}
-      <div className="bg-[#EFEAE2] p-4 flex flex-col gap-3">
-        {/* User */}
-        <div className="max-w-[75%]">
+      <div className="bg-[#EFEAE2] p-5 flex flex-col min-h-[400px]">
+        {/* User — msg 1 */}
+        <div className="max-w-[75%] mb-2">
           <div className="bg-white rounded-xl rounded-tl-none px-3 py-2 shadow-sm">
-            <p className="text-[#0F172A] text-sm">I want to book a teeth cleaning tomorrow morning</p>
-            <p className="text-[11px] text-gray-400 mt-1 text-right">9:01 AM</p>
+            <p className="text-[#0F172A] text-[14px]">I want to book a teeth cleaning tomorrow morning</p>
+            <p className="text-[10px] text-gray-400 opacity-70 mt-0.5 text-right">9:01 AM</p>
           </div>
         </div>
 
-        {/* AI */}
-        <div className="max-w-[80%] ml-auto">
+        {/* AI — slots */}
+        <div className="max-w-[80%] ml-auto mb-4">
           <div className="bg-[#DCF8C6] rounded-xl rounded-tr-none px-3 py-2 shadow-sm">
-            <p className="text-[#0F172A] text-sm">
+            <p className="text-[#0F172A] text-[14px]">
               Hi there 👋<br />
               Here are the available slots:<br />
               1️⃣ Tuesday 9:00 AM<br />
               2️⃣ Tuesday 11:00 AM<br />
               3️⃣ Wednesday 9:30 AM
             </p>
-            <div className="flex items-center justify-end gap-1 mt-1">
-              <span className="text-[11px] text-gray-400">9:01 AM</span>
-              <span className="text-[11px] text-[#25D366]">✓✓</span>
+            <div className="flex items-center justify-end gap-1 mt-0.5">
+              <span className="text-[10px] text-gray-400 opacity-70">9:01 AM</span>
+              <span className="text-[10px] text-[#25D366]">✓✓</span>
             </div>
           </div>
         </div>
 
-        {/* User */}
-        <div className="max-w-[75%]">
+        {/* User — selection */}
+        <div className="max-w-[75%] mb-2">
           <div className="bg-white rounded-xl rounded-tl-none px-3 py-2 shadow-sm">
-            <p className="text-[#0F172A] text-sm">1</p>
-            <p className="text-[11px] text-gray-400 mt-1 text-right">9:02 AM</p>
+            <p className="text-[#0F172A] text-[14px]">1</p>
+            <p className="text-[10px] text-gray-400 opacity-70 mt-0.5 text-right">9:02 AM</p>
           </div>
         </div>
 
-        {/* AI */}
+        {/* AI — confirmation */}
         <div className="max-w-[80%] ml-auto">
           <div className="bg-[#DCF8C6] rounded-xl rounded-tr-none px-3 py-2 shadow-sm">
-            <p className="text-[#0F172A] text-sm">
+            <p className="text-[#0F172A] text-[14px]">
               ✅ Booking confirmed<br />
               Service: Teeth cleaning<br />
               Time: Tuesday 9:00 AM
             </p>
-            <div className="flex items-center justify-end gap-1 mt-1">
-              <span className="text-[11px] text-gray-400">9:02 AM</span>
-              <span className="text-[11px] text-[#25D366]">✓✓</span>
+            <div className="flex items-center justify-end gap-1 mt-0.5">
+              <span className="text-[10px] text-gray-400 opacity-70">9:02 AM</span>
+              <span className="text-[10px] text-[#25D366]">✓✓</span>
             </div>
           </div>
         </div>
@@ -142,10 +142,10 @@ export default function VeloraLanding() {
               <span className="inline-block bg-[#E9E5FF] text-[#6D5DFC] text-sm font-semibold rounded-full px-3 py-1 mb-6">
                 WhatsApp AI Receptionist
               </span>
-              <h1 className="text-4xl md:text-5xl font-bold text-[#0F172A] leading-tight mb-5">
+              <h1 className="text-4xl md:text-5xl font-bold text-[#0F172A] leading-[1.08] mb-5">
                 Turn WhatsApp into a 24/7 Booking Machine
               </h1>
-              <p className="text-lg text-[#6B7280] mb-8 max-w-lg">
+              <p className="text-lg text-[#6B7280] leading-relaxed mb-8 max-w-lg">
                 Velora AI automatically replies to patients, finds available slots, and confirms appointments — so your team can focus on care.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 mb-6">
@@ -194,7 +194,7 @@ export default function VeloraLanding() {
 
       {/* ── Problem ──────────────────────────────────────────────────────── */}
       <section className="bg-[#F5F6F8]">
-        <Container className="py-24">
+        <Container className="py-16">
           <SectionLabel>The Problem</SectionLabel>
           <h2 className="text-2xl md:text-3xl font-bold text-[#0F172A] mb-4 max-w-2xl">
             WhatsApp is where your clients book — and where your team gets overwhelmed.
@@ -255,7 +255,7 @@ export default function VeloraLanding() {
 
       {/* ── How It Works ─────────────────────────────────────────────────── */}
       <section id="how" className="bg-white border-t border-[#E5E7EB]">
-        <Container className="py-24">
+        <Container className="py-28">
           <div className="text-center mb-12">
             <SectionLabel>Process</SectionLabel>
             <h2 className="text-2xl md:text-3xl font-bold text-[#0F172A]">How Velora works</h2>
@@ -268,7 +268,7 @@ export default function VeloraLanding() {
               { step: 4, title: "Confirmation", desc: "Appointment confirmed and saved automatically" },
             ].map(({ step, title, desc }, idx, arr) => (
               <React.Fragment key={step}>
-                <div className="flex-1 bg-white rounded-xl border border-[#E5E7EB] p-6 flex flex-col items-center text-center shadow-sm hover:shadow-md transition-shadow">
+                <div className="flex-1 bg-white rounded-xl border border-[#E5E7EB] p-7 flex flex-col items-center text-center shadow-sm hover:shadow-md hover:scale-[1.01] transition-all duration-200">
                   <div className="w-8 h-8 rounded-full bg-[#0F172A] text-white text-sm font-bold flex items-center justify-center mb-4 flex-shrink-0">
                     {step}
                   </div>
@@ -302,10 +302,10 @@ export default function VeloraLanding() {
             ].map(({ emoji, title, desc }) => (
               <div
                 key={title}
-                className="bg-white rounded-xl border border-[#E5E7EB] p-6 hover:shadow-md transition-shadow"
+                className="bg-white rounded-xl border border-[#E5E7EB] p-7 flex flex-col gap-2 hover:shadow-md hover:scale-[1.01] transition-all duration-200"
               >
-                <div className="text-2xl mb-3">{emoji}</div>
-                <p className="font-semibold text-[#0F172A] text-sm mb-1">{title}</p>
+                <div className="text-2xl">{emoji}</div>
+                <p className="font-semibold text-[#0F172A] text-sm">{title}</p>
                 <p className="text-sm text-[#6B7280]">{desc}</p>
               </div>
             ))}
@@ -315,7 +315,7 @@ export default function VeloraLanding() {
 
       {/* ── Use Cases ────────────────────────────────────────────────────── */}
       <section className="bg-white">
-        <Container className="py-24">
+        <Container className="py-16">
           <SectionLabel>Use Cases</SectionLabel>
           <h2 className="text-2xl md:text-3xl font-bold text-[#0F172A] mb-3 max-w-2xl">
             Built for clinics now. Ready for every booking-based business next.
