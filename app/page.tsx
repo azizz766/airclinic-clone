@@ -153,17 +153,17 @@ export default function VeloraLanding() {
           {/* Left: Headline & CTA */}
           <div className="flex-1 flex flex-col items-center md:items-start text-center md:text-left">
             <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight mb-4 bg-gradient-to-r from-green-400 via-emerald-400 to-green-300 bg-clip-text text-transparent">
-              Turn Your WhatsApp Into a 24/7 Booking Machine
+              Turn WhatsApp into a 24/7 Booking Machine
             </h1>
             <p className="text-lg md:text-2xl text-neutral-200 mb-8 max-w-xl">
-              Velora AI replies, qualifies, books, and follows up automatically — so your clinic saves time and captures more appointments.
+              Velora AI automatically replies to patients, finds available slots, and confirms appointments
             </p>
             <div className="flex flex-col sm:flex-row gap-4 mb-2 w-full md:w-auto justify-center md:justify-start">
-              <a href="#demo" className="inline-block px-8 py-3 rounded-full bg-green-500 hover:bg-green-400 text-neutral-950 font-semibold shadow transition">Book a Demo</a>
+              <a href="#demo" className="inline-block px-8 py-3 rounded-full bg-green-500 hover:bg-green-400 text-neutral-950 font-semibold shadow transition">Start Free Trial</a>
               <a href="#how" className="inline-block px-8 py-3 rounded-full border border-green-500 text-green-300 hover:bg-green-900/40 font-semibold shadow transition">See How It Works</a>
             </div>
             <div className="text-sm text-neutral-400 mt-4">
-              Built for dental clinics now — designed to scale across beauty clinics, salons, and service businesses.
+              No credit card required • Setup in under 24 hours
             </div>
           </div>
           {/* Right: WhatsApp Mockup */}
@@ -185,6 +185,23 @@ export default function VeloraLanding() {
           <div className="flex-1 flex justify-center md:justify-end">
             <WhatsAppMockupLarge />
           </div>
+        </div>
+      </Section>
+
+      {/* Stats Bar Section */}
+      <Section className="mt-8">
+        <div className="grid md:grid-cols-4 gap-6">
+          {[
+            { label: "Avg. reply time", value: "<2 min" },
+            { label: "Bookings automated", value: "1,200+" },
+            { label: "WhatsApp messages handled", value: "30,000+" },
+            { label: "Clinics onboarded", value: "15+" },
+          ].map((stat) => (
+            <div key={stat.label} className="flex flex-col items-center">
+              <div className="text-3xl md:text-4xl font-extrabold text-green-400 mb-1">{stat.value}</div>
+              <div className="text-zinc-400 text-sm">{stat.label}</div>
+            </div>
+          ))}
         </div>
       </Section>
 
@@ -241,57 +258,74 @@ export default function VeloraLanding() {
 
       {/* How It Works Section */}
       <Section id="how" className="mt-16">
-        <h2 className="text-2xl md:text-3xl font-bold mb-12 text-center text-white">How Velora AI works</h2>
+        <h2 className="text-2xl md:text-3xl font-bold mb-12 text-center text-white">How Velora works</h2>
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-8 md:gap-4">
-          <div className="flex-1 flex flex-col items-center">
-            <div className="relative flex flex-col items-center">
-              <div className="flex items-center justify-center w-12 h-12 rounded-full bg-green-500 text-neutral-950 font-bold text-xl mb-2">1</div>
-              <div className="font-semibold text-lg mb-1 text-white">Client messages your WhatsApp</div>
-              <div className="text-zinc-300 text-base text-center mb-2">They ask to book, reschedule, confirm, or speak to someone.</div>
-            </div>
-          </div>
-          <div className="hidden md:block w-12 h-1 bg-gradient-to-r from-green-400 via-emerald-400 to-green-300 rounded-full mx-2" />
-          <div className="flex-1 flex flex-col items-center">
-            <div className="relative flex flex-col items-center">
-              <div className="flex items-center justify-center w-12 h-12 rounded-full bg-green-500 text-neutral-950 font-bold text-xl mb-2">2</div>
-              <div className="font-semibold text-lg mb-1 text-white">Velora AI handles the flow</div>
-              <div className="text-zinc-300 text-base text-center mb-2">It understands the message, collects missing details, and guides the client step by step.</div>
-            </div>
-          </div>
-          <div className="hidden md:block w-12 h-1 bg-gradient-to-r from-green-400 via-emerald-400 to-green-300 rounded-full mx-2" />
-          <div className="flex-1 flex flex-col items-center">
-            <div className="relative flex flex-col items-center">
-              <div className="flex items-center justify-center w-12 h-12 rounded-full bg-green-500 text-neutral-950 font-bold text-xl mb-2">3</div>
-              <div className="font-semibold text-lg mb-1 text-white">Appointment gets booked</div>
-              <div className="text-zinc-300 text-base text-center mb-2">The system confirms the booking, updates the session, and keeps the process moving.</div>
-            </div>
-          </div>
+          {[
+            {
+              step: 1,
+              title: "Patient Message",
+              description: "Patient sends a message on WhatsApp",
+            },
+            {
+              step: 2,
+              title: "AI Processing",
+              description: "Velora understands intent and checks availability",
+            },
+            {
+              step: 3,
+              title: "Smart Scheduling",
+              description: "Best available slot is suggested instantly",
+            },
+            {
+              step: 4,
+              title: "Confirmation",
+              description: "Appointment is confirmed and saved automatically",
+            },
+          ].map(({ step, title, description }, idx, arr) => (
+            <React.Fragment key={step}>
+              <div className="flex-1 flex flex-col items-center">
+                <div className="relative flex flex-col items-center">
+                  <div className="flex items-center justify-center w-12 h-12 rounded-full bg-green-500 text-neutral-950 font-bold text-xl mb-2">{step}</div>
+                  <div className="font-semibold text-lg mb-1 text-white">{title}</div>
+                  <div className="text-zinc-300 text-base text-center mb-2">{description}</div>
+                </div>
+              </div>
+              {idx < arr.length - 1 && (
+                <div className="hidden md:block w-12 h-1 bg-gradient-to-r from-green-400 via-emerald-400 to-green-300 rounded-full mx-2" />
+              )}
+            </React.Fragment>
+          ))}
         </div>
       </Section>
 
       {/* Benefits Section */}
       <Section className="mt-16">
-        <h2 className="text-2xl md:text-3xl font-bold mb-8 text-white">Why clinics use Velora AI</h2>
+        <h2 className="text-2xl md:text-3xl font-bold mb-8 text-white">Why clinics choose Velora AI</h2>
         <div className="grid md:grid-cols-3 gap-6">
           <Card>
-            <h3 className="font-semibold text-lg mb-2 text-white">Respond in seconds, not hours</h3>
-            <p className="text-zinc-300 text-base">No more waiting hours to answer booking inquiries.</p>
+            <div className="text-2xl mb-3">🔔</div>
+            <h3 className="font-semibold text-lg mb-2 text-white">Never miss a booking</h3>
+            <p className="text-zinc-300 text-base">Capture every patient inquiry — even after working hours</p>
           </Card>
           <Card>
-            <h3 className="font-semibold text-lg mb-2 text-white">Stop answering the same questions manually</h3>
-            <p className="text-zinc-300 text-base">Your team stops wasting time on repetitive WhatsApp messages.</p>
+            <div className="text-2xl mb-3">⚡</div>
+            <h3 className="font-semibold text-lg mb-2 text-white">Reduce front desk workload</h3>
+            <p className="text-zinc-300 text-base">Stop answering repetitive booking messages manually</p>
           </Card>
           <Card>
-            <h3 className="font-semibold text-lg mb-2 text-white">Less drop-off, more completed bookings</h3>
-            <p className="text-zinc-300 text-base">Guide clients from message to appointment with less drop-off.</p>
+            <div className="text-2xl mb-3">📈</div>
+            <h3 className="font-semibold text-lg mb-2 text-white">Increase confirmed appointments</h3>
+            <p className="text-zinc-300 text-base">Convert more conversations into actual bookings</p>
           </Card>
           <Card>
-            <h3 className="font-semibold text-lg mb-2 text-white">Capture demand even after working hours</h3>
-            <p className="text-zinc-300 text-base">Capture booking intent even outside working hours.</p>
+            <div className="text-2xl mb-3">🌙</div>
+            <h3 className="font-semibold text-lg mb-2 text-white">Available 24/7</h3>
+            <p className="text-zinc-300 text-base">Patients can book anytime, even at night</p>
           </Card>
           <Card>
-            <h3 className="font-semibold text-lg mb-2 text-white">Your team focuses on care, not admin</h3>
-            <p className="text-zinc-300 text-base">Human staff step in only for exceptions, not every message.</p>
+            <div className="text-2xl mb-3">🎯</div>
+            <h3 className="font-semibold text-lg mb-2 text-white">Smart escalation</h3>
+            <p className="text-zinc-300 text-base">Only involve staff when necessary</p>
           </Card>
         </div>
       </Section>
