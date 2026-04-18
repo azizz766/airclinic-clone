@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><style>*, ::before, ::after{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }/* ! tailwindcss v3.4.17 | MIT License | https://tailwindcss.com */*,::after,::before{box-sizing:border-box;border-width:0;border-style:solid;border-color:#e5e7eb}::after,::before{--tw-content:''}:host,html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;tab-size:4;font-family:ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";font-feature-settings:normal;font-variation-settings:normal;-webkit-tap-highlight-color:transparent}body{margin:0;line-height:inherit}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,pre,samp{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;font-feature-settings:normal;font-variation-settings:normal;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-feature-settings:inherit;font-variation-settings:inherit;font-size:100%;font-weight:inherit;line-height:inherit;letter-spacing:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,input:where([type=button]),input:where([type=reset]),input:where([type=submit]){-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}summary{display:list-item}blockquote,dd,dl,figure,h1,h2,h3,h4,h5,h6,hr,p,pre{margin:0}fieldset{margin:0;padding:0}legend{padding:0}menu,ol,ul{list-style:none;margin:0;padding:0}dialog{padding:0}textarea{resize:vertical}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}[role=button],button{cursor:pointer}:disabled{cursor:default}audio,canvas,embed,iframe,img,object,svg,video{display:block;vertical-align:middle}img,video{max-width:100%;height:auto}[hidden]:where(:not([hidden=until-found])){display:none}[type='text'],input:where(:not([type])),[type='email'],[type='url'],[type='password'],[type='number'],[type='date'],[type='datetime-local'],[type='month'],[type='search'],[type='tel'],[type='time'],[type='week'],[multiple],textarea,select{-webkit-appearance:none;appearance:none;background-color:#fff;border-color:#6b7280;border-width:1px;border-radius:0px;padding-top:0.5rem;padding-right:0.75rem;padding-bottom:0.5rem;padding-left:0.75rem;font-size:1rem;line-height:1.5rem;--tw-shadow:0 0 #0000;}[type='text']:focus, input:where(:not([type])):focus, [type='email']:focus, [type='url']:focus, [type='password']:focus, [type='number']:focus, [type='date']:focus, [type='datetime-local']:focus, [type='month']:focus, [type='search']:focus, [type='tel']:focus, [type='time']:focus, [type='week']:focus, [multiple]:focus, textarea:focus, select:focus{outline:2px solid transparent;outline-offset:2px;--tw-ring-inset:var(--tw-empty,/*!*/ /*!*/);--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:#2563eb;--tw-ring-offset-shadow:var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);--tw-ring-shadow:var(--tw-ring-inset) 0 0 0 calc(1px + var(--tw-ring-offset-width)) var(--tw-ring-color);box-shadow:var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);border-color:#2563eb}input::placeholder,textarea::placeholder{color:#6b7280;opacity:1}::-webkit-datetime-edit-fields-wrapper{padding:0}::-webkit-date-and-time-value{min-height:1.5em;text-align:inherit}::-webkit-datetime-edit{display:inline-flex}::-webkit-datetime-edit,::-webkit-datetime-edit-year-field,::-webkit-datetime-edit-month-field,::-webkit-datetime-edit-day-field,::-webkit-datetime-edit-hour-field,::-webkit-datetime-edit-minute-field,::-webkit-datetime-edit-second-field,::-webkit-datetime-edit-millisecond-field,::-webkit-datetime-edit-meridiem-field{padding-top:0;padding-bottom:0}select{background-image:url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");background-position:right 0.5rem center;background-repeat:no-repeat;background-size:1.5em 1.5em;padding-right:2.5rem;print-color-adjust:exact}[multiple],[size]:where(select:not([size="1"])){background-image:initial;background-position:initial;background-repeat:unset;background-size:initial;padding-right:0.75rem;print-color-adjust:unset}[type='checkbox'],[type='radio']{-webkit-appearance:none;appearance:none;padding:0;print-color-adjust:exact;display:inline-block;vertical-align:middle;background-origin:border-box;-webkit-user-select:none;user-select:none;flex-shrink:0;height:1rem;width:1rem;color:#2563eb;background-color:#fff;border-color:#6b7280;border-width:1px;--tw-shadow:0 0 #0000}[type='checkbox']{border-radius:0px}[type='radio']{border-radius:100%}[type='checkbox']:focus,[type='radio']:focus{outline:2px solid transparent;outline-offset:2px;--tw-ring-inset:var(--tw-empty,/*!*/ /*!*/);--tw-ring-offset-width:2px;--tw-ring-offset-color:#fff;--tw-ring-color:#2563eb;--tw-ring-offset-shadow:var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);--tw-ring-shadow:var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);box-shadow:var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow)}[type='checkbox']:checked,[type='radio']:checked{border-color:transparent;background-color:currentColor;background-size:100% 100%;background-position:center;background-repeat:no-repeat}[type='checkbox']:checked{background-image:url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z'/%3e%3c/svg%3e");}@media (forced-colors: active) {[type='checkbox']:checked{-webkit-appearance:auto;appearance:auto}}[type='radio']:checked{background-image:url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3e%3ccircle cx='8' cy='8' r='3'/%3e%3c/svg%3e");}@media (forced-colors: active) {[type='radio']:checked{-webkit-appearance:auto;appearance:auto}}[type='checkbox']:checked:hover,[type='checkbox']:checked:focus,[type='radio']:checked:hover,[type='radio']:checked:focus{border-color:transparent;background-color:currentColor}[type='checkbox']:indeterminate{background-image:url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 16 16'%3e%3cpath stroke='white' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M4 8h8'/%3e%3c/svg%3e");border-color:transparent;background-color:currentColor;background-size:100% 100%;background-position:center;background-repeat:no-repeat;}@media (forced-colors: active) {[type='checkbox']:indeterminate{-webkit-appearance:auto;appearance:auto}}[type='checkbox']:indeterminate:hover,[type='checkbox']:indeterminate:focus{border-color:transparent;background-color:currentColor}[type='file']{background:unset;border-color:inherit;border-width:0;border-radius:0;padding:0;font-size:unset;line-height:inherit}[type='file']:focus{outline:1px solid ButtonText;outline:1px auto -webkit-focus-ring-color}.fixed{position:fixed}.absolute{position:absolute}.relative{position:relative}.-top-4{top:-1rem}.bottom-0{bottom:0px}.left-0{left:0px}.left-1\/2{left:50%}.right-0{right:0px}.top-0{top:0px}.z-10{z-index:10}.z-50{z-index:50}.mx-auto{margin-left:auto;margin-right:auto}.mb-10{margin-bottom:2.5rem}.mb-12{margin-bottom:3rem}.mb-2{margin-bottom:0.5rem}.mb-20{margin-bottom:5rem}.mb-32{margin-bottom:8rem}.mb-4{margin-bottom:1rem}.mb-6{margin-bottom:1.5rem}.mb-8{margin-bottom:2rem}.mt-1{margin-top:0.25rem}.mt-2{margin-top:0.5rem}.mt-4{margin-top:1rem}.block{display:block}.flex{display:flex}.inline-flex{display:inline-flex}.grid{display:grid}.hidden{display:none}.h-10{height:2.5rem}.h-12{height:3rem}.h-48{height:12rem}.h-8{height:2rem}.h-\[640px\]{height:640px}.h-full{height:100%}.w-10{width:2.5rem}.w-12{width:3rem}.w-8{width:2rem}.w-\[340px\]{width:340px}.w-full{width:100%}.max-w-2xl{max-width:42rem}.max-w-3xl{max-width:48rem}.max-w-4xl{max-width:56rem}.max-w-5xl{max-width:64rem}.max-w-7xl{max-width:80rem}.max-w-\[85\%\]{max-width:85%}.max-w-full{max-width:100%}.max-w-lg{max-width:32rem}.max-w-sm{max-width:24rem}.flex-1{flex:1 1 0%}.shrink-0{flex-shrink:0}.flex-grow{flex-grow:1}.-translate-x-1\/2{--tw-translate-x:-50%;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.cursor-default{cursor:default}.grid-cols-1{grid-template-columns:repeat(1, minmax(0, 1fr))}.grid-cols-2{grid-template-columns:repeat(2, minmax(0, 1fr))}.flex-col{flex-direction:column}.flex-wrap{flex-wrap:wrap}.items-start{align-items:flex-start}.items-center{align-items:center}.items-baseline{align-items:baseline}.items-stretch{align-items:stretch}.justify-start{justify-content:flex-start}.justify-end{justify-content:flex-end}.justify-center{justify-content:center}.justify-between{justify-content:space-between}.gap-1{gap:0.25rem}.gap-10{gap:2.5rem}.gap-12{gap:3rem}.gap-2{gap:0.5rem}.gap-2\.5{gap:0.625rem}.gap-20{gap:5rem}.gap-3{gap:0.75rem}.gap-4{gap:1rem}.gap-6{gap:1.5rem}.gap-8{gap:2rem}.\!space-y-1 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0 !important;margin-top:calc(0.25rem * calc(1 - var(--tw-space-y-reverse))) !important;margin-bottom:calc(0.25rem * var(--tw-space-y-reverse)) !important}.-space-x-2 > :not([hidden]) ~ :not([hidden]){--tw-space-x-reverse:0;margin-right:calc(-0.5rem * var(--tw-space-x-reverse));margin-left:calc(-0.5rem * calc(1 - var(--tw-space-x-reverse)))}.space-y-10 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(2.5rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(2.5rem * var(--tw-space-y-reverse))}.space-y-12 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(3rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(3rem * var(--tw-space-y-reverse))}.space-y-2 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(0.5rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(0.5rem * var(--tw-space-y-reverse))}.space-y-20 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(5rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(5rem * var(--tw-space-y-reverse))}.space-y-3 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(0.75rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(0.75rem * var(--tw-space-y-reverse))}.space-y-4 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(1rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(1rem * var(--tw-space-y-reverse))}.space-y-6 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(1.5rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(1.5rem * var(--tw-space-y-reverse))}.space-y-8 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(2rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(2rem * var(--tw-space-y-reverse))}.overflow-hidden{overflow:hidden}.overflow-y-auto{overflow-y:auto}.rounded-\[2rem\]{border-radius:2rem}.rounded-full{border-radius:9999px}.rounded-lg{border-radius:2rem}.rounded-xl{border-radius:3rem}.rounded-tl-\[32px\]{border-top-left-radius:32px}.rounded-tl-none{border-top-left-radius:0px}.rounded-tr-none{border-top-right-radius:0px}.border{border-width:1px}.border-2{border-width:2px}.border-b{border-bottom-width:1px}.border-\[\#363228\]\/10{border-color:rgb(54 50 40 / 0.1)}.border-\[\#674db1\]{--tw-border-opacity:1;border-color:rgb(103 77 177 / var(--tw-border-opacity, 1))}.border-black\/5{border-color:rgb(0 0 0 / 0.05)}.border-on-surface{--tw-border-opacity:1;border-color:rgb(54 50 40 / var(--tw-border-opacity, 1))}.border-primary{--tw-border-opacity:1;border-color:rgb(103 77 177 / var(--tw-border-opacity, 1))}.border-surface{--tw-border-opacity:1;border-color:rgb(255 249 239 / var(--tw-border-opacity, 1))}.border-white\/20{border-color:rgb(255 255 255 / 0.2)}.bg-surface{--tw-bg-opacity:1;background-color:rgb(255 249 239 / var(--tw-bg-opacity, 1))}.bg-\[\#075e54\]{--tw-bg-opacity:1;background-color:rgb(7 94 84 / var(--tw-bg-opacity, 1))}.bg-\[\#128c7e\]{--tw-bg-opacity:1;background-color:rgb(18 140 126 / var(--tw-bg-opacity, 1))}.bg-\[\#363228\]{--tw-bg-opacity:1;background-color:rgb(54 50 40 / var(--tw-bg-opacity, 1))}.bg-\[\#e1ffc7\]{--tw-bg-opacity:1;background-color:rgb(225 255 199 / var(--tw-bg-opacity, 1))}.bg-\[\#e5ddd5\]{--tw-bg-opacity:1;background-color:rgb(229 221 213 / var(--tw-bg-opacity, 1))}.bg-\[\#e8f5e9\]{--tw-bg-opacity:1;background-color:rgb(232 245 233 / var(--tw-bg-opacity, 1))}.bg-\[\#f0f2f5\]{--tw-bg-opacity:1;background-color:rgb(240 242 245 / var(--tw-bg-opacity, 1))}.bg-\[\#fff9ef\]{--tw-bg-opacity:1;background-color:rgb(255 249 239 / var(--tw-bg-opacity, 1))}.bg-error-container\/20{background-color:rgb(249 115 134 / 0.2)}.bg-on-surface{--tw-bg-opacity:1;background-color:rgb(54 50 40 / var(--tw-bg-opacity, 1))}.bg-primary{--tw-bg-opacity:1;background-color:rgb(103 77 177 / var(--tw-bg-opacity, 1))}.bg-primary-container{--tw-bg-opacity:1;background-color:rgb(176 149 255 / var(--tw-bg-opacity, 1))}.bg-primary-container\/20{background-color:rgb(176 149 255 / 0.2)}.bg-primary-container\/30{background-color:rgb(176 149 255 / 0.3)}.bg-primary\/10{background-color:rgb(103 77 177 / 0.1)}.bg-primary\/5{background-color:rgb(103 77 177 / 0.05)}.bg-secondary-container\/25{background-color:rgb(255 219 205 / 0.25)}.bg-secondary-container\/50{background-color:rgb(255 219 205 / 0.5)}.bg-surface-container-high{--tw-bg-opacity:1;background-color:rgb(238 231 218 / var(--tw-bg-opacity, 1))}.bg-surface-container-low{--tw-bg-opacity:1;background-color:rgb(249 243 231 / var(--tw-bg-opacity, 1))}.bg-surface-container-lowest{--tw-bg-opacity:1;background-color:rgb(255 255 255 / var(--tw-bg-opacity, 1))}.bg-tertiary-container\/20{background-color:rgb(158 194 253 / 0.2)}.bg-tertiary-container\/30{background-color:rgb(158 194 253 / 0.3)}.bg-white{--tw-bg-opacity:1;background-color:rgb(255 255 255 / var(--tw-bg-opacity, 1))}.bg-white\/10{background-color:rgb(255 255 255 / 0.1)}.p-10{padding:2.5rem}.p-16{padding:4rem}.p-2{padding:0.5rem}.p-3{padding:0.75rem}.p-4{padding:1rem}.p-8{padding:2rem}.\!px-3{padding-left:0.75rem !important;padding-right:0.75rem !important}.\!py-1\.5{padding-top:0.375rem !important;padding-bottom:0.375rem !important}.px-10{padding-left:2.5rem;padding-right:2.5rem}.px-3{padding-left:0.75rem;padding-right:0.75rem}.px-4{padding-left:1rem;padding-right:1rem}.px-5{padding-left:1.25rem;padding-right:1.25rem}.px-6{padding-left:1.5rem;padding-right:1.5rem}.px-8{padding-left:2rem;padding-right:2rem}.py-1{padding-top:0.25rem;padding-bottom:0.25rem}.py-2{padding-top:0.5rem;padding-bottom:0.5rem}.py-2\.5{padding-top:0.625rem;padding-bottom:0.625rem}.py-20{padding-top:5rem;padding-bottom:5rem}.py-32{padding-top:8rem;padding-bottom:8rem}.py-4{padding-top:1rem;padding-bottom:1rem}.py-5{padding-top:1.25rem;padding-bottom:1.25rem}.pb-32{padding-bottom:8rem}.pt-24{padding-top:6rem}.pt-6{padding-top:1.5rem}.text-left{text-align:left}.text-center{text-align:center}.text-right{text-align:right}.text-2xl{font-size:1.5rem;line-height:2rem}.text-3xl{font-size:1.875rem;line-height:2.25rem}.text-4xl{font-size:2.25rem;line-height:2.5rem}.text-5xl{font-size:3rem;line-height:1}.text-6xl{font-size:3.75rem;line-height:1}.text-\[10px\]{font-size:10px}.text-\[11px\]{font-size:11px}.text-\[13px\]{font-size:13px}.text-\[14px\]{font-size:14px}.text-\[16px\]{font-size:16px}.text-lg{font-size:1.125rem;line-height:1.75rem}.text-sm{font-size:0.875rem;line-height:1.25rem}.text-xl{font-size:1.25rem;line-height:1.75rem}.text-xs{font-size:0.75rem;line-height:1rem}.font-bold{font-weight:700}.font-extrabold{font-weight:800}.font-medium{font-weight:500}.font-semibold{font-weight:600}.uppercase{text-transform:uppercase}.leading-\[1\.1\]{line-height:1.1}.leading-relaxed{line-height:1.625}.leading-snug{line-height:1.375}.leading-tight{line-height:1.25}.tracking-tight{letter-spacing:-0.025em}.tracking-wide{letter-spacing:0.025em}.tracking-widest{letter-spacing:0.1em}.text-\[\#303030\]{--tw-text-opacity:1;color:rgb(48 48 48 / var(--tw-text-opacity, 1))}.text-\[\#363228\]{--tw-text-opacity:1;color:rgb(54 50 40 / var(--tw-text-opacity, 1))}.text-\[\#4fc3f7\]{--tw-text-opacity:1;color:rgb(79 195 247 / var(--tw-text-opacity, 1))}.text-\[\#5b41a4\]{--tw-text-opacity:1;color:rgb(91 65 164 / var(--tw-text-opacity, 1))}.text-\[\#674db1\]{--tw-text-opacity:1;color:rgb(103 77 177 / var(--tw-text-opacity, 1))}.text-\[\#9C89B8\]{--tw-text-opacity:1;color:rgb(156 137 184 / var(--tw-text-opacity, 1))}.text-\[\#b095ff\]{--tw-text-opacity:1;color:rgb(176 149 255 / var(--tw-text-opacity, 1))}.text-\[\#fff9ef\]{--tw-text-opacity:1;color:rgb(255 249 239 / var(--tw-text-opacity, 1))}.text-\[\#fff9ef\]\/40{color:rgb(255 249 239 / 0.4)}.text-\[\#fff9ef\]\/70{color:rgb(255 249 239 / 0.7)}.text-black\/40{color:rgb(0 0 0 / 0.4)}.text-error-dim{--tw-text-opacity:1;color:rgb(107 2 33 / var(--tw-text-opacity, 1))}.text-green-800{--tw-text-opacity:1;color:rgb(22 101 52 / var(--tw-text-opacity, 1))}.text-on-primary{--tw-text-opacity:1;color:rgb(253 247 255 / var(--tw-text-opacity, 1))}.text-on-primary-container{--tw-text-opacity:1;color:rgb(46 8 119 / var(--tw-text-opacity, 1))}.text-on-secondary-container{--tw-text-opacity:1;color:rgb(123 67 42 / var(--tw-text-opacity, 1))}.text-on-surface{--tw-text-opacity:1;color:rgb(54 50 40 / var(--tw-text-opacity, 1))}.text-on-surface-variant{--tw-text-opacity:1;color:rgb(99 95 83 / var(--tw-text-opacity, 1))}.text-on-surface-variant\/80{color:rgb(99 95 83 / 0.8)}.text-on-tertiary-container{--tw-text-opacity:1;color:rgb(16 61 111 / var(--tw-text-opacity, 1))}.text-primary{--tw-text-opacity:1;color:rgb(103 77 177 / var(--tw-text-opacity, 1))}.text-primary-fixed{--tw-text-opacity:1;color:rgb(176 149 255 / var(--tw-text-opacity, 1))}.text-secondary{--tw-text-opacity:1;color:rgb(139 80 54 / var(--tw-text-opacity, 1))}.text-surface{--tw-text-opacity:1;color:rgb(255 249 239 / var(--tw-text-opacity, 1))}.text-surface-variant{--tw-text-opacity:1;color:rgb(233 226 211 / var(--tw-text-opacity, 1))}.text-white{--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity, 1))}.text-white\/80{color:rgb(255 255 255 / 0.8)}.opacity-10{opacity:0.1}.opacity-40{opacity:0.4}.opacity-60{opacity:0.6}.opacity-70{opacity:0.7}.opacity-80{opacity:0.8}.shadow-\[0_1px_0\.5px_rgba\(0\2c 0\2c 0\2c 0\.13\)\]{--tw-shadow:0 1px 0.5px rgba(0,0,0,0.13);--tw-shadow-colored:0 1px 0.5px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-md{--tw-shadow:0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 4px 6px -1px var(--tw-shadow-color), 0 2px 4px -2px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-sm{--tw-shadow:0 1px 2px 0 rgb(0 0 0 / 0.05);--tw-shadow-colored:0 1px 2px 0 var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-xl{--tw-shadow:0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 20px 25px -5px var(--tw-shadow-color), 0 8px 10px -6px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.ring-1{--tw-ring-offset-shadow:var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);--tw-ring-shadow:var(--tw-ring-inset) 0 0 0 calc(1px + var(--tw-ring-offset-width)) var(--tw-ring-color);box-shadow:var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000)}.ring-2{--tw-ring-offset-shadow:var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);--tw-ring-shadow:var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);box-shadow:var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000)}.ring-4{--tw-ring-offset-shadow:var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);--tw-ring-shadow:var(--tw-ring-inset) 0 0 0 calc(4px + var(--tw-ring-offset-width)) var(--tw-ring-color);box-shadow:var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000)}.ring-black\/5{--tw-ring-color:rgb(0 0 0 / 0.05)}.ring-primary\/20{--tw-ring-color:rgb(103 77 177 / 0.2)}.backdrop-blur-md{--tw-backdrop-blur:blur(12px);-webkit-backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)}.transition-all{transition-property:all;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.transition-colors{transition-property:color, background-color, border-color, fill, stroke, -webkit-text-decoration-color;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke, -webkit-text-decoration-color;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.duration-300{transition-duration:300ms}.selection\:bg-primary-container *::selection{--tw-bg-opacity:1;background-color:rgb(176 149 255 / var(--tw-bg-opacity, 1))}.selection\:text-on-primary-container *::selection{--tw-text-opacity:1;color:rgb(46 8 119 / var(--tw-text-opacity, 1))}.selection\:bg-primary-container::selection{--tw-bg-opacity:1;background-color:rgb(176 149 255 / var(--tw-bg-opacity, 1))}.selection\:text-on-primary-container::selection{--tw-text-opacity:1;color:rgb(46 8 119 / var(--tw-text-opacity, 1))}.hover\:bg-on-surface:hover{--tw-bg-opacity:1;background-color:rgb(54 50 40 / var(--tw-bg-opacity, 1))}.hover\:bg-primary:hover{--tw-bg-opacity:1;background-color:rgb(103 77 177 / var(--tw-bg-opacity, 1))}.hover\:bg-primary-container\/30:hover{background-color:rgb(176 149 255 / 0.3)}.hover\:bg-secondary-container\/35:hover{background-color:rgb(255 219 205 / 0.35)}.hover\:bg-surface-variant:hover{--tw-bg-opacity:1;background-color:rgb(233 226 211 / var(--tw-bg-opacity, 1))}.hover\:bg-tertiary-container\/30:hover{background-color:rgb(158 194 253 / 0.3)}.hover\:bg-white\/20:hover{background-color:rgb(255 255 255 / 0.2)}.hover\:text-primary-fixed:hover{--tw-text-opacity:1;color:rgb(176 149 255 / var(--tw-text-opacity, 1))}.hover\:text-surface:hover{--tw-text-opacity:1;color:rgb(255 249 239 / var(--tw-text-opacity, 1))}.hover\:text-white:hover{--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity, 1))}.hover\:opacity-100:hover{opacity:1}.hover\:opacity-90:hover{opacity:0.9}.hover\:shadow-lg:hover{--tw-shadow:0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 10px 15px -3px var(--tw-shadow-color), 0 4px 6px -4px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.hover\:shadow-xl:hover{--tw-shadow:0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 20px 25px -5px var(--tw-shadow-color), 0 8px 10px -6px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.active\:scale-95:active{--tw-scale-x:.95;--tw-scale-y:.95;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.dark\:bg-stone-950:is(.dark *){--tw-bg-opacity:1;background-color:rgb(12 10 9 / var(--tw-bg-opacity, 1))}.dark\:text-\[\#f9f3e7\]:is(.dark *){--tw-text-opacity:1;color:rgb(249 243 231 / var(--tw-text-opacity, 1))}@media (min-width: 768px){.md\:col-span-5{grid-column:span 5 / span 5}.md\:col-span-7{grid-column:span 7 / span 7}.md\:flex{display:flex}.md\:grid-cols-12{grid-template-columns:repeat(12, minmax(0, 1fr))}.md\:grid-cols-3{grid-template-columns:repeat(3, minmax(0, 1fr))}.md\:grid-cols-4{grid-template-columns:repeat(4, minmax(0, 1fr))}.md\:grid-cols-5{grid-template-columns:repeat(5, minmax(0, 1fr))}}@media (min-width: 1024px){.lg\:grid-cols-2{grid-template-columns:repeat(2, minmax(0, 1fr))}.lg\:justify-end{justify-content:flex-end}}</style></head><body class="bg-surface selection:bg-primary-container selection:text-on-primary-container" data-mode="connect">```html
+
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Velora AI | High-End WhatsApp Booking Automation</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface": "#fff9ef",
+                        "surface-variant": "#e9e2d3",
+                        "secondary-fixed-dim": "#ffc8b3",
+                        "primary-dim": "#5b41a4",
+                        "on-tertiary-container": "#103d6f",
+                        "inverse-primary": "#b095ff",
+                        "on-surface": "#363228",
+                        "on-primary-container": "#2e0877",
+                        "on-primary": "#fdf7ff",
+                        "error": "#a8364b",
+                        "surface-dim": "#e0d9ca",
+                        "on-tertiary-fixed": "#002851",
+                        "secondary-fixed": "#ffdbcd",
+                        "on-secondary-fixed-variant": "#864c33",
+                        "on-primary-fixed": "#080024",
+                        "tertiary-fixed-dim": "#91b5ef",
+                        "secondary-container": "#ffdbcd",
+                        "primary-fixed": "#b095ff",
+                        "error-container": "#f97386",
+                        "error-dim": "#6b0221",
+                        "on-error": "#fff7f7",
+                        "on-secondary-container": "#7b432a",
+                        "on-background": "#363228",
+                        "background": "#fff9ef",
+                        "surface-container-low": "#f9f3e7",
+                        "on-primary-fixed-variant": "#38187f",
+                        "surface-tint": "primary",
+                        "tertiary-container": "#9ec2fd",
+                        "surface-container-high": "#eee7da",
+                        "secondary": "#8b5036",
+                        "inverse-on-surface": "#a19c94",
+                        "on-tertiary-fixed-variant": "#1d4679",
+                        "surface-bright": "#fff9ef",
+                        "on-error-container": "#6e0523",
+                        "primary-container": "#b095ff",
+                        "on-surface-variant": "#635f53",
+                        "on-secondary": "#fff7f5",
+                        "on-secondary-fixed": "#64311a",
+                        "primary": "primary",
+                        "surface-container": "#f4ede0",
+                        "surface-container-lowest": "#ffffff",
+                        "primary-fixed-dim": "#a288f0",
+                        "outline": "#7f7a6e",
+                        "inverse-surface": "#100e09",
+                        "secondary-dim": "#7c442b",
+                        "outline-variant": "#b8b1a3",
+                        "tertiary-dim": "#2e5488"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Manrope"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; background-color: #fff9ef; color: #363228; -webkit-font-smoothing: antialiased; }
+        h1, h2, h3 { font-family: 'Manrope', sans-serif; }
+        .glass-card { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(24px); }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; vertical-align: middle; }
+        .ambient-shadow { box-shadow: 0 40px 60px -5px rgba(54, 50, 40, 0.06); }
+        .benefit-card-shadow { box-shadow: 0 10px 30px -5px rgba(54, 50, 40, 0.08); }
+        html { scroll-behavior: smooth; }
+    </style>
+<!-- TopNavBar -->
+<nav class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-8 py-4 max-w-full bg-[#fff9ef] dark:bg-stone-950 border-b border-[#363228]/10">
+<div class="flex items-center gap-2.5">
+<span class="material-symbols-outlined text-primary text-3xl" style="font-variation-settings: 'FILL' 1">auto_awesome</span>
+<div class="text-2xl tracking-tight text-[#363228] dark:text-[#f9f3e7]">
+<span class="font-bold">Velora</span><span class="font-extrabold text-[#9C89B8]"> AI</span>
+</div>
+</div>
+<div class="hidden md:flex items-center gap-10">
+<a class="text-[#363228] dark:text-[#f9f3e7] opacity-80 hover:opacity-100 transition-colors duration-300" href="#how-it-works">How it works</a>
+<a class="text-[#363228] dark:text-[#f9f3e7] opacity-80 hover:opacity-100 transition-colors duration-300" href="#features">Features</a>
+<a class="text-[#363228] dark:text-[#f9f3e7] opacity-80 hover:opacity-100 transition-colors duration-300" href="#outcomes">Outcomes</a>
+<a class="text-[#363228] dark:text-[#f9f3e7] opacity-80 hover:opacity-100 transition-colors duration-300" href="#use-cases">Use Cases</a>
+<a class="text-[#363228] dark:text-[#f9f3e7] opacity-80 hover:opacity-100 transition-colors duration-300" href="#pricing">Pricing</a>
+</div>
+<button class="bg-primary text-on-primary px-6 py-2.5 rounded-full font-semibold hover:opacity-90 active:scale-95 transition-all">See it book patients live</button>
+</nav>
+<main class="pt-24">
+<!-- 1. Hero Section -->
+<section class="max-w-7xl mx-auto px-8 py-20 grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+<div class="space-y-8">
+<div class="inline-flex items-center px-4 py-2 rounded-full bg-primary-container text-on-primary-container text-sm font-semibold tracking-wide uppercase">
+                WhatsApp AI Receptionist
+            </div>
+<h1 class="text-6xl font-extrabold text-on-surface leading-[1.1] tracking-tight">
+                You’re losing patients on WhatsApp.
+            </h1><p class="text-2xl font-bold text-primary mt-2 mb-6 font-extrabold text-[#5b41a4]">Turn every message into a confirmed booking — automatically.</p>
+<p class="text-xl text-on-surface-variant max-w-lg leading-relaxed">
+                Most clinics reply too late — or not at all. Velora replies instantly, books automatically, and never misses a message.
+            </p>
+<div class="flex flex-wrap gap-4">
+<button class="bg-primary text-on-primary px-8 py-4 rounded-full text-lg font-bold hover:shadow-lg transition-all active:scale-95">Watch it handle a real booking</button>
+<button class="bg-surface-container-high text-on-surface px-8 py-4 rounded-full text-lg font-bold hover:bg-surface-variant transition-all">See how it works in 60 sec</button>
+</div>
+<div class="flex items-center gap-4 text-on-surface-variant opacity-70">
+<div class="flex -space-x-2">
+<img alt="office manager" class="w-8 h-8 rounded-full border-2 border-surface" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDCsMj1O9N-eTMzQ0uzUT_K-DRKtpMIFHLaW5nhSZcDCDt36PkyE-2EnulIATKgQWsWMLSBJZ0z8VEdeaK0xvc__HAUg5zF8X5XpDHqZS1MJNQ5XlstiW5qyW5koYXTpuqAoNfDJtEKf-Z_5Lh0-0akJUZRvCmThmEDBCFUD5Dz3l_x8AZr6nGggmBAycKfYv4-GloZ26p285W2jIlnmRnQtFJxh_8QXHtbior2AJHcmBhXTpZJcPSbXsPp-ybonlMIqh6nkGhTLkbH"/>
+<img alt="healthcare professional" class="w-8 h-8 rounded-full border-2 border-surface" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBfzklfuN0v3LsKzDkOjK4Q2un3PpSBCrfNVuVp03aS-yyJ5BDQq_vEx6w5SGuJ2PUj4klyLXZJ1fcrWEeWot8WAveZgbJPggW3J5WsLu-ED15cF4Z4tgqdT9wEQCFoWOeLHrWa48YN7UYnhEtfnDBbf34wJWgU3e2Oid7faud6fweIHhIQGg46apvOGoaGflE4pyvbigrsg98WxWRCEb-yQ9LtqgiTC3BhNneIVGsdMsv8JdvCf1cICIFFkchlHTZ4mXGEMYmWjOae"/>
+<img alt="dentist" class="w-8 h-8 rounded-full border-2 border-surface" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAAerFUlCNyS3RBUNXflh9uq5kov4QJ3sZA4cUxLNzO_ALIdisXfJnD9rEXxbUYdDkMzn3kndSVepgobb9tBz2J6ojarkTCSurFgH9jAOhgFeJx_hQvJYjQgxn0N3cwDcNr-bbbq54QpAwIJdwHLZP8e3IJ-KPFptG-507BNwPIjonYq_IeRSEwV22xx7XzQmR0fBK6BljUvQh2OrfjkmW-96XStk2-2z_6CFzgsAnJmDc8qryr1U9YVs4hbOBWKy3Xl-BYlTz4X8lM"/>
+</div>
+<span class="text-xs font-medium">Trusted by 200+ clinics • Setup in under 24 hours • No credit card required</span>
+</div>
+</div>
+<!-- WhatsApp Mockup -->
+<div class="relative flex justify-center lg:justify-end">
+<div class="w-[340px] h-[640px] bg-[#e5ddd5] rounded-[2rem] overflow-hidden ambient-shadow flex flex-col relative border border-black/5 ring-1 ring-black/5">
+<div class="bg-[#075e54] text-white p-4 pt-6 flex items-center justify-between shrink-0">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full flex items-center justify-center shrink-0" style="background-color: #9C89B8;">
+<span class="material-symbols-outlined text-white text-xl">smart_toy</span>
+</div>
+<div>
+<h4 class="font-bold text-[14px] leading-tight">Velora AI Receptionist</h4>
+<p class="text-[11px] text-white/80">Active &amp; Online</p>
+</div>
+</div>
+<div class="flex gap-4">
+<span class="material-symbols-outlined text-xl opacity-80">videocam</span>
+<span class="material-symbols-outlined text-xl opacity-80">call</span>
+</div>
+</div>
+<div class="flex-1 overflow-y-auto p-4 space-y-2 !space-y-1" style='background-image: url("https://lh3.googleusercontent.com/aida/ADBb0uicbQo9GNZXVi_MdW50yKySqG5Kq2ADFKMd3HA9nRN1e-7L8gJ6LubVtGIsIZatAf2sBWSgQ3hRiVvqTYWHnSFSEGB-4Csa1Z_U8-b-9KwbDDoBOFPm4oz_CNCqfW73j6W--2jK5yFVsSADEuO7hAQ28yKNxuBvw20AqEUcapTWXVKB6Vb7oQt3a2zDOVfSYuz0P1U_jLvV8LIgcl3heiA-TKMPfm7CWvxCXyJHq7-m0wiCLJliYhvfbkPv8Q0SidcxZimnQ76LXLU"); background-repeat: repeat; background-size: 320px auto; background-color: #f1ebe1; background-blend-mode: multiply;'>
+<div class="flex justify-start">
+<div class="relative bg-white text-[#303030] px-4 py-2.5 rounded-lg rounded-tl-none shadow-[0_1px_0.5px_rgba(0,0,0,0.13)] max-w-[85%] text-[13px] leading-snug shadow-md !py-1.5 !px-3 shadow-sm border border-black/5">
+                            Hi! I'd like to book a teeth cleaning for this Thursday afternoon if possible?
+                            <div class="text-[10px] text-black/40 text-right mt-1">10:42 AM</div>
+</div>
+</div>
+<div class="flex justify-end">
+<div class="relative bg-[#e1ffc7] text-[#303030] px-4 py-2.5 rounded-lg rounded-tr-none shadow-[0_1px_0.5px_rgba(0,0,0,0.13)] max-w-[85%] text-[13px] leading-snug shadow-md !py-1.5 !px-3 shadow-sm border border-black/5">
+                            Hi Sarah! Let me check Dr. Aris's schedule for Thursday. 🦷 <br/><br/>
+                            We have two spots: 2:30 PM or 4:15 PM. Which one works best for you?
+                            <div class="flex items-center justify-end gap-1 mt-1">
+<span class="text-[10px] text-black/40">10:43 AM</span>
+<span class="material-symbols-outlined text-[16px] text-[#4fc3f7]">done_all</span>
+</div>
+</div>
+</div>
+<div class="flex justify-start">
+<div class="relative bg-white text-[#303030] px-4 py-2.5 rounded-lg rounded-tl-none shadow-[0_1px_0.5px_rgba(0,0,0,0.13)] max-w-[85%] text-[13px] leading-snug shadow-md !py-1.5 !px-3 shadow-sm border border-black/5">
+                            4:15 PM is perfect!
+                            <div class="text-[10px] text-black/40 text-right mt-1">10:44 AM</div>
+</div>
+</div>
+<div class="flex justify-end">
+<div class="relative bg-[#e1ffc7] text-[#303030] px-4 py-2.5 rounded-lg rounded-tr-none shadow-[0_1px_0.5px_rgba(0,0,0,0.13)] max-w-[85%] text-[13px] leading-snug shadow-md !py-1.5 !px-3 shadow-sm border border-black/5">
+                            Done! You're booked for Thursday, Oct 24th at 4:15 PM. ✨
+                            <div class="flex items-center justify-end gap-1 mt-1">
+<span class="text-[10px] text-black/40">10:44 AM</span>
+<span class="material-symbols-outlined text-[16px] text-[#4fc3f7]">done_all</span>
+</div>
+</div>
+</div>
+</div>
+<div class="p-3 bg-[#f0f2f5] flex items-center gap-2 shrink-0">
+<div class="flex-1 bg-white rounded-full px-5 py-2.5 text-[13px] text-on-surface-variant shadow-sm border border-black/5">
+                        Type a message...
+                    </div>
+<div class="w-10 h-10 rounded-full bg-[#128c7e] flex items-center justify-center text-white shadow-md">
+<span class="material-symbols-outlined text-xl">mic</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- 2. Problem Section -->
+<section class="max-w-7xl mx-auto px-8 py-32 space-y-20">
+<div class="text-center max-w-3xl mx-auto space-y-6">
+<h2 class="text-4xl font-extrabold text-on-surface">Every delayed reply = a lost patient.</h2>
+<p class="text-xl text-on-surface-variant leading-relaxed">
+                Patients don’t wait. They message multiple clinics — and go with whoever replies first. You’re not losing leads because of demand. You’re losing them because of response time.
+            </p>
+<div class="flex flex-wrap justify-center gap-3">
+<span class="px-6 py-2 rounded-full bg-error-container/20 text-error-dim font-medium text-sm">Slow replies</span>
+<span class="px-6 py-2 rounded-full bg-error-container/20 text-error-dim font-medium text-sm">Missed inquiries</span>
+<span class="px-6 py-2 rounded-full bg-error-container/20 text-error-dim font-medium text-sm">Manual follow-ups</span>
+<span class="px-6 py-2 rounded-full bg-error-container/20 text-error-dim font-medium text-sm">Lost bookings</span>
+<span class="px-6 py-2 rounded-full bg-error-container/20 text-error-dim font-medium text-sm">Front desk overload</span>
+</div>
+</div>
+</section>
+<!-- 3. Stats Row Section -->
+<section class="max-w-7xl mx-auto px-8 pb-32">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+<div class="bg-primary-container/30 p-8 rounded-lg flex flex-col justify-between h-48">
+<span class="text-sm font-bold uppercase tracking-widest text-on-primary-container opacity-60">Availability</span>
+<div class="text-4xl font-extrabold text-on-primary-container">24/7</div>
+<span class="text-xs font-medium text-on-primary-container">Booking availability</span>
+</div>
+<div class="bg-secondary-container/50 p-8 rounded-lg flex flex-col justify-between h-48">
+<span class="text-sm font-bold uppercase tracking-widest text-on-secondary-container opacity-60">Speed</span>
+<div class="text-4xl font-extrabold text-on-secondary-container">&lt; 3 sec</div>
+<span class="text-xs font-medium text-on-secondary-container">Average response time</span>
+</div>
+<div class="bg-tertiary-container/30 p-8 rounded-lg flex flex-col justify-between h-48">
+<span class="text-sm font-bold uppercase tracking-widest text-on-tertiary-container opacity-60">Growth</span>
+<div class="text-4xl font-extrabold text-on-tertiary-container">+30%</div>
+<span class="text-xs font-medium text-on-tertiary-container">More confirmed bookings</span>
+</div>
+<div class="bg-[#e8f5e9] p-8 rounded-lg flex flex-col justify-between h-48">
+<span class="text-sm font-bold uppercase tracking-widest text-green-800 opacity-60">Reliability</span>
+<div class="text-4xl font-extrabold text-green-800">0</div>
+<span class="text-xs font-medium text-green-800">missed Patient inquiries</span>
+</div>
+</div>
+</section>
+<!-- 4. Positioning Section -->
+<section class="max-w-7xl mx-auto px-8 py-32" id="about">
+<div class="bg-white p-16 rounded-xl space-y-12 border border-black/5 ambient-shadow">
+<div class="text-center space-y-4">
+<h2 class="text-4xl font-extrabold text-on-surface"><span class="text-4xl font-extrabold text-on-surface mb-12 text-center" spellcheck="false" style="margin-top: 0px; margin-right: 0px; margin-left: 0px; color: rgb(54, 50, 40);">Not a chatbot. A digital receptionist.</span></h2>
+<p class="text-xl text-on-surface-variant/80">Built for real clinic workflows — not just generic replies.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-12 max-w-5xl mx-auto">
+<!-- Column 1 -->
+<div class="space-y-6">
+<div class="flex items-center gap-4">
+<div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-white text-lg">check</span>
+</div>
+<span class="font-semibold text-on-surface">Understands intent</span>
+</div>
+<div class="flex items-center gap-4">
+<div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-white text-lg">check</span>
+</div>
+<span class="font-semibold text-on-surface">Confirms instantly</span>
+</div>
+</div>
+<!-- Column 2 -->
+<div class="space-y-6">
+<div class="flex items-center gap-4">
+<div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-white text-lg">check</span>
+</div>
+<span class="font-semibold text-on-surface">Escalates when needed</span>
+</div>
+<div class="flex items-center gap-4">
+<div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-white text-lg">check</span>
+</div>
+<span class="font-semibold text-on-surface">Checks real availability</span>
+</div>
+</div>
+<!-- Column 3 -->
+<div class="space-y-6">
+<div class="flex items-center gap-4">
+<div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-white text-lg">check</span>
+</div>
+<span class="font-semibold text-on-surface">Sends automatic reminders</span>
+</div>
+<div class="flex items-center gap-4">
+<div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-white text-lg">check</span>
+</div>
+<span class="font-semibold text-on-surface">Secure &amp; HIPAA compliant</span>
+</div>
+</div>
+</div><div class="text-center mt-10"><p class="text-2xl font-semibold text-primary">All inside WhatsApp.</p></div>
+</div>
+</section>
+<!-- 5. How It Works Section -->
+<section class="bg-surface-container-low py-32" id="how-it-works">
+<div class="max-w-7xl mx-auto px-8">
+<h2 class="text-4xl font-extrabold text-center mb-20">From message to confirmed booking — automatically</h2>
+<div class="grid grid-cols-1 md:grid-cols-5 gap-8">
+<!-- Step 1 -->
+<div class="bg-surface-container-lowest p-8 rounded-lg ambient-shadow relative overflow-hidden group h-full">
+<div class="w-10 h-10 rounded-full bg-primary text-on-primary flex items-center justify-center font-bold text-lg mb-6 shadow-md relative z-10 w-12 h-12 text-xl border-2 border-white/20">1</div>
+<span class="material-symbols-outlined text-primary mb-6 text-3xl block" style="font-variation-settings: 'FILL' 1">chat</span>
+<h4 class="font-bold mb-2 text-lg">Patient sends a message</h4>
+<p class="text-sm text-on-surface-variant">They text your business WhatsApp for an appointment.</p>
+</div>
+<!-- Step 2 -->
+<div class="bg-surface-container-lowest p-8 rounded-lg ambient-shadow relative overflow-hidden group h-full">
+<div class="w-10 h-10 rounded-full bg-primary text-on-primary flex items-center justify-center font-bold text-lg mb-6 shadow-md relative z-10 w-12 h-12 text-xl border-2 border-white/20">2</div>
+<span class="material-symbols-outlined text-primary mb-6 text-3xl block" style="font-variation-settings: 'FILL' 1">neurology</span>
+<h4 class="font-bold mb-2 text-lg">Velora understands intent</h4>
+<p class="text-sm text-on-surface-variant">The AI identifies the request and scans your live calendar.</p>
+</div>
+<!-- Step 3 -->
+<div class="bg-surface-container-lowest p-8 rounded-lg ambient-shadow relative overflow-hidden group h-full">
+<div class="w-10 h-10 rounded-full bg-primary text-on-primary flex items-center justify-center font-bold text-lg mb-6 shadow-md relative z-10 w-12 h-12 text-xl border-2 border-white/20">3</div>
+<span class="material-symbols-outlined text-primary mb-6 text-3xl block" style="font-variation-settings: 'FILL' 1">calendar_month</span>
+<h4 class="font-bold mb-2 text-lg">Suggests best available slots instantly</h4>
+<p class="text-sm text-on-surface-variant">Available times are offered for the patient to choose from.</p>
+</div>
+<!-- Step 4 -->
+<div class="bg-surface-container-lowest p-8 rounded-lg ambient-shadow relative overflow-hidden group h-full">
+<div class="w-10 h-10 rounded-full bg-primary text-on-primary flex items-center justify-center font-bold text-lg mb-6 shadow-md relative z-10 w-12 h-12 text-xl border-2 border-white/20">4</div>
+<span class="material-symbols-outlined text-primary mb-6 text-3xl block" style="font-variation-settings: 'FILL' 1">check_circle</span>
+<h4 class="font-bold mb-2 text-lg">Confirms instantly</h4>
+<p class="text-sm text-on-surface-variant">The appointment is secured in your system without human help.</p>
+</div>
+<!-- Step 5 -->
+<div class="bg-surface-container-lowest p-8 rounded-lg ambient-shadow relative overflow-hidden group ring-2 ring-primary/20 h-full">
+<div class="w-10 h-10 rounded-full bg-primary text-on-primary flex items-center justify-center font-bold text-lg mb-6 shadow-md relative z-10 w-12 h-12 text-xl border-2 border-white/20">5</div>
+<span class="material-symbols-outlined text-primary mb-6 text-3xl block" style="font-variation-settings: 'FILL' 1">notifications_active</span>
+<h4 class="font-bold mb-2 text-lg">Automated reminders &amp; follow-ups</h4>
+<p class="text-sm text-on-surface-variant mb-8">Automatic follow-ups and reminders ensure high show-up rates.</p>
+<div class="absolute bottom-0 right-0 p-2 bg-primary/5 rounded-tl-[32px]">
+<span class="text-[10px] font-bold text-primary uppercase">Revenue feature</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- 6. Features Section -->
+<section class="max-w-7xl mx-auto px-8 py-32" id="features">
+<h2 class="text-4xl font-extrabold text-center mb-20">Operational Features</h2>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8"><div class="bg-surface-container-low p-8 rounded-xl border border-black/5 hover:shadow-lg transition-all">
+<span class="material-symbols-outlined text-primary text-4xl mb-6">calendar_add_on</span>
+<h4 class="text-xl font-bold mb-4 font-extrabold text-primary">Smart Booking Automation</h4>
+<p class="text-on-surface-variant text-sm">Advanced logic to handle multi-step scheduling across different treatments automatically.</p>
+</div>
+<div class="bg-surface-container-low p-8 rounded-xl border border-black/5 hover:shadow-lg transition-all">
+<span class="material-symbols-outlined text-primary text-4xl mb-6">event_available</span>
+<h4 class="text-xl font-bold mb-4 font-extrabold text-primary">Calendar-Aware Scheduling</h4>
+<p class="text-on-surface-variant text-sm">Real-time sync with your PMS (Dentrix, Cliniko, Jane, etc.) for live availability checking.</p>
+</div>
+<div class="bg-surface-container-low p-8 rounded-xl border border-black/5 hover:shadow-lg transition-all">
+<span class="material-symbols-outlined text-primary text-4xl mb-6">alarm_on</span>
+<h4 class="text-xl font-bold mb-4 font-extrabold text-primary">Automated Reminders</h4>
+<p class="text-on-surface-variant text-sm">Proactive WhatsApp notifications to reduce no-shows and keep chairs filled.</p>
+</div>
+<div class="bg-surface-container-low p-8 rounded-xl border border-black/5 hover:shadow-lg transition-all">
+<span class="material-symbols-outlined text-primary text-4xl mb-6">payments</span>
+<h4 class="text-xl font-bold mb-4 font-extrabold text-primary">Recovery Flows</h4>
+<p class="text-on-surface-variant text-sm">Automatically re-engage patients who dropped off during the booking process.</p>
+</div>
+<div class="bg-surface-container-low p-8 rounded-xl border border-black/5 hover:shadow-lg transition-all">
+<span class="material-symbols-outlined text-primary text-4xl mb-6">transfer_within_a_station</span>
+<h4 class="text-xl font-bold mb-4 font-extrabold text-primary">Human Handoff</h4>
+<p class="text-on-surface-variant text-sm">Seamlessly escalate complex medical inquiries to your team with full context.</p>
+</div>
+<div class="bg-surface-container-low p-8 rounded-xl border border-black/5 hover:shadow-lg transition-all">
+<span class="material-symbols-outlined text-primary text-4xl mb-6">bolt</span>
+<h4 class="text-xl font-bold mb-4 font-extrabold text-primary">Instant Activation</h4>
+<p class="text-on-surface-variant text-sm">Go live on your existing number in under 24 hours. No complex coding required.</p>
+</div></div>
+</section>
+<!-- 7. Outcomes Section -->
+<section class="max-w-7xl mx-auto px-8 py-32 bg-surface" id="outcomes">
+<h2 class="text-4xl font-extrabold text-center mb-20">Business Outcomes</h2>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<div class="bg-primary-container/20 p-10 rounded-xl hover:bg-primary-container/30 transition-all cursor-default benefit-card-shadow h-full">
+<h4 class="text-xl font-bold mb-4">Never Miss a Patient Again</h4>
+<p class="text-on-surface-variant text-sm">Capture every inquiry 24/7. Turn middle-of-the-night messages into confirmed morning appointments.</p>
+</div>
+<div class="bg-secondary-container/25 p-10 rounded-xl hover:bg-secondary-container/35 transition-all cursor-default benefit-card-shadow h-full">
+<h4 class="text-xl font-bold mb-4">Save 15+ Hours / Week</h4>
+<p class="text-on-surface-variant text-sm">Save 20+ hours weekly. Eliminate manual WhatsApp management and let your front desk focus on patients in the clinic.</p>
+</div>
+<div class="bg-tertiary-container/20 p-10 rounded-xl hover:bg-tertiary-container/30 transition-all cursor-default benefit-card-shadow h-full">
+<h4 class="text-xl font-bold mb-4">+30% More Confirmed Bookings</h4>
+<p class="text-on-surface-variant text-sm">Boost chair utilization by 25-30% by closing leads while their intent is at its peak.</p>
+</div>
+<div class="bg-primary-container/20 p-10 rounded-xl hover:bg-primary-container/30 transition-all cursor-default benefit-card-shadow h-full">
+<h4 class="text-xl font-bold mb-4">Reply in &lt;3 Seconds, 24/7</h4>
+<p class="text-on-surface-variant text-sm">Reply in under 3 seconds every time, ensuring you are the first clinic to engage with potential patients.</p>
+</div>
+<div class="bg-secondary-container/25 p-10 rounded-xl hover:bg-secondary-container/35 transition-all cursor-default benefit-card-shadow h-full">
+<h4 class="text-xl font-bold mb-4">Automated Follow-ups = Higher Retention</h4>
+<p class="text-on-surface-variant text-sm">Patients value instant communication. Provide a modern, frictionless experience that keeps them coming back.</p>
+</div>
+<div class="bg-tertiary-container/20 p-10 rounded-xl hover:bg-tertiary-container/30 transition-all cursor-default benefit-card-shadow h-full">
+<h4 class="text-xl font-bold mb-4">Run Your Front Desk on Autopilot</h4>
+<p class="text-on-surface-variant text-sm">Manage multiple locations and high-volume inquiry periods without hiring additional administrative staff.</p>
+</div>
+</div>
+</section>
+<!-- 8. Use Cases Section -->
+<section class="max-w-7xl mx-auto px-8 py-32 grid grid-cols-1 gap-10 items-stretch max-w-4xl mx-auto" id="use-cases">
+<!-- Left Column: Verticals -->
+<div class="space-y-10 flex flex-col">
+<h2 class="text-4xl font-extrabold text-left">Built for clinics. Expanding to everything that books.</h2>
+<div class="flex flex-col gap-6 flex-grow">
+<!-- Card 1: Dental Clinics -->
+<div class="bg-surface-container-lowest p-8 rounded-xl border-2 border-primary ambient-shadow flex flex-col justify-center text-left flex-grow">
+<div class="flex items-center justify-between mb-2">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-primary text-3xl">dentistry</span>
+<h4 class="text-xl font-bold">Dental Clinics</h4>
+</div>
+<span class="px-3 py-1 bg-primary/10 text-primary rounded-full text-[10px] font-bold">Live now</span>
+</div>
+<p class="text-on-surface-variant text-sm">Optimized for dental workflows, emergency consultations, and routine hygiene bookings.</p>
+</div>
+<!-- Card 2: Hair Salons -->
+<div class="bg-surface-container-lowest p-8 rounded-xl border border-black/5 ambient-shadow flex flex-col justify-center text-left flex-grow">
+<div class="flex items-center justify-between mb-2">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-secondary text-3xl">content_cut</span>
+<h4 class="text-xl font-bold">Hair Salons</h4>
+</div>
+<span class="px-3 py-1 bg-surface-container-high text-on-surface-variant rounded-full text-[10px] font-semibold opacity-60">Coming soon</span>
+</div>
+<p class="text-on-surface-variant text-sm">Automated scheduling for stylists, color treatments, and barber services.</p>
+</div>
+<!-- Card 3: Nail & Beauty -->
+<div class="bg-surface-container-lowest p-8 rounded-xl border border-black/5 ambient-shadow flex flex-col justify-center text-left flex-grow">
+<div class="flex items-center justify-between mb-2">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-tertiary text-3xl">spa</span>
+<h4 class="text-xl font-bold">Nail &amp; Beauty</h4>
+</div>
+<span class="px-3 py-1 bg-surface-container-high text-on-surface-variant rounded-full text-[10px] font-semibold opacity-60">Coming soon</span>
+</div>
+<p class="text-on-surface-variant text-sm">Manage high-volume bookings for manicures, lash extensions, and facials.</p>
+</div>
+<!-- Card 4: Medical Centers -->
+<div class="bg-surface-container-lowest p-8 rounded-xl border border-black/5 ambient-shadow flex flex-col justify-center text-left flex-grow">
+<div class="flex items-center justify-between mb-2">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-on-tertiary-container text-3xl">medical_services</span>
+<h4 class="text-xl font-bold">Medical Centers</h4>
+</div>
+<span class="px-3 py-1 bg-surface-container-high text-on-surface-variant rounded-full text-[10px] font-semibold opacity-60">Coming soon</span>
+</div>
+<p class="text-on-surface-variant text-sm">Streamlining triage and appointments for general practice and specialists.</p>
+</div>
+</div>
+</div>
+<!-- Right Column: Capability Cards (Updated for symmetry) -->
+</section>
+<!-- 9. Pricing Section -->
+<section class="max-w-7xl mx-auto px-8 py-32" id="pricing">
+<div class="text-center max-w-3xl mx-auto mb-20 space-y-4">
+<h2 class="text-4xl font-extrabold text-on-surface">Simple, Transparent Pricing</h2>
+<p class="text-xl text-on-surface-variant leading-relaxed">Choose the plan that fits your clinic's needs.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+<!-- Starter Plan -->
+<div class="bg-surface-container-low p-10 rounded-xl flex flex-col h-full ambient-shadow border border-black/5">
+<div class="mb-8">
+<h4 class="text-2xl font-bold mb-2">Starter</h4>
+<p class="text-sm text-on-surface-variant mb-6">For small clinics getting started with automation</p>
+<div class="flex items-baseline gap-1">
+<span class="text-4xl font-extrabold">$700</span>
+<span class="text-on-surface-variant text-sm">/mo</span>
+</div>
+<p class="text-xs font-semibold text-primary mt-4">Recover 10-20 missed patients/month</p>
+</div>
+<ul class="space-y-4 mb-10 flex-1"><li class="flex items-start gap-3 text-sm"><span class="material-symbols-outlined text-primary text-lg">check_circle</span><span>Handle all WhatsApp inquiries automatically</span></li>
+<li class="flex items-start gap-3 text-sm">
+<span class="material-symbols-outlined text-primary text-lg">check_circle</span>
+<span>Handle 100–200 patient conversations/month</span>
+</li>
+<li class="flex items-start gap-3 text-sm">
+<span class="material-symbols-outlined text-primary text-lg">check_circle</span>
+<span>Basic appointment scheduling</span>
+</li>
+<li class="flex items-start gap-3 text-sm">
+<span class="material-symbols-outlined text-primary text-lg">check_circle</span>
+<span>1 clinic location</span>
+</li>
+</ul>
+<button class="w-full py-4 rounded-full border-2 border-primary text-primary font-bold hover:bg-primary hover:text-white transition-all">See it book patients live</button>
+</div>
+<!-- Growth Plan -->
+<div class="bg-on-surface p-10 rounded-xl flex flex-col h-full shadow-xl relative ring-4 ring-primary/20">
+<div class="absolute -top-4 left-1/2 -translate-x-1/2 bg-primary text-on-primary px-4 py-1 rounded-full text-xs font-bold uppercase tracking-widest">Most clinics choose this</div>
+<div class="mb-8">
+<h4 class="text-2xl font-bold mb-2 text-surface">Growth</h4>
+<p class="text-sm text-surface-variant mb-6">For clinics ready to scale bookings and reduce staff workload</p>
+<div class="flex items-baseline gap-1 text-surface">
+<span class="text-4xl font-extrabold">$2000</span>
+<span class="text-surface-variant text-sm">/mo</span>
+</div>
+<p class="text-xs font-semibold text-primary-fixed mt-4">Recover 30-80 patients automatically</p>
+</div>
+<ul class="space-y-4 mb-10 flex-1"><li class="flex items-start gap-3 text-sm text-surface"><span class="material-symbols-outlined text-primary text-lg">check_circle</span><span>Automated booking &amp; confirmations</span></li><li class="flex items-start gap-3 text-sm text-surface"><span class="material-symbols-outlined text-primary text-lg">check_circle</span><span>Smart reminders &amp; follow-ups</span></li><li class="flex items-start gap-3 text-sm text-surface"><span class="material-symbols-outlined text-primary text-lg">check_circle</span><span>Recover missed and lost patients</span></li><li class="flex items-start gap-3 text-sm text-surface"><span class="material-symbols-outlined text-primary text-lg">check_circle</span><span>Reduce front desk workload</span></li></ul>
+<button class="w-full py-4 rounded-full bg-primary text-on-primary font-bold hover:opacity-90 transition-all">See it book patients live</button>
+</div>
+<!-- Enterprise Plan -->
+<div class="bg-surface-container-low p-10 rounded-xl flex flex-col h-full ambient-shadow border border-black/5">
+<div class="mb-8">
+<h4 class="text-2xl font-bold mb-2">Enterprise</h4>
+<p class="text-sm text-on-surface-variant mb-6">Custom solutions for multi-location clinics and high volume operations</p>
+<div class="flex items-baseline gap-1">
+<span class="text-4xl font-extrabold">Custom</span>
+</div>
+<p class="text-xs font-semibold text-primary mt-4">Scale operations across all locations</p>
+</div>
+<ul class="space-y-4 mb-10 flex-1"><li class="flex items-start gap-3 text-sm"><span class="material-symbols-outlined text-primary text-lg">check_circle</span><span>Multi-location support</span></li><li class="flex items-start gap-3 text-sm"><span class="material-symbols-outlined text-primary text-lg">check_circle</span><span>Custom workflows</span></li><li class="flex items-start gap-3 text-sm"><span class="material-symbols-outlined text-primary text-lg">check_circle</span><span>Dedicated support</span></li><li class="flex items-start gap-3 text-sm"><span class="material-symbols-outlined text-primary text-lg">check_circle</span><span>Advanced integrations</span></li></ul>
+<button class="w-full py-4 rounded-full border-2 border-on-surface text-on-surface font-bold hover:bg-on-surface hover:text-surface transition-all">
+                    Contact Sales
+                </button>
+</div>
+</div>
+</section>
+<!-- 10. Final CTA -->
+<section class="max-w-7xl mx-auto px-8 mb-32">
+<div class="bg-on-surface rounded-xl p-16 text-center space-y-8 relative overflow-hidden">
+<div class="absolute top-0 left-0 w-full h-full opacity-10" style="background-image: radial-gradient(circle at 20% 30%, primary 0%, transparent 40%), radial-gradient(circle at 80% 70%, #8b5036 0%, transparent 40%);"></div>
+<h2 class="text-5xl font-extrabold text-surface relative z-10">Stop losing patients on WhatsApp.<div class="mt-4">Turn conversations into confirmed bookings — automatically.</div></h2>
+<p class="text-surface-variant text-xl max-w-2xl mx-auto relative z-10 mb-12 opacity-60">Let Velora reply instantly, book automatically, and free up your team.</p>
+<div class="relative z-10 flex flex-wrap justify-center gap-4">
+<button class="bg-primary text-on-primary px-10 py-5 rounded-full text-lg font-bold hover:shadow-xl transition-all">See it book patients live</button>
+<button class="bg-white/10 text-white backdrop-blur-md px-10 py-5 rounded-full text-lg font-bold hover:bg-white/20 transition-all border border-white/20">Try it on your clinic</button>
+</div>
+</div>
+</section>
+</main>
+<!-- 11. Footer -->
+<footer class="bg-[#363228] text-[#fff9ef] py-20 px-8">
+<div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-12">
+<!-- Logo & Desc -->
+<div class="md:col-span-5 space-y-6">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[#b095ff] text-2xl">auto_awesome</span>
+<div class="text-2xl font-bold">Velora AI</div>
+</div>
+<p class="text-[#fff9ef]/70 max-w-sm leading-relaxed">
+                The leading WhatsApp booking automation platform for high-end clinics. We turn conversations into confirmed appointments while you sleep.
+            </p>
+<div class="text-sm text-[#fff9ef]/40">
+                © 2024 Velora AI. The Tactile Sanctuary.
+            </div>
+</div>
+<!-- Links -->
+<div class="md:col-span-7 grid grid-cols-2 md:grid-cols-3 gap-8">
+<div class="space-y-4">
+<h5 class="font-bold text-sm tracking-widest uppercase opacity-40">Product</h5>
+<ul class="space-y-3 text-sm font-medium">
+<li><a class="hover:text-primary-fixed transition-colors" href="#how-it-works">How it works</a></li>
+<li><a class="hover:text-primary-fixed transition-colors" href="#features">Features</a></li>
+<li><a class="hover:text-primary-fixed transition-colors" href="#pricing">Pricing</a></li>
+</ul>
+</div>
+<div class="space-y-4">
+<h5 class="font-bold text-sm tracking-widest uppercase opacity-40">Company</h5>
+<ul class="space-y-3 text-sm font-medium">
+<li><a class="hover:text-primary-fixed transition-colors" href="#about">About Us</a></li>
+<li><a class="hover:text-primary-fixed transition-colors" href="#">Contact Support</a></li>
+<li><a class="hover:text-primary-fixed transition-colors" href="#">Book a Demo</a></li>
+</ul>
+</div>
+<div class="space-y-4">
+<h5 class="font-bold text-sm tracking-widest uppercase opacity-40">Legal</h5>
+<ul class="space-y-3 text-sm font-medium">
+<li><a class="hover:text-primary-fixed transition-colors" href="#">Privacy Policy</a></li>
+<li><a class="hover:text-primary-fixed transition-colors" href="#">Terms of Service</a></li>
+<li><a class="hover:text-primary-fixed transition-colors" href="#">Cookies</a></li>
+</ul>
+</div>
+</div>
+</div>
+</footer>
+```</body></html>
