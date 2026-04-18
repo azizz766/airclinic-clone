@@ -12,6 +12,84 @@
   --font-mono: var(--font-geist-mono);
 }
 
+/* ── Tactile Sanctuary Design System ───────────────────────────────────────── */
+@theme {
+  /* Surface hierarchy */
+  --color-surface:                   #fff9ef;
+  --color-surface-dim:               #e0d9ca;
+  --color-surface-bright:            #fff9ef;
+  --color-surface-variant:           #e9e2d3;
+  --color-surface-tint:              primary;
+  --color-surface-container-lowest:  #ffffff;
+  --color-surface-container-low:     #f9f3e7;
+  --color-surface-container:         #f4ede0;
+  --color-surface-container-high:    #eee7da;
+  --color-surface-container-highest: #e9e2d3;
+  --color-inverse-surface:           #100e09;
+  --color-inverse-on-surface:        #a19c94;
+
+  /* On-surface */
+  --color-on-surface:         #363228;
+  --color-on-surface-variant: #635f53;
+  --color-on-background:      #363228;
+  --color-background-theme:   #fff9ef;
+
+  /* Primary */
+  --color-primary:              primary;
+  --color-primary-dim:          #5b41a4;
+  --color-primary-fixed:        #b095ff;
+  --color-primary-fixed-dim:    #a288f0;
+  --color-primary-container:    #b095ff;
+  --color-on-primary:           #fdf7ff;
+  --color-on-primary-fixed:     #080024;
+  --color-on-primary-fixed-variant: #38187f;
+  --color-on-primary-container: #2e0877;
+  --color-inverse-primary:      #b095ff;
+
+  /* Secondary */
+  --color-secondary:                   #8b5036;
+  --color-secondary-dim:               #7c442b;
+  --color-secondary-fixed:             #ffdbcd;
+  --color-secondary-fixed-dim:         #ffc8b3;
+  --color-secondary-container:         #ffdbcd;
+  --color-on-secondary:                #fff7f5;
+  --color-on-secondary-fixed:          #64311a;
+  --color-on-secondary-fixed-variant:  #864c33;
+  --color-on-secondary-container:      #7b432a;
+
+  /* Tertiary */
+  --color-tertiary:                    #3b6095;
+  --color-tertiary-dim:                #2e5488;
+  --color-tertiary-fixed:              #9ec2fd;
+  --color-tertiary-fixed-dim:          #91b5ef;
+  --color-tertiary-container:          #9ec2fd;
+  --color-on-tertiary:                 #f8f8ff;
+  --color-on-tertiary-fixed:           #002851;
+  --color-on-tertiary-fixed-variant:   #1d4679;
+  --color-on-tertiary-container:       #103d6f;
+
+  /* Error */
+  --color-error:             #a8364b;
+  --color-error-dim:         #6b0221;
+  --color-error-container:   #f97386;
+  --color-on-error:          #fff7f7;
+  --color-on-error-container: #6e0523;
+
+  /* Outline */
+  --color-outline:         #7f7a6e;
+  --color-outline-variant: #b8b1a3;
+
+  /* Border radius overrides — matches the Tactile Sanctuary config */
+  --radius:    1rem;
+  --radius-lg: 2rem;
+  --radius-xl: 3rem;
+
+  /* Fonts */
+  --font-headline: "Manrope", sans-serif;
+  --font-body:     "Inter", sans-serif;
+  --font-label:    "Inter", sans-serif;
+}
+
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
@@ -20,7 +98,35 @@
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-surface);
+  color: var(--color-on-surface);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3 {
+  font-family: 'Manrope', sans-serif;
+}
+
+/* Material Symbols */
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  vertical-align: middle;
+}
+
+/* Tactile Sanctuary shadows */
+.ambient-shadow {
+  box-shadow: 0 40px 60px -5px rgba(54, 50, 40, 0.06);
+}
+
+.benefit-card-shadow {
+  box-shadow: 0 10px 30px -5px rgba(54, 50, 40, 0.08);
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(24px);
+}
+html {
+  scroll-behavior: smooth;
 }
