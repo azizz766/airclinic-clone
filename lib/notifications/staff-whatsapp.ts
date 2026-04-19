@@ -7,7 +7,9 @@ interface StaffNotificationParams {
   phone: string
 }
 
-export async function sendStaffBookingNotification(params: StaffNotificationParams): Promise<void> {
+export async function sendStaffBookingNotification(
+  params: StaffNotificationParams
+): Promise<void> {
   const staffNumber = process.env.STAFF_WHATSAPP_NUMBER
   const twilioFrom = process.env.TWILIO_WHATSAPP_NUMBER
   const accountSid = process.env.TWILIO_ACCOUNT_SID
@@ -15,6 +17,11 @@ export async function sendStaffBookingNotification(params: StaffNotificationPara
 
   if (!staffNumber) {
     console.warn('[staff-whatsapp] STAFF_WHATSAPP_NUMBER not set — skipping notification')
+    return
+  }
+
+  if (!twilioFrom || !accountSid || !authToken) {
+    console.warn('[staff-whatsapp] Missing Twilio env vars')
     return
   }
 
@@ -27,17 +34,23 @@ export async function sendStaffBookingNotification(params: StaffNotificationPara
     minute: '2-digit',
   })
 
-  const message = `🔔 حجز جديد عبر واتساب\n👤 المريض: ${params.patientName}\n🦷 الخدمة: ${params.serviceName}\n📅 الموعد: ${scheduledStr}\n📞 رقم المريض: ${params.phone}`
+  const message = `🔔 طلب ديمو جديد
+🏥 العيادة: ${params.serviceName}
+👤 الاسم: ${params.patientName}
+📞 الرقم: ${params.phone || 'غير متوفر'}
+📅 الوقت: ${scheduledStr}`
 
   try {
     const client = twilio(accountSid, authToken)
-    await client.messages.create({
-      from: `whatsapp:${twilioFrom}`,
+
+    const result = await client.messages.create({
+      from: `whatsapp:${twilioFrom}`, // ✅ أهم تعديل هنا
       to: `whatsapp:${staffNumber}`,
       body: message,
     })
-    console.log('[staff-whatsapp] notification sent to staff')
+
+    console.log('[staff-whatsapp] notification sent', result.sid)
   } catch (err) {
-    console.error('[staff-whatsapp] failed to send notification', { err })
+    console.error('[staff-whatsapp] failed to send notification', err)
   }
 }
