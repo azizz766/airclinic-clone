@@ -40,6 +40,14 @@ export async function sendStaffBookingNotification(
 📞 الرقم: ${params.phone || 'غير متوفر'}
 📅 الوقت: ${scheduledStr}`
 
+  console.log(JSON.stringify({
+    event: '[book-demo-whatsapp] pre_send',
+    from: `whatsapp:${twilioFrom}`,
+    to: `whatsapp:${staffNumber}`,
+    hasSid: !!accountSid,
+    hasToken: !!authToken,
+  }))
+
   try {
     const client = twilio(accountSid, authToken)
 
@@ -49,8 +57,21 @@ export async function sendStaffBookingNotification(
       body: message,
     })
 
-    console.log('[staff-whatsapp] notification sent', result.sid)
+    console.log(JSON.stringify({
+      event: '[book-demo-whatsapp] send_success',
+      sid: result.sid,
+      status: result.status,
+      to: result.to,
+      from: result.from,
+    }))
   } catch (err) {
-    console.error('[staff-whatsapp] failed to send notification', err)
+    const e = err as Record<string, unknown>
+    console.error(JSON.stringify({
+      event: '[book-demo-whatsapp] send_failure',
+      code: e['code'],
+      status: e['status'],
+      message: e['message'],
+      moreInfo: e['moreInfo'] ?? null,
+    }))
   }
 }
