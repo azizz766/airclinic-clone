@@ -69,6 +69,7 @@ export const ModelName = {
   Campaign: 'Campaign',
   ClinicSettings: 'ClinicSettings',
   BusinessHours: 'BusinessHours',
+  Lead: 'Lead',
   EscalationLog: 'EscalationLog'
 } as const
 
@@ -213,6 +214,8 @@ export const ConversationSessionScalarFieldEnum = {
   escalationClaimedBy: 'escalationClaimedBy',
   escalationClaimedAt: 'escalationClaimedAt',
   bookingId: 'bookingId',
+  handoffActive: 'handoffActive',
+  slotOfferedAt: 'slotOfferedAt',
   expiresAt: 'expiresAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
@@ -433,6 +436,21 @@ export const BusinessHoursScalarFieldEnum = {
 } as const
 
 export type BusinessHoursScalarFieldEnum = (typeof BusinessHoursScalarFieldEnum)[keyof typeof BusinessHoursScalarFieldEnum]
+
+
+export const LeadScalarFieldEnum = {
+  id: 'id',
+  clinicId: 'clinicId',
+  patientPhone: 'patientPhone',
+  patientName: 'patientName',
+  serviceInterest: 'serviceInterest',
+  datePreference: 'datePreference',
+  dropReason: 'dropReason',
+  sessionId: 'sessionId',
+  createdAt: 'createdAt'
+} as const
+
+export type LeadScalarFieldEnum = (typeof LeadScalarFieldEnum)[keyof typeof LeadScalarFieldEnum]
 
 
 export const EscalationLogScalarFieldEnum = {

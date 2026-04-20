@@ -268,6 +268,7 @@ export type ClinicWhereInput = {
   escalationLogs?: Prisma.EscalationLogListRelationFilter
   availableSlots?: Prisma.AvailableSlotListRelationFilter
   conversationSessions?: Prisma.ConversationSessionListRelationFilter
+  leads?: Prisma.LeadListRelationFilter
 }
 
 export type ClinicOrderByWithRelationInput = {
@@ -299,6 +300,7 @@ export type ClinicOrderByWithRelationInput = {
   escalationLogs?: Prisma.EscalationLogOrderByRelationAggregateInput
   availableSlots?: Prisma.AvailableSlotOrderByRelationAggregateInput
   conversationSessions?: Prisma.ConversationSessionOrderByRelationAggregateInput
+  leads?: Prisma.LeadOrderByRelationAggregateInput
 }
 
 export type ClinicWhereUniqueInput = Prisma.AtLeast<{
@@ -333,6 +335,7 @@ export type ClinicWhereUniqueInput = Prisma.AtLeast<{
   escalationLogs?: Prisma.EscalationLogListRelationFilter
   availableSlots?: Prisma.AvailableSlotListRelationFilter
   conversationSessions?: Prisma.ConversationSessionListRelationFilter
+  leads?: Prisma.LeadListRelationFilter
 }, "id" | "slug" | "email">
 
 export type ClinicOrderByWithAggregationInput = {
@@ -404,6 +407,7 @@ export type ClinicCreateInput = {
   escalationLogs?: Prisma.EscalationLogCreateNestedManyWithoutClinicInput
   availableSlots?: Prisma.AvailableSlotCreateNestedManyWithoutClinicInput
   conversationSessions?: Prisma.ConversationSessionCreateNestedManyWithoutClinicInput
+  leads?: Prisma.LeadCreateNestedManyWithoutClinicInput
 }
 
 export type ClinicUncheckedCreateInput = {
@@ -435,6 +439,7 @@ export type ClinicUncheckedCreateInput = {
   escalationLogs?: Prisma.EscalationLogUncheckedCreateNestedManyWithoutClinicInput
   availableSlots?: Prisma.AvailableSlotUncheckedCreateNestedManyWithoutClinicInput
   conversationSessions?: Prisma.ConversationSessionUncheckedCreateNestedManyWithoutClinicInput
+  leads?: Prisma.LeadUncheckedCreateNestedManyWithoutClinicInput
 }
 
 export type ClinicUpdateInput = {
@@ -466,6 +471,7 @@ export type ClinicUpdateInput = {
   escalationLogs?: Prisma.EscalationLogUpdateManyWithoutClinicNestedInput
   availableSlots?: Prisma.AvailableSlotUpdateManyWithoutClinicNestedInput
   conversationSessions?: Prisma.ConversationSessionUpdateManyWithoutClinicNestedInput
+  leads?: Prisma.LeadUpdateManyWithoutClinicNestedInput
 }
 
 export type ClinicUncheckedUpdateInput = {
@@ -497,6 +503,7 @@ export type ClinicUncheckedUpdateInput = {
   escalationLogs?: Prisma.EscalationLogUncheckedUpdateManyWithoutClinicNestedInput
   availableSlots?: Prisma.AvailableSlotUncheckedUpdateManyWithoutClinicNestedInput
   conversationSessions?: Prisma.ConversationSessionUncheckedUpdateManyWithoutClinicNestedInput
+  leads?: Prisma.LeadUncheckedUpdateManyWithoutClinicNestedInput
 }
 
 export type ClinicCreateManyInput = {
@@ -812,6 +819,20 @@ export type ClinicUpdateOneRequiredWithoutBusinessHoursNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.ClinicUpdateToOneWithWhereWithoutBusinessHoursInput, Prisma.ClinicUpdateWithoutBusinessHoursInput>, Prisma.ClinicUncheckedUpdateWithoutBusinessHoursInput>
 }
 
+export type ClinicCreateNestedOneWithoutLeadsInput = {
+  create?: Prisma.XOR<Prisma.ClinicCreateWithoutLeadsInput, Prisma.ClinicUncheckedCreateWithoutLeadsInput>
+  connectOrCreate?: Prisma.ClinicCreateOrConnectWithoutLeadsInput
+  connect?: Prisma.ClinicWhereUniqueInput
+}
+
+export type ClinicUpdateOneRequiredWithoutLeadsNestedInput = {
+  create?: Prisma.XOR<Prisma.ClinicCreateWithoutLeadsInput, Prisma.ClinicUncheckedCreateWithoutLeadsInput>
+  connectOrCreate?: Prisma.ClinicCreateOrConnectWithoutLeadsInput
+  upsert?: Prisma.ClinicUpsertWithoutLeadsInput
+  connect?: Prisma.ClinicWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ClinicUpdateToOneWithWhereWithoutLeadsInput, Prisma.ClinicUpdateWithoutLeadsInput>, Prisma.ClinicUncheckedUpdateWithoutLeadsInput>
+}
+
 export type ClinicCreateNestedOneWithoutEscalationLogsInput = {
   create?: Prisma.XOR<Prisma.ClinicCreateWithoutEscalationLogsInput, Prisma.ClinicUncheckedCreateWithoutEscalationLogsInput>
   connectOrCreate?: Prisma.ClinicCreateOrConnectWithoutEscalationLogsInput
@@ -854,6 +875,7 @@ export type ClinicCreateWithoutMembershipsInput = {
   escalationLogs?: Prisma.EscalationLogCreateNestedManyWithoutClinicInput
   availableSlots?: Prisma.AvailableSlotCreateNestedManyWithoutClinicInput
   conversationSessions?: Prisma.ConversationSessionCreateNestedManyWithoutClinicInput
+  leads?: Prisma.LeadCreateNestedManyWithoutClinicInput
 }
 
 export type ClinicUncheckedCreateWithoutMembershipsInput = {
@@ -884,6 +906,7 @@ export type ClinicUncheckedCreateWithoutMembershipsInput = {
   escalationLogs?: Prisma.EscalationLogUncheckedCreateNestedManyWithoutClinicInput
   availableSlots?: Prisma.AvailableSlotUncheckedCreateNestedManyWithoutClinicInput
   conversationSessions?: Prisma.ConversationSessionUncheckedCreateNestedManyWithoutClinicInput
+  leads?: Prisma.LeadUncheckedCreateNestedManyWithoutClinicInput
 }
 
 export type ClinicCreateOrConnectWithoutMembershipsInput = {
@@ -930,6 +953,7 @@ export type ClinicUpdateWithoutMembershipsInput = {
   escalationLogs?: Prisma.EscalationLogUpdateManyWithoutClinicNestedInput
   availableSlots?: Prisma.AvailableSlotUpdateManyWithoutClinicNestedInput
   conversationSessions?: Prisma.ConversationSessionUpdateManyWithoutClinicNestedInput
+  leads?: Prisma.LeadUpdateManyWithoutClinicNestedInput
 }
 
 export type ClinicUncheckedUpdateWithoutMembershipsInput = {
@@ -960,6 +984,7 @@ export type ClinicUncheckedUpdateWithoutMembershipsInput = {
   escalationLogs?: Prisma.EscalationLogUncheckedUpdateManyWithoutClinicNestedInput
   availableSlots?: Prisma.AvailableSlotUncheckedUpdateManyWithoutClinicNestedInput
   conversationSessions?: Prisma.ConversationSessionUncheckedUpdateManyWithoutClinicNestedInput
+  leads?: Prisma.LeadUncheckedUpdateManyWithoutClinicNestedInput
 }
 
 export type ClinicCreateWithoutDoctorsInput = {
@@ -990,6 +1015,7 @@ export type ClinicCreateWithoutDoctorsInput = {
   escalationLogs?: Prisma.EscalationLogCreateNestedManyWithoutClinicInput
   availableSlots?: Prisma.AvailableSlotCreateNestedManyWithoutClinicInput
   conversationSessions?: Prisma.ConversationSessionCreateNestedManyWithoutClinicInput
+  leads?: Prisma.LeadCreateNestedManyWithoutClinicInput
 }
 
 export type ClinicUncheckedCreateWithoutDoctorsInput = {
@@ -1020,6 +1046,7 @@ export type ClinicUncheckedCreateWithoutDoctorsInput = {
   escalationLogs?: Prisma.EscalationLogUncheckedCreateNestedManyWithoutClinicInput
   availableSlots?: Prisma.AvailableSlotUncheckedCreateNestedManyWithoutClinicInput
   conversationSessions?: Prisma.ConversationSessionUncheckedCreateNestedManyWithoutClinicInput
+  leads?: Prisma.LeadUncheckedCreateNestedManyWithoutClinicInput
 }
 
 export type ClinicCreateOrConnectWithoutDoctorsInput = {
@@ -1066,6 +1093,7 @@ export type ClinicUpdateWithoutDoctorsInput = {
   escalationLogs?: Prisma.EscalationLogUpdateManyWithoutClinicNestedInput
   availableSlots?: Prisma.AvailableSlotUpdateManyWithoutClinicNestedInput
   conversationSessions?: Prisma.ConversationSessionUpdateManyWithoutClinicNestedInput
+  leads?: Prisma.LeadUpdateManyWithoutClinicNestedInput
 }
 
 export type ClinicUncheckedUpdateWithoutDoctorsInput = {
@@ -1096,6 +1124,7 @@ export type ClinicUncheckedUpdateWithoutDoctorsInput = {
   escalationLogs?: Prisma.EscalationLogUncheckedUpdateManyWithoutClinicNestedInput
   availableSlots?: Prisma.AvailableSlotUncheckedUpdateManyWithoutClinicNestedInput
   conversationSessions?: Prisma.ConversationSessionUncheckedUpdateManyWithoutClinicNestedInput
+  leads?: Prisma.LeadUncheckedUpdateManyWithoutClinicNestedInput
 }
 
 export type ClinicCreateWithoutServicesInput = {
@@ -1126,6 +1155,7 @@ export type ClinicCreateWithoutServicesInput = {
   escalationLogs?: Prisma.EscalationLogCreateNestedManyWithoutClinicInput
   availableSlots?: Prisma.AvailableSlotCreateNestedManyWithoutClinicInput
   conversationSessions?: Prisma.ConversationSessionCreateNestedManyWithoutClinicInput
+  leads?: Prisma.LeadCreateNestedManyWithoutClinicInput
 }
 
 export type ClinicUncheckedCreateWithoutServicesInput = {
@@ -1156,6 +1186,7 @@ export type ClinicUncheckedCreateWithoutServicesInput = {
   escalationLogs?: Prisma.EscalationLogUncheckedCreateNestedManyWithoutClinicInput
   availableSlots?: Prisma.AvailableSlotUncheckedCreateNestedManyWithoutClinicInput
   conversationSessions?: Prisma.ConversationSessionUncheckedCreateNestedManyWithoutClinicInput
+  leads?: Prisma.LeadUncheckedCreateNestedManyWithoutClinicInput
 }
 
 export type ClinicCreateOrConnectWithoutServicesInput = {
@@ -1202,6 +1233,7 @@ export type ClinicUpdateWithoutServicesInput = {
   escalationLogs?: Prisma.EscalationLogUpdateManyWithoutClinicNestedInput
   availableSlots?: Prisma.AvailableSlotUpdateManyWithoutClinicNestedInput
   conversationSessions?: Prisma.ConversationSessionUpdateManyWithoutClinicNestedInput
+  leads?: Prisma.LeadUpdateManyWithoutClinicNestedInput
 }
 
 export type ClinicUncheckedUpdateWithoutServicesInput = {
@@ -1232,6 +1264,7 @@ export type ClinicUncheckedUpdateWithoutServicesInput = {
   escalationLogs?: Prisma.EscalationLogUncheckedUpdateManyWithoutClinicNestedInput
   availableSlots?: Prisma.AvailableSlotUncheckedUpdateManyWithoutClinicNestedInput
   conversationSessions?: Prisma.ConversationSessionUncheckedUpdateManyWithoutClinicNestedInput
+  leads?: Prisma.LeadUncheckedUpdateManyWithoutClinicNestedInput
 }
 
 export type ClinicCreateWithoutAvailableSlotsInput = {
@@ -1262,6 +1295,7 @@ export type ClinicCreateWithoutAvailableSlotsInput = {
   businessHours?: Prisma.BusinessHoursCreateNestedManyWithoutClinicInput
   escalationLogs?: Prisma.EscalationLogCreateNestedManyWithoutClinicInput
   conversationSessions?: Prisma.ConversationSessionCreateNestedManyWithoutClinicInput
+  leads?: Prisma.LeadCreateNestedManyWithoutClinicInput
 }
 
 export type ClinicUncheckedCreateWithoutAvailableSlotsInput = {
@@ -1292,6 +1326,7 @@ export type ClinicUncheckedCreateWithoutAvailableSlotsInput = {
   businessHours?: Prisma.BusinessHoursUncheckedCreateNestedManyWithoutClinicInput
   escalationLogs?: Prisma.EscalationLogUncheckedCreateNestedManyWithoutClinicInput
   conversationSessions?: Prisma.ConversationSessionUncheckedCreateNestedManyWithoutClinicInput
+  leads?: Prisma.LeadUncheckedCreateNestedManyWithoutClinicInput
 }
 
 export type ClinicCreateOrConnectWithoutAvailableSlotsInput = {
@@ -1338,6 +1373,7 @@ export type ClinicUpdateWithoutAvailableSlotsInput = {
   businessHours?: Prisma.BusinessHoursUpdateManyWithoutClinicNestedInput
   escalationLogs?: Prisma.EscalationLogUpdateManyWithoutClinicNestedInput
   conversationSessions?: Prisma.ConversationSessionUpdateManyWithoutClinicNestedInput
+  leads?: Prisma.LeadUpdateManyWithoutClinicNestedInput
 }
 
 export type ClinicUncheckedUpdateWithoutAvailableSlotsInput = {
@@ -1368,6 +1404,7 @@ export type ClinicUncheckedUpdateWithoutAvailableSlotsInput = {
   businessHours?: Prisma.BusinessHoursUncheckedUpdateManyWithoutClinicNestedInput
   escalationLogs?: Prisma.EscalationLogUncheckedUpdateManyWithoutClinicNestedInput
   conversationSessions?: Prisma.ConversationSessionUncheckedUpdateManyWithoutClinicNestedInput
+  leads?: Prisma.LeadUncheckedUpdateManyWithoutClinicNestedInput
 }
 
 export type ClinicCreateWithoutConversationSessionsInput = {
@@ -1398,6 +1435,7 @@ export type ClinicCreateWithoutConversationSessionsInput = {
   businessHours?: Prisma.BusinessHoursCreateNestedManyWithoutClinicInput
   escalationLogs?: Prisma.EscalationLogCreateNestedManyWithoutClinicInput
   availableSlots?: Prisma.AvailableSlotCreateNestedManyWithoutClinicInput
+  leads?: Prisma.LeadCreateNestedManyWithoutClinicInput
 }
 
 export type ClinicUncheckedCreateWithoutConversationSessionsInput = {
@@ -1428,6 +1466,7 @@ export type ClinicUncheckedCreateWithoutConversationSessionsInput = {
   businessHours?: Prisma.BusinessHoursUncheckedCreateNestedManyWithoutClinicInput
   escalationLogs?: Prisma.EscalationLogUncheckedCreateNestedManyWithoutClinicInput
   availableSlots?: Prisma.AvailableSlotUncheckedCreateNestedManyWithoutClinicInput
+  leads?: Prisma.LeadUncheckedCreateNestedManyWithoutClinicInput
 }
 
 export type ClinicCreateOrConnectWithoutConversationSessionsInput = {
@@ -1474,6 +1513,7 @@ export type ClinicUpdateWithoutConversationSessionsInput = {
   businessHours?: Prisma.BusinessHoursUpdateManyWithoutClinicNestedInput
   escalationLogs?: Prisma.EscalationLogUpdateManyWithoutClinicNestedInput
   availableSlots?: Prisma.AvailableSlotUpdateManyWithoutClinicNestedInput
+  leads?: Prisma.LeadUpdateManyWithoutClinicNestedInput
 }
 
 export type ClinicUncheckedUpdateWithoutConversationSessionsInput = {
@@ -1504,6 +1544,7 @@ export type ClinicUncheckedUpdateWithoutConversationSessionsInput = {
   businessHours?: Prisma.BusinessHoursUncheckedUpdateManyWithoutClinicNestedInput
   escalationLogs?: Prisma.EscalationLogUncheckedUpdateManyWithoutClinicNestedInput
   availableSlots?: Prisma.AvailableSlotUncheckedUpdateManyWithoutClinicNestedInput
+  leads?: Prisma.LeadUncheckedUpdateManyWithoutClinicNestedInput
 }
 
 export type ClinicCreateWithoutPatientsInput = {
@@ -1534,6 +1575,7 @@ export type ClinicCreateWithoutPatientsInput = {
   escalationLogs?: Prisma.EscalationLogCreateNestedManyWithoutClinicInput
   availableSlots?: Prisma.AvailableSlotCreateNestedManyWithoutClinicInput
   conversationSessions?: Prisma.ConversationSessionCreateNestedManyWithoutClinicInput
+  leads?: Prisma.LeadCreateNestedManyWithoutClinicInput
 }
 
 export type ClinicUncheckedCreateWithoutPatientsInput = {
@@ -1564,6 +1606,7 @@ export type ClinicUncheckedCreateWithoutPatientsInput = {
   escalationLogs?: Prisma.EscalationLogUncheckedCreateNestedManyWithoutClinicInput
   availableSlots?: Prisma.AvailableSlotUncheckedCreateNestedManyWithoutClinicInput
   conversationSessions?: Prisma.ConversationSessionUncheckedCreateNestedManyWithoutClinicInput
+  leads?: Prisma.LeadUncheckedCreateNestedManyWithoutClinicInput
 }
 
 export type ClinicCreateOrConnectWithoutPatientsInput = {
@@ -1610,6 +1653,7 @@ export type ClinicUpdateWithoutPatientsInput = {
   escalationLogs?: Prisma.EscalationLogUpdateManyWithoutClinicNestedInput
   availableSlots?: Prisma.AvailableSlotUpdateManyWithoutClinicNestedInput
   conversationSessions?: Prisma.ConversationSessionUpdateManyWithoutClinicNestedInput
+  leads?: Prisma.LeadUpdateManyWithoutClinicNestedInput
 }
 
 export type ClinicUncheckedUpdateWithoutPatientsInput = {
@@ -1640,6 +1684,7 @@ export type ClinicUncheckedUpdateWithoutPatientsInput = {
   escalationLogs?: Prisma.EscalationLogUncheckedUpdateManyWithoutClinicNestedInput
   availableSlots?: Prisma.AvailableSlotUncheckedUpdateManyWithoutClinicNestedInput
   conversationSessions?: Prisma.ConversationSessionUncheckedUpdateManyWithoutClinicNestedInput
+  leads?: Prisma.LeadUncheckedUpdateManyWithoutClinicNestedInput
 }
 
 export type ClinicCreateWithoutAppointmentsInput = {
@@ -1670,6 +1715,7 @@ export type ClinicCreateWithoutAppointmentsInput = {
   escalationLogs?: Prisma.EscalationLogCreateNestedManyWithoutClinicInput
   availableSlots?: Prisma.AvailableSlotCreateNestedManyWithoutClinicInput
   conversationSessions?: Prisma.ConversationSessionCreateNestedManyWithoutClinicInput
+  leads?: Prisma.LeadCreateNestedManyWithoutClinicInput
 }
 
 export type ClinicUncheckedCreateWithoutAppointmentsInput = {
@@ -1700,6 +1746,7 @@ export type ClinicUncheckedCreateWithoutAppointmentsInput = {
   escalationLogs?: Prisma.EscalationLogUncheckedCreateNestedManyWithoutClinicInput
   availableSlots?: Prisma.AvailableSlotUncheckedCreateNestedManyWithoutClinicInput
   conversationSessions?: Prisma.ConversationSessionUncheckedCreateNestedManyWithoutClinicInput
+  leads?: Prisma.LeadUncheckedCreateNestedManyWithoutClinicInput
 }
 
 export type ClinicCreateOrConnectWithoutAppointmentsInput = {
@@ -1746,6 +1793,7 @@ export type ClinicUpdateWithoutAppointmentsInput = {
   escalationLogs?: Prisma.EscalationLogUpdateManyWithoutClinicNestedInput
   availableSlots?: Prisma.AvailableSlotUpdateManyWithoutClinicNestedInput
   conversationSessions?: Prisma.ConversationSessionUpdateManyWithoutClinicNestedInput
+  leads?: Prisma.LeadUpdateManyWithoutClinicNestedInput
 }
 
 export type ClinicUncheckedUpdateWithoutAppointmentsInput = {
@@ -1776,6 +1824,7 @@ export type ClinicUncheckedUpdateWithoutAppointmentsInput = {
   escalationLogs?: Prisma.EscalationLogUncheckedUpdateManyWithoutClinicNestedInput
   availableSlots?: Prisma.AvailableSlotUncheckedUpdateManyWithoutClinicNestedInput
   conversationSessions?: Prisma.ConversationSessionUncheckedUpdateManyWithoutClinicNestedInput
+  leads?: Prisma.LeadUncheckedUpdateManyWithoutClinicNestedInput
 }
 
 export type ClinicCreateWithoutConversationsInput = {
@@ -1806,6 +1855,7 @@ export type ClinicCreateWithoutConversationsInput = {
   escalationLogs?: Prisma.EscalationLogCreateNestedManyWithoutClinicInput
   availableSlots?: Prisma.AvailableSlotCreateNestedManyWithoutClinicInput
   conversationSessions?: Prisma.ConversationSessionCreateNestedManyWithoutClinicInput
+  leads?: Prisma.LeadCreateNestedManyWithoutClinicInput
 }
 
 export type ClinicUncheckedCreateWithoutConversationsInput = {
@@ -1836,6 +1886,7 @@ export type ClinicUncheckedCreateWithoutConversationsInput = {
   escalationLogs?: Prisma.EscalationLogUncheckedCreateNestedManyWithoutClinicInput
   availableSlots?: Prisma.AvailableSlotUncheckedCreateNestedManyWithoutClinicInput
   conversationSessions?: Prisma.ConversationSessionUncheckedCreateNestedManyWithoutClinicInput
+  leads?: Prisma.LeadUncheckedCreateNestedManyWithoutClinicInput
 }
 
 export type ClinicCreateOrConnectWithoutConversationsInput = {
@@ -1882,6 +1933,7 @@ export type ClinicUpdateWithoutConversationsInput = {
   escalationLogs?: Prisma.EscalationLogUpdateManyWithoutClinicNestedInput
   availableSlots?: Prisma.AvailableSlotUpdateManyWithoutClinicNestedInput
   conversationSessions?: Prisma.ConversationSessionUpdateManyWithoutClinicNestedInput
+  leads?: Prisma.LeadUpdateManyWithoutClinicNestedInput
 }
 
 export type ClinicUncheckedUpdateWithoutConversationsInput = {
@@ -1912,6 +1964,7 @@ export type ClinicUncheckedUpdateWithoutConversationsInput = {
   escalationLogs?: Prisma.EscalationLogUncheckedUpdateManyWithoutClinicNestedInput
   availableSlots?: Prisma.AvailableSlotUncheckedUpdateManyWithoutClinicNestedInput
   conversationSessions?: Prisma.ConversationSessionUncheckedUpdateManyWithoutClinicNestedInput
+  leads?: Prisma.LeadUncheckedUpdateManyWithoutClinicNestedInput
 }
 
 export type ClinicCreateWithoutRemindersInput = {
@@ -1942,6 +1995,7 @@ export type ClinicCreateWithoutRemindersInput = {
   escalationLogs?: Prisma.EscalationLogCreateNestedManyWithoutClinicInput
   availableSlots?: Prisma.AvailableSlotCreateNestedManyWithoutClinicInput
   conversationSessions?: Prisma.ConversationSessionCreateNestedManyWithoutClinicInput
+  leads?: Prisma.LeadCreateNestedManyWithoutClinicInput
 }
 
 export type ClinicUncheckedCreateWithoutRemindersInput = {
@@ -1972,6 +2026,7 @@ export type ClinicUncheckedCreateWithoutRemindersInput = {
   escalationLogs?: Prisma.EscalationLogUncheckedCreateNestedManyWithoutClinicInput
   availableSlots?: Prisma.AvailableSlotUncheckedCreateNestedManyWithoutClinicInput
   conversationSessions?: Prisma.ConversationSessionUncheckedCreateNestedManyWithoutClinicInput
+  leads?: Prisma.LeadUncheckedCreateNestedManyWithoutClinicInput
 }
 
 export type ClinicCreateOrConnectWithoutRemindersInput = {
@@ -2018,6 +2073,7 @@ export type ClinicUpdateWithoutRemindersInput = {
   escalationLogs?: Prisma.EscalationLogUpdateManyWithoutClinicNestedInput
   availableSlots?: Prisma.AvailableSlotUpdateManyWithoutClinicNestedInput
   conversationSessions?: Prisma.ConversationSessionUpdateManyWithoutClinicNestedInput
+  leads?: Prisma.LeadUpdateManyWithoutClinicNestedInput
 }
 
 export type ClinicUncheckedUpdateWithoutRemindersInput = {
@@ -2048,6 +2104,7 @@ export type ClinicUncheckedUpdateWithoutRemindersInput = {
   escalationLogs?: Prisma.EscalationLogUncheckedUpdateManyWithoutClinicNestedInput
   availableSlots?: Prisma.AvailableSlotUncheckedUpdateManyWithoutClinicNestedInput
   conversationSessions?: Prisma.ConversationSessionUncheckedUpdateManyWithoutClinicNestedInput
+  leads?: Prisma.LeadUncheckedUpdateManyWithoutClinicNestedInput
 }
 
 export type ClinicCreateWithoutNotificationJobsInput = {
@@ -2078,6 +2135,7 @@ export type ClinicCreateWithoutNotificationJobsInput = {
   escalationLogs?: Prisma.EscalationLogCreateNestedManyWithoutClinicInput
   availableSlots?: Prisma.AvailableSlotCreateNestedManyWithoutClinicInput
   conversationSessions?: Prisma.ConversationSessionCreateNestedManyWithoutClinicInput
+  leads?: Prisma.LeadCreateNestedManyWithoutClinicInput
 }
 
 export type ClinicUncheckedCreateWithoutNotificationJobsInput = {
@@ -2108,6 +2166,7 @@ export type ClinicUncheckedCreateWithoutNotificationJobsInput = {
   escalationLogs?: Prisma.EscalationLogUncheckedCreateNestedManyWithoutClinicInput
   availableSlots?: Prisma.AvailableSlotUncheckedCreateNestedManyWithoutClinicInput
   conversationSessions?: Prisma.ConversationSessionUncheckedCreateNestedManyWithoutClinicInput
+  leads?: Prisma.LeadUncheckedCreateNestedManyWithoutClinicInput
 }
 
 export type ClinicCreateOrConnectWithoutNotificationJobsInput = {
@@ -2154,6 +2213,7 @@ export type ClinicUpdateWithoutNotificationJobsInput = {
   escalationLogs?: Prisma.EscalationLogUpdateManyWithoutClinicNestedInput
   availableSlots?: Prisma.AvailableSlotUpdateManyWithoutClinicNestedInput
   conversationSessions?: Prisma.ConversationSessionUpdateManyWithoutClinicNestedInput
+  leads?: Prisma.LeadUpdateManyWithoutClinicNestedInput
 }
 
 export type ClinicUncheckedUpdateWithoutNotificationJobsInput = {
@@ -2184,6 +2244,7 @@ export type ClinicUncheckedUpdateWithoutNotificationJobsInput = {
   escalationLogs?: Prisma.EscalationLogUncheckedUpdateManyWithoutClinicNestedInput
   availableSlots?: Prisma.AvailableSlotUncheckedUpdateManyWithoutClinicNestedInput
   conversationSessions?: Prisma.ConversationSessionUncheckedUpdateManyWithoutClinicNestedInput
+  leads?: Prisma.LeadUncheckedUpdateManyWithoutClinicNestedInput
 }
 
 export type ClinicCreateWithoutCampaignsInput = {
@@ -2214,6 +2275,7 @@ export type ClinicCreateWithoutCampaignsInput = {
   escalationLogs?: Prisma.EscalationLogCreateNestedManyWithoutClinicInput
   availableSlots?: Prisma.AvailableSlotCreateNestedManyWithoutClinicInput
   conversationSessions?: Prisma.ConversationSessionCreateNestedManyWithoutClinicInput
+  leads?: Prisma.LeadCreateNestedManyWithoutClinicInput
 }
 
 export type ClinicUncheckedCreateWithoutCampaignsInput = {
@@ -2244,6 +2306,7 @@ export type ClinicUncheckedCreateWithoutCampaignsInput = {
   escalationLogs?: Prisma.EscalationLogUncheckedCreateNestedManyWithoutClinicInput
   availableSlots?: Prisma.AvailableSlotUncheckedCreateNestedManyWithoutClinicInput
   conversationSessions?: Prisma.ConversationSessionUncheckedCreateNestedManyWithoutClinicInput
+  leads?: Prisma.LeadUncheckedCreateNestedManyWithoutClinicInput
 }
 
 export type ClinicCreateOrConnectWithoutCampaignsInput = {
@@ -2290,6 +2353,7 @@ export type ClinicUpdateWithoutCampaignsInput = {
   escalationLogs?: Prisma.EscalationLogUpdateManyWithoutClinicNestedInput
   availableSlots?: Prisma.AvailableSlotUpdateManyWithoutClinicNestedInput
   conversationSessions?: Prisma.ConversationSessionUpdateManyWithoutClinicNestedInput
+  leads?: Prisma.LeadUpdateManyWithoutClinicNestedInput
 }
 
 export type ClinicUncheckedUpdateWithoutCampaignsInput = {
@@ -2320,6 +2384,7 @@ export type ClinicUncheckedUpdateWithoutCampaignsInput = {
   escalationLogs?: Prisma.EscalationLogUncheckedUpdateManyWithoutClinicNestedInput
   availableSlots?: Prisma.AvailableSlotUncheckedUpdateManyWithoutClinicNestedInput
   conversationSessions?: Prisma.ConversationSessionUncheckedUpdateManyWithoutClinicNestedInput
+  leads?: Prisma.LeadUncheckedUpdateManyWithoutClinicNestedInput
 }
 
 export type ClinicCreateWithoutClinicSettingsInput = {
@@ -2350,6 +2415,7 @@ export type ClinicCreateWithoutClinicSettingsInput = {
   escalationLogs?: Prisma.EscalationLogCreateNestedManyWithoutClinicInput
   availableSlots?: Prisma.AvailableSlotCreateNestedManyWithoutClinicInput
   conversationSessions?: Prisma.ConversationSessionCreateNestedManyWithoutClinicInput
+  leads?: Prisma.LeadCreateNestedManyWithoutClinicInput
 }
 
 export type ClinicUncheckedCreateWithoutClinicSettingsInput = {
@@ -2380,6 +2446,7 @@ export type ClinicUncheckedCreateWithoutClinicSettingsInput = {
   escalationLogs?: Prisma.EscalationLogUncheckedCreateNestedManyWithoutClinicInput
   availableSlots?: Prisma.AvailableSlotUncheckedCreateNestedManyWithoutClinicInput
   conversationSessions?: Prisma.ConversationSessionUncheckedCreateNestedManyWithoutClinicInput
+  leads?: Prisma.LeadUncheckedCreateNestedManyWithoutClinicInput
 }
 
 export type ClinicCreateOrConnectWithoutClinicSettingsInput = {
@@ -2426,6 +2493,7 @@ export type ClinicUpdateWithoutClinicSettingsInput = {
   escalationLogs?: Prisma.EscalationLogUpdateManyWithoutClinicNestedInput
   availableSlots?: Prisma.AvailableSlotUpdateManyWithoutClinicNestedInput
   conversationSessions?: Prisma.ConversationSessionUpdateManyWithoutClinicNestedInput
+  leads?: Prisma.LeadUpdateManyWithoutClinicNestedInput
 }
 
 export type ClinicUncheckedUpdateWithoutClinicSettingsInput = {
@@ -2456,6 +2524,7 @@ export type ClinicUncheckedUpdateWithoutClinicSettingsInput = {
   escalationLogs?: Prisma.EscalationLogUncheckedUpdateManyWithoutClinicNestedInput
   availableSlots?: Prisma.AvailableSlotUncheckedUpdateManyWithoutClinicNestedInput
   conversationSessions?: Prisma.ConversationSessionUncheckedUpdateManyWithoutClinicNestedInput
+  leads?: Prisma.LeadUncheckedUpdateManyWithoutClinicNestedInput
 }
 
 export type ClinicCreateWithoutBusinessHoursInput = {
@@ -2486,6 +2555,7 @@ export type ClinicCreateWithoutBusinessHoursInput = {
   escalationLogs?: Prisma.EscalationLogCreateNestedManyWithoutClinicInput
   availableSlots?: Prisma.AvailableSlotCreateNestedManyWithoutClinicInput
   conversationSessions?: Prisma.ConversationSessionCreateNestedManyWithoutClinicInput
+  leads?: Prisma.LeadCreateNestedManyWithoutClinicInput
 }
 
 export type ClinicUncheckedCreateWithoutBusinessHoursInput = {
@@ -2516,6 +2586,7 @@ export type ClinicUncheckedCreateWithoutBusinessHoursInput = {
   escalationLogs?: Prisma.EscalationLogUncheckedCreateNestedManyWithoutClinicInput
   availableSlots?: Prisma.AvailableSlotUncheckedCreateNestedManyWithoutClinicInput
   conversationSessions?: Prisma.ConversationSessionUncheckedCreateNestedManyWithoutClinicInput
+  leads?: Prisma.LeadUncheckedCreateNestedManyWithoutClinicInput
 }
 
 export type ClinicCreateOrConnectWithoutBusinessHoursInput = {
@@ -2562,6 +2633,7 @@ export type ClinicUpdateWithoutBusinessHoursInput = {
   escalationLogs?: Prisma.EscalationLogUpdateManyWithoutClinicNestedInput
   availableSlots?: Prisma.AvailableSlotUpdateManyWithoutClinicNestedInput
   conversationSessions?: Prisma.ConversationSessionUpdateManyWithoutClinicNestedInput
+  leads?: Prisma.LeadUpdateManyWithoutClinicNestedInput
 }
 
 export type ClinicUncheckedUpdateWithoutBusinessHoursInput = {
@@ -2589,6 +2661,147 @@ export type ClinicUncheckedUpdateWithoutBusinessHoursInput = {
   notificationJobs?: Prisma.NotificationJobUncheckedUpdateManyWithoutClinicNestedInput
   campaigns?: Prisma.CampaignUncheckedUpdateManyWithoutClinicNestedInput
   clinicSettings?: Prisma.ClinicSettingsUncheckedUpdateOneWithoutClinicNestedInput
+  escalationLogs?: Prisma.EscalationLogUncheckedUpdateManyWithoutClinicNestedInput
+  availableSlots?: Prisma.AvailableSlotUncheckedUpdateManyWithoutClinicNestedInput
+  conversationSessions?: Prisma.ConversationSessionUncheckedUpdateManyWithoutClinicNestedInput
+  leads?: Prisma.LeadUncheckedUpdateManyWithoutClinicNestedInput
+}
+
+export type ClinicCreateWithoutLeadsInput = {
+  id?: string
+  name: string
+  slug: string
+  address?: string | null
+  phone?: string | null
+  email?: string | null
+  website?: string | null
+  timezone?: string
+  twilioPhoneNumber?: string | null
+  isActive?: boolean
+  subscriptionPlan?: $Enums.SubscriptionPlan
+  subscriptionExpiresAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  memberships?: Prisma.MembershipCreateNestedManyWithoutClinicInput
+  doctors?: Prisma.DoctorCreateNestedManyWithoutClinicInput
+  services?: Prisma.ServiceCreateNestedManyWithoutClinicInput
+  patients?: Prisma.PatientCreateNestedManyWithoutClinicInput
+  appointments?: Prisma.AppointmentCreateNestedManyWithoutClinicInput
+  conversations?: Prisma.ConversationCreateNestedManyWithoutClinicInput
+  reminders?: Prisma.ReminderCreateNestedManyWithoutClinicInput
+  notificationJobs?: Prisma.NotificationJobCreateNestedManyWithoutClinicInput
+  campaigns?: Prisma.CampaignCreateNestedManyWithoutClinicInput
+  clinicSettings?: Prisma.ClinicSettingsCreateNestedOneWithoutClinicInput
+  businessHours?: Prisma.BusinessHoursCreateNestedManyWithoutClinicInput
+  escalationLogs?: Prisma.EscalationLogCreateNestedManyWithoutClinicInput
+  availableSlots?: Prisma.AvailableSlotCreateNestedManyWithoutClinicInput
+  conversationSessions?: Prisma.ConversationSessionCreateNestedManyWithoutClinicInput
+}
+
+export type ClinicUncheckedCreateWithoutLeadsInput = {
+  id?: string
+  name: string
+  slug: string
+  address?: string | null
+  phone?: string | null
+  email?: string | null
+  website?: string | null
+  timezone?: string
+  twilioPhoneNumber?: string | null
+  isActive?: boolean
+  subscriptionPlan?: $Enums.SubscriptionPlan
+  subscriptionExpiresAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  memberships?: Prisma.MembershipUncheckedCreateNestedManyWithoutClinicInput
+  doctors?: Prisma.DoctorUncheckedCreateNestedManyWithoutClinicInput
+  services?: Prisma.ServiceUncheckedCreateNestedManyWithoutClinicInput
+  patients?: Prisma.PatientUncheckedCreateNestedManyWithoutClinicInput
+  appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutClinicInput
+  conversations?: Prisma.ConversationUncheckedCreateNestedManyWithoutClinicInput
+  reminders?: Prisma.ReminderUncheckedCreateNestedManyWithoutClinicInput
+  notificationJobs?: Prisma.NotificationJobUncheckedCreateNestedManyWithoutClinicInput
+  campaigns?: Prisma.CampaignUncheckedCreateNestedManyWithoutClinicInput
+  clinicSettings?: Prisma.ClinicSettingsUncheckedCreateNestedOneWithoutClinicInput
+  businessHours?: Prisma.BusinessHoursUncheckedCreateNestedManyWithoutClinicInput
+  escalationLogs?: Prisma.EscalationLogUncheckedCreateNestedManyWithoutClinicInput
+  availableSlots?: Prisma.AvailableSlotUncheckedCreateNestedManyWithoutClinicInput
+  conversationSessions?: Prisma.ConversationSessionUncheckedCreateNestedManyWithoutClinicInput
+}
+
+export type ClinicCreateOrConnectWithoutLeadsInput = {
+  where: Prisma.ClinicWhereUniqueInput
+  create: Prisma.XOR<Prisma.ClinicCreateWithoutLeadsInput, Prisma.ClinicUncheckedCreateWithoutLeadsInput>
+}
+
+export type ClinicUpsertWithoutLeadsInput = {
+  update: Prisma.XOR<Prisma.ClinicUpdateWithoutLeadsInput, Prisma.ClinicUncheckedUpdateWithoutLeadsInput>
+  create: Prisma.XOR<Prisma.ClinicCreateWithoutLeadsInput, Prisma.ClinicUncheckedCreateWithoutLeadsInput>
+  where?: Prisma.ClinicWhereInput
+}
+
+export type ClinicUpdateToOneWithWhereWithoutLeadsInput = {
+  where?: Prisma.ClinicWhereInput
+  data: Prisma.XOR<Prisma.ClinicUpdateWithoutLeadsInput, Prisma.ClinicUncheckedUpdateWithoutLeadsInput>
+}
+
+export type ClinicUpdateWithoutLeadsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  timezone?: Prisma.StringFieldUpdateOperationsInput | string
+  twilioPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  subscriptionPlan?: Prisma.EnumSubscriptionPlanFieldUpdateOperationsInput | $Enums.SubscriptionPlan
+  subscriptionExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  memberships?: Prisma.MembershipUpdateManyWithoutClinicNestedInput
+  doctors?: Prisma.DoctorUpdateManyWithoutClinicNestedInput
+  services?: Prisma.ServiceUpdateManyWithoutClinicNestedInput
+  patients?: Prisma.PatientUpdateManyWithoutClinicNestedInput
+  appointments?: Prisma.AppointmentUpdateManyWithoutClinicNestedInput
+  conversations?: Prisma.ConversationUpdateManyWithoutClinicNestedInput
+  reminders?: Prisma.ReminderUpdateManyWithoutClinicNestedInput
+  notificationJobs?: Prisma.NotificationJobUpdateManyWithoutClinicNestedInput
+  campaigns?: Prisma.CampaignUpdateManyWithoutClinicNestedInput
+  clinicSettings?: Prisma.ClinicSettingsUpdateOneWithoutClinicNestedInput
+  businessHours?: Prisma.BusinessHoursUpdateManyWithoutClinicNestedInput
+  escalationLogs?: Prisma.EscalationLogUpdateManyWithoutClinicNestedInput
+  availableSlots?: Prisma.AvailableSlotUpdateManyWithoutClinicNestedInput
+  conversationSessions?: Prisma.ConversationSessionUpdateManyWithoutClinicNestedInput
+}
+
+export type ClinicUncheckedUpdateWithoutLeadsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  timezone?: Prisma.StringFieldUpdateOperationsInput | string
+  twilioPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  subscriptionPlan?: Prisma.EnumSubscriptionPlanFieldUpdateOperationsInput | $Enums.SubscriptionPlan
+  subscriptionExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  memberships?: Prisma.MembershipUncheckedUpdateManyWithoutClinicNestedInput
+  doctors?: Prisma.DoctorUncheckedUpdateManyWithoutClinicNestedInput
+  services?: Prisma.ServiceUncheckedUpdateManyWithoutClinicNestedInput
+  patients?: Prisma.PatientUncheckedUpdateManyWithoutClinicNestedInput
+  appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutClinicNestedInput
+  conversations?: Prisma.ConversationUncheckedUpdateManyWithoutClinicNestedInput
+  reminders?: Prisma.ReminderUncheckedUpdateManyWithoutClinicNestedInput
+  notificationJobs?: Prisma.NotificationJobUncheckedUpdateManyWithoutClinicNestedInput
+  campaigns?: Prisma.CampaignUncheckedUpdateManyWithoutClinicNestedInput
+  clinicSettings?: Prisma.ClinicSettingsUncheckedUpdateOneWithoutClinicNestedInput
+  businessHours?: Prisma.BusinessHoursUncheckedUpdateManyWithoutClinicNestedInput
   escalationLogs?: Prisma.EscalationLogUncheckedUpdateManyWithoutClinicNestedInput
   availableSlots?: Prisma.AvailableSlotUncheckedUpdateManyWithoutClinicNestedInput
   conversationSessions?: Prisma.ConversationSessionUncheckedUpdateManyWithoutClinicNestedInput
@@ -2622,6 +2835,7 @@ export type ClinicCreateWithoutEscalationLogsInput = {
   businessHours?: Prisma.BusinessHoursCreateNestedManyWithoutClinicInput
   availableSlots?: Prisma.AvailableSlotCreateNestedManyWithoutClinicInput
   conversationSessions?: Prisma.ConversationSessionCreateNestedManyWithoutClinicInput
+  leads?: Prisma.LeadCreateNestedManyWithoutClinicInput
 }
 
 export type ClinicUncheckedCreateWithoutEscalationLogsInput = {
@@ -2652,6 +2866,7 @@ export type ClinicUncheckedCreateWithoutEscalationLogsInput = {
   businessHours?: Prisma.BusinessHoursUncheckedCreateNestedManyWithoutClinicInput
   availableSlots?: Prisma.AvailableSlotUncheckedCreateNestedManyWithoutClinicInput
   conversationSessions?: Prisma.ConversationSessionUncheckedCreateNestedManyWithoutClinicInput
+  leads?: Prisma.LeadUncheckedCreateNestedManyWithoutClinicInput
 }
 
 export type ClinicCreateOrConnectWithoutEscalationLogsInput = {
@@ -2698,6 +2913,7 @@ export type ClinicUpdateWithoutEscalationLogsInput = {
   businessHours?: Prisma.BusinessHoursUpdateManyWithoutClinicNestedInput
   availableSlots?: Prisma.AvailableSlotUpdateManyWithoutClinicNestedInput
   conversationSessions?: Prisma.ConversationSessionUpdateManyWithoutClinicNestedInput
+  leads?: Prisma.LeadUpdateManyWithoutClinicNestedInput
 }
 
 export type ClinicUncheckedUpdateWithoutEscalationLogsInput = {
@@ -2728,6 +2944,7 @@ export type ClinicUncheckedUpdateWithoutEscalationLogsInput = {
   businessHours?: Prisma.BusinessHoursUncheckedUpdateManyWithoutClinicNestedInput
   availableSlots?: Prisma.AvailableSlotUncheckedUpdateManyWithoutClinicNestedInput
   conversationSessions?: Prisma.ConversationSessionUncheckedUpdateManyWithoutClinicNestedInput
+  leads?: Prisma.LeadUncheckedUpdateManyWithoutClinicNestedInput
 }
 
 
@@ -2749,6 +2966,7 @@ export type ClinicCountOutputType = {
   escalationLogs: number
   availableSlots: number
   conversationSessions: number
+  leads: number
 }
 
 export type ClinicCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2765,6 +2983,7 @@ export type ClinicCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions
   escalationLogs?: boolean | ClinicCountOutputTypeCountEscalationLogsArgs
   availableSlots?: boolean | ClinicCountOutputTypeCountAvailableSlotsArgs
   conversationSessions?: boolean | ClinicCountOutputTypeCountConversationSessionsArgs
+  leads?: boolean | ClinicCountOutputTypeCountLeadsArgs
 }
 
 /**
@@ -2868,6 +3087,13 @@ export type ClinicCountOutputTypeCountConversationSessionsArgs<ExtArgs extends r
   where?: Prisma.ConversationSessionWhereInput
 }
 
+/**
+ * ClinicCountOutputType without action
+ */
+export type ClinicCountOutputTypeCountLeadsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.LeadWhereInput
+}
+
 
 export type ClinicSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -2898,6 +3124,7 @@ export type ClinicSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   escalationLogs?: boolean | Prisma.Clinic$escalationLogsArgs<ExtArgs>
   availableSlots?: boolean | Prisma.Clinic$availableSlotsArgs<ExtArgs>
   conversationSessions?: boolean | Prisma.Clinic$conversationSessionsArgs<ExtArgs>
+  leads?: boolean | Prisma.Clinic$leadsArgs<ExtArgs>
   _count?: boolean | Prisma.ClinicCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["clinic"]>
 
@@ -2968,6 +3195,7 @@ export type ClinicInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   escalationLogs?: boolean | Prisma.Clinic$escalationLogsArgs<ExtArgs>
   availableSlots?: boolean | Prisma.Clinic$availableSlotsArgs<ExtArgs>
   conversationSessions?: boolean | Prisma.Clinic$conversationSessionsArgs<ExtArgs>
+  leads?: boolean | Prisma.Clinic$leadsArgs<ExtArgs>
   _count?: boolean | Prisma.ClinicCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ClinicIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -2990,6 +3218,7 @@ export type $ClinicPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     escalationLogs: Prisma.$EscalationLogPayload<ExtArgs>[]
     availableSlots: Prisma.$AvailableSlotPayload<ExtArgs>[]
     conversationSessions: Prisma.$ConversationSessionPayload<ExtArgs>[]
+    leads: Prisma.$LeadPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -3414,6 +3643,7 @@ export interface Prisma__ClinicClient<T, Null = never, ExtArgs extends runtime.T
   escalationLogs<T extends Prisma.Clinic$escalationLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Clinic$escalationLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EscalationLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   availableSlots<T extends Prisma.Clinic$availableSlotsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Clinic$availableSlotsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AvailableSlotPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   conversationSessions<T extends Prisma.Clinic$conversationSessionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Clinic$conversationSessionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ConversationSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  leads<T extends Prisma.Clinic$leadsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Clinic$leadsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LeadPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -4178,6 +4408,30 @@ export type Clinic$conversationSessionsArgs<ExtArgs extends runtime.Types.Extens
   take?: number
   skip?: number
   distinct?: Prisma.ConversationSessionScalarFieldEnum | Prisma.ConversationSessionScalarFieldEnum[]
+}
+
+/**
+ * Clinic.leads
+ */
+export type Clinic$leadsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Lead
+   */
+  select?: Prisma.LeadSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Lead
+   */
+  omit?: Prisma.LeadOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.LeadInclude<ExtArgs> | null
+  where?: Prisma.LeadWhereInput
+  orderBy?: Prisma.LeadOrderByWithRelationInput | Prisma.LeadOrderByWithRelationInput[]
+  cursor?: Prisma.LeadWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.LeadScalarFieldEnum | Prisma.LeadScalarFieldEnum[]
 }
 
 /**

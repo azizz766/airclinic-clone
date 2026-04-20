@@ -149,7 +149,7 @@ export default function BookDemoPage() {
                         setSubmitState('idle')
                         setMessage('')
                       }}
-                      className="mt-8 rounded-full bg-[#5d32de] px-6 py-3 font-bold text-white"
+                      className="mt-8 rounded-full bg-[#674db1] px-6 py-3 font-bold text-white"
                     >
                       Submit another request
                     </button>

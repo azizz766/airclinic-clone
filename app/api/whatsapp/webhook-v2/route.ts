@@ -36,6 +36,11 @@ import {
   isEscalationRequest,
   parseDateInput,
 } from '@/lib/whatsapp/input-parsers'
+import { saveLead, type DropReason } from '@/lib/whatsapp/lead-handler'
+
+// Slot TTL: how long a presented slot list remains valid before re-checking.
+// Override with SLOT_TTL_MS env var. Default: 10 minutes.
+const SLOT_TTL_MS = Number(process.env.SLOT_TTL_MS) || 10 * 60 * 1000
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Types
@@ -83,6 +88,7 @@ async function checkRetryLimit(
       'HUMAN_ESCALATION_PENDING',
       'MAX_RETRIES',
     )
+    await saveLead(session, 'vague_repeated')
     return { reply: 'سيتواصل معك أحد من فريقنا قريبًا 🙏' }
   }
 
@@ -111,6 +117,11 @@ async function escalate(
     'USER_REQUESTED_ESCALATION',
     reason,
   )
+  await prisma.conversationSession.update({
+    where: { id: ctx.session.id },
+    data: { handoffActive: true },
+  })
+  await saveLead(ctx.session, 'other')
 
   return { reply: 'سيتواصل معك أحد من فريقنا قريبًا 🙏\nشكراً على صبرك.' }
 }
@@ -373,6 +384,7 @@ async function handleDateCollection(
     data: {
       slotDate: targetDate,
       retryCount: 0,
+      slotOfferedAt: new Date(),
       ambiguousIntents: slotData as unknown as Prisma.InputJsonValue,
     },
   })
@@ -693,6 +705,77 @@ async function handleConfirmation(
     return { reply: 'اكتب *نعم* لتأكيد الحجز أو *لا* لتعديل البيانات.' }
   }
 
+  // ── Slot TTL check ────────────────────────────────────
+  if (session.slotOfferedAt) {
+    const elapsed = Date.now() - new Date(session.slotOfferedAt).getTime()
+    if (elapsed > SLOT_TTL_MS) {
+      await prisma.conversationSession.update({
+        where: { id: session.id },
+        data: { slotTimeId: null, slotOfferedAt: null },
+      })
+
+      if (session.slotServiceId && session.slotDate) {
+        const freshSlots = await prisma.availableSlot.findMany({
+          where: {
+            clinicId,
+            serviceId: session.slotServiceId,
+            isBooked: false,
+            OR: [{ isHeld: false }, { heldBySessionId: session.id }],
+            startTime: { gte: session.slotDate },
+          },
+          select: { id: true, startTime: true },
+          orderBy: { startTime: 'asc' },
+          take: 5,
+        })
+
+        if (freshSlots.length > 0) {
+          const slotData = freshSlots.map((s) => ({
+            id: s.id,
+            startTime: s.startTime.toISOString(),
+          }))
+          await prisma.conversationSession.update({
+            where: { id: session.id },
+            data: {
+              slotOfferedAt: new Date(),
+              ambiguousIntents: slotData as unknown as Prisma.InputJsonValue,
+            },
+          })
+          await transitionSession(session.id, clinicId, 'SLOT_COLLECTION_TIME', 'SLOT_TTL_EXPIRED')
+
+          const SLOT_NUMBERS = ['1️⃣','2️⃣','3️⃣','4️⃣','5️⃣','6️⃣','7️⃣','8️⃣','9️⃣','🔟']
+          const list = freshSlots
+            .map((s, i) => {
+              const label = new Date(s.startTime).toLocaleDateString('ar-SA', {
+                weekday: 'long', month: 'short', day: 'numeric',
+                hour: '2-digit', minute: '2-digit',
+              })
+              return `${SLOT_NUMBERS[i] ?? `${i + 1}.`} ${label}`
+            })
+            .join('\n')
+
+          return {
+            reply:
+              'انتهت مدة صلاحية الموعد المختار.\n\n' +
+              `المواعيد المتاحة الآن:\n\n${list}\n\n` +
+              'اختر رقم الموعد المناسب.',
+          }
+        }
+      }
+
+      // No fresh slots — restart date collection
+      await prisma.conversationSession.update({
+        where: { id: session.id },
+        data: { slotDate: null, ambiguousIntents: Prisma.JsonNull },
+      })
+      await transitionSession(session.id, clinicId, 'SLOT_COLLECTION_DATE', 'SLOT_TTL_EXPIRED')
+      return {
+        reply:
+          'انتهت مدة صلاحية الموعد المختار.\n' +
+          'متى يناسبك؟',
+      }
+    }
+  }
+
   // ── User confirmed — write to DB ─────────────────────
   await transitionSession(
     session.id,
@@ -781,6 +864,7 @@ async function handleConfirmation(
           await prisma.conversationSession.update({
             where: { id: session.id },
             data: {
+              slotOfferedAt: new Date(),
               ambiguousIntents: slotData as unknown as Prisma.InputJsonValue,
             },
           })
@@ -1080,6 +1164,21 @@ export async function POST(req: NextRequest) {
     twilioMessageSid: messageSid,
     currentState: session.currentState,
   })
+
+  // ── 5.5. Handoff lock check ───────────────────────────────────────────────
+  if (session.handoffActive) {
+    const holdReply = 'محادثتك مع أحد من فريقنا — سيردون عليك قريبًا. 🙏'
+    try {
+      await sendWhatsAppReply(from, clinicNumber, holdReply)
+    } catch (holdErr) {
+      console.error('[webhook-v2] handoff hold reply failed', {
+        sessionId: session.id,
+        from,
+        error: holdErr,
+      })
+    }
+    return NextResponse.json({ ok: true }, { status: 200 })
+  }
 
   // ── 6. AI interpretation ──────────────────────────────────────────────────
   let interpretation: AiInterpretation

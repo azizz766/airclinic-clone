@@ -108,6 +108,11 @@ export type ClinicSettings = Prisma.ClinicSettingsModel
  */
 export type BusinessHours = Prisma.BusinessHoursModel
 /**
+ * Model Lead
+ * 
+ */
+export type Lead = Prisma.LeadModel
+/**
  * Model EscalationLog
  * 
  */

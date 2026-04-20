@@ -184,6 +184,7 @@ model Clinic {
   escalationLogs       EscalationLog[]
   availableSlots       AvailableSlot[]
   conversationSessions ConversationSession[]
+  leads                Lead[]
 
   @@map("clinics")
 }
@@ -321,6 +322,8 @@ model ConversationSession {
   escalationClaimedBy String?
   escalationClaimedAt DateTime?
   bookingId           String?
+  handoffActive       Boolean            @default(false)
+  slotOfferedAt       DateTime?
   expiresAt           DateTime
   createdAt           DateTime           @default(now())
   updatedAt           DateTime           @updatedAt
@@ -598,6 +601,25 @@ model BusinessHours {
 
   @@unique([clinicId, dayOfWeek])
   @@map("business_hours")
+}
+
+model Lead {
+  id              String   @id @default(cuid())
+  clinicId        String
+  patientPhone    String
+  patientName     String?
+  serviceInterest String?
+  datePreference  String?
+  dropReason      String
+  sessionId       String   @unique
+
+  createdAt       DateTime @default(now())
+
+  clinic Clinic @relation(fields: [clinicId], references: [id], onDelete: Cascade)
+
+  @@index([clinicId, createdAt])
+  @@index([patientPhone])
+  @@map("leads")
 }
 
 model EscalationLog {

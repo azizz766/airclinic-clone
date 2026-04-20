@@ -402,6 +402,7 @@ export const ModelName = {
   Campaign: 'Campaign',
   ClinicSettings: 'ClinicSettings',
   BusinessHours: 'BusinessHours',
+  Lead: 'Lead',
   EscalationLog: 'EscalationLog'
 } as const
 
@@ -418,7 +419,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "clinic" | "user" | "membership" | "doctor" | "service" | "availableSlot" | "conversationSession" | "conversationMessage" | "stateTransitionLog" | "patient" | "appointment" | "conversation" | "message" | "reminder" | "notificationJob" | "campaign" | "clinicSettings" | "businessHours" | "escalationLog"
+    modelProps: "clinic" | "user" | "membership" | "doctor" | "service" | "availableSlot" | "conversationSession" | "conversationMessage" | "stateTransitionLog" | "patient" | "appointment" | "conversation" | "message" | "reminder" | "notificationJob" | "campaign" | "clinicSettings" | "businessHours" | "lead" | "escalationLog"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1754,6 +1755,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    Lead: {
+      payload: Prisma.$LeadPayload<ExtArgs>
+      fields: Prisma.LeadFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.LeadFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LeadPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.LeadFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LeadPayload>
+        }
+        findFirst: {
+          args: Prisma.LeadFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LeadPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.LeadFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LeadPayload>
+        }
+        findMany: {
+          args: Prisma.LeadFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LeadPayload>[]
+        }
+        create: {
+          args: Prisma.LeadCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LeadPayload>
+        }
+        createMany: {
+          args: Prisma.LeadCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.LeadCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LeadPayload>[]
+        }
+        delete: {
+          args: Prisma.LeadDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LeadPayload>
+        }
+        update: {
+          args: Prisma.LeadUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LeadPayload>
+        }
+        deleteMany: {
+          args: Prisma.LeadDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.LeadUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.LeadUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LeadPayload>[]
+        }
+        upsert: {
+          args: Prisma.LeadUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LeadPayload>
+        }
+        aggregate: {
+          args: Prisma.LeadAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateLead>
+        }
+        groupBy: {
+          args: Prisma.LeadGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.LeadGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.LeadCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.LeadCountAggregateOutputType> | number
+        }
+      }
+    }
     EscalationLog: {
       payload: Prisma.$EscalationLogPayload<ExtArgs>
       fields: Prisma.EscalationLogFieldRefs
@@ -1992,6 +2067,8 @@ export const ConversationSessionScalarFieldEnum = {
   escalationClaimedBy: 'escalationClaimedBy',
   escalationClaimedAt: 'escalationClaimedAt',
   bookingId: 'bookingId',
+  handoffActive: 'handoffActive',
+  slotOfferedAt: 'slotOfferedAt',
   expiresAt: 'expiresAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
@@ -2212,6 +2289,21 @@ export const BusinessHoursScalarFieldEnum = {
 } as const
 
 export type BusinessHoursScalarFieldEnum = (typeof BusinessHoursScalarFieldEnum)[keyof typeof BusinessHoursScalarFieldEnum]
+
+
+export const LeadScalarFieldEnum = {
+  id: 'id',
+  clinicId: 'clinicId',
+  patientPhone: 'patientPhone',
+  patientName: 'patientName',
+  serviceInterest: 'serviceInterest',
+  datePreference: 'datePreference',
+  dropReason: 'dropReason',
+  sessionId: 'sessionId',
+  createdAt: 'createdAt'
+} as const
+
+export type LeadScalarFieldEnum = (typeof LeadScalarFieldEnum)[keyof typeof LeadScalarFieldEnum]
 
 
 export const EscalationLogScalarFieldEnum = {
@@ -2704,6 +2796,7 @@ export type GlobalOmitConfig = {
   campaign?: Prisma.CampaignOmit
   clinicSettings?: Prisma.ClinicSettingsOmit
   businessHours?: Prisma.BusinessHoursOmit
+  lead?: Prisma.LeadOmit
   escalationLog?: Prisma.EscalationLogOmit
 }
 

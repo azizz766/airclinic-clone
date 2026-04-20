@@ -58,6 +58,8 @@ export type ConversationSessionMinAggregateOutputType = {
   escalationClaimedBy: string | null
   escalationClaimedAt: Date | null
   bookingId: string | null
+  handoffActive: boolean | null
+  slotOfferedAt: Date | null
   expiresAt: Date | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -84,6 +86,8 @@ export type ConversationSessionMaxAggregateOutputType = {
   escalationClaimedBy: string | null
   escalationClaimedAt: Date | null
   bookingId: string | null
+  handoffActive: boolean | null
+  slotOfferedAt: Date | null
   expiresAt: Date | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -111,6 +115,8 @@ export type ConversationSessionCountAggregateOutputType = {
   escalationClaimedBy: number
   escalationClaimedAt: number
   bookingId: number
+  handoffActive: number
+  slotOfferedAt: number
   expiresAt: number
   createdAt: number
   updatedAt: number
@@ -151,6 +157,8 @@ export type ConversationSessionMinAggregateInputType = {
   escalationClaimedBy?: true
   escalationClaimedAt?: true
   bookingId?: true
+  handoffActive?: true
+  slotOfferedAt?: true
   expiresAt?: true
   createdAt?: true
   updatedAt?: true
@@ -177,6 +185,8 @@ export type ConversationSessionMaxAggregateInputType = {
   escalationClaimedBy?: true
   escalationClaimedAt?: true
   bookingId?: true
+  handoffActive?: true
+  slotOfferedAt?: true
   expiresAt?: true
   createdAt?: true
   updatedAt?: true
@@ -204,6 +214,8 @@ export type ConversationSessionCountAggregateInputType = {
   escalationClaimedBy?: true
   escalationClaimedAt?: true
   bookingId?: true
+  handoffActive?: true
+  slotOfferedAt?: true
   expiresAt?: true
   createdAt?: true
   updatedAt?: true
@@ -318,6 +330,8 @@ export type ConversationSessionGroupByOutputType = {
   escalationClaimedBy: string | null
   escalationClaimedAt: Date | null
   bookingId: string | null
+  handoffActive: boolean
+  slotOfferedAt: Date | null
   expiresAt: Date
   createdAt: Date
   updatedAt: Date
@@ -368,6 +382,8 @@ export type ConversationSessionWhereInput = {
   escalationClaimedBy?: Prisma.StringNullableFilter<"ConversationSession"> | string | null
   escalationClaimedAt?: Prisma.DateTimeNullableFilter<"ConversationSession"> | Date | string | null
   bookingId?: Prisma.StringNullableFilter<"ConversationSession"> | string | null
+  handoffActive?: Prisma.BoolFilter<"ConversationSession"> | boolean
+  slotOfferedAt?: Prisma.DateTimeNullableFilter<"ConversationSession"> | Date | string | null
   expiresAt?: Prisma.DateTimeFilter<"ConversationSession"> | Date | string
   createdAt?: Prisma.DateTimeFilter<"ConversationSession"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"ConversationSession"> | Date | string
@@ -400,6 +416,8 @@ export type ConversationSessionOrderByWithRelationInput = {
   escalationClaimedBy?: Prisma.SortOrderInput | Prisma.SortOrder
   escalationClaimedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   bookingId?: Prisma.SortOrderInput | Prisma.SortOrder
+  handoffActive?: Prisma.SortOrder
+  slotOfferedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   expiresAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -436,6 +454,8 @@ export type ConversationSessionWhereUniqueInput = Prisma.AtLeast<{
   escalationClaimedBy?: Prisma.StringNullableFilter<"ConversationSession"> | string | null
   escalationClaimedAt?: Prisma.DateTimeNullableFilter<"ConversationSession"> | Date | string | null
   bookingId?: Prisma.StringNullableFilter<"ConversationSession"> | string | null
+  handoffActive?: Prisma.BoolFilter<"ConversationSession"> | boolean
+  slotOfferedAt?: Prisma.DateTimeNullableFilter<"ConversationSession"> | Date | string | null
   expiresAt?: Prisma.DateTimeFilter<"ConversationSession"> | Date | string
   createdAt?: Prisma.DateTimeFilter<"ConversationSession"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"ConversationSession"> | Date | string
@@ -468,6 +488,8 @@ export type ConversationSessionOrderByWithAggregationInput = {
   escalationClaimedBy?: Prisma.SortOrderInput | Prisma.SortOrder
   escalationClaimedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   bookingId?: Prisma.SortOrderInput | Prisma.SortOrder
+  handoffActive?: Prisma.SortOrder
+  slotOfferedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   expiresAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -503,6 +525,8 @@ export type ConversationSessionScalarWhereWithAggregatesInput = {
   escalationClaimedBy?: Prisma.StringNullableWithAggregatesFilter<"ConversationSession"> | string | null
   escalationClaimedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"ConversationSession"> | Date | string | null
   bookingId?: Prisma.StringNullableWithAggregatesFilter<"ConversationSession"> | string | null
+  handoffActive?: Prisma.BoolWithAggregatesFilter<"ConversationSession"> | boolean
+  slotOfferedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"ConversationSession"> | Date | string | null
   expiresAt?: Prisma.DateTimeWithAggregatesFilter<"ConversationSession"> | Date | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"ConversationSession"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"ConversationSession"> | Date | string
@@ -527,6 +551,8 @@ export type ConversationSessionCreateInput = {
   escalationClaimedBy?: string | null
   escalationClaimedAt?: Date | string | null
   bookingId?: string | null
+  handoffActive?: boolean
+  slotOfferedAt?: Date | string | null
   expiresAt: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -559,6 +585,8 @@ export type ConversationSessionUncheckedCreateInput = {
   escalationClaimedBy?: string | null
   escalationClaimedAt?: Date | string | null
   bookingId?: string | null
+  handoffActive?: boolean
+  slotOfferedAt?: Date | string | null
   expiresAt: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -585,6 +613,8 @@ export type ConversationSessionUpdateInput = {
   escalationClaimedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   escalationClaimedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bookingId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  handoffActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  slotOfferedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -617,6 +647,8 @@ export type ConversationSessionUncheckedUpdateInput = {
   escalationClaimedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   escalationClaimedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bookingId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  handoffActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  slotOfferedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -646,6 +678,8 @@ export type ConversationSessionCreateManyInput = {
   escalationClaimedBy?: string | null
   escalationClaimedAt?: Date | string | null
   bookingId?: string | null
+  handoffActive?: boolean
+  slotOfferedAt?: Date | string | null
   expiresAt: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -670,6 +704,8 @@ export type ConversationSessionUpdateManyMutationInput = {
   escalationClaimedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   escalationClaimedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bookingId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  handoffActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  slotOfferedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -697,6 +733,8 @@ export type ConversationSessionUncheckedUpdateManyInput = {
   escalationClaimedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   escalationClaimedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bookingId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  handoffActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  slotOfferedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -739,6 +777,8 @@ export type ConversationSessionCountOrderByAggregateInput = {
   escalationClaimedBy?: Prisma.SortOrder
   escalationClaimedAt?: Prisma.SortOrder
   bookingId?: Prisma.SortOrder
+  handoffActive?: Prisma.SortOrder
+  slotOfferedAt?: Prisma.SortOrder
   expiresAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -771,6 +811,8 @@ export type ConversationSessionMaxOrderByAggregateInput = {
   escalationClaimedBy?: Prisma.SortOrder
   escalationClaimedAt?: Prisma.SortOrder
   bookingId?: Prisma.SortOrder
+  handoffActive?: Prisma.SortOrder
+  slotOfferedAt?: Prisma.SortOrder
   expiresAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -797,6 +839,8 @@ export type ConversationSessionMinOrderByAggregateInput = {
   escalationClaimedBy?: Prisma.SortOrder
   escalationClaimedAt?: Prisma.SortOrder
   bookingId?: Prisma.SortOrder
+  handoffActive?: Prisma.SortOrder
+  slotOfferedAt?: Prisma.SortOrder
   expiresAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -1002,6 +1046,8 @@ export type ConversationSessionCreateWithoutClinicInput = {
   escalationClaimedBy?: string | null
   escalationClaimedAt?: Date | string | null
   bookingId?: string | null
+  handoffActive?: boolean
+  slotOfferedAt?: Date | string | null
   expiresAt: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1032,6 +1078,8 @@ export type ConversationSessionUncheckedCreateWithoutClinicInput = {
   escalationClaimedBy?: string | null
   escalationClaimedAt?: Date | string | null
   bookingId?: string | null
+  handoffActive?: boolean
+  slotOfferedAt?: Date | string | null
   expiresAt: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1090,6 +1138,8 @@ export type ConversationSessionScalarWhereInput = {
   escalationClaimedBy?: Prisma.StringNullableFilter<"ConversationSession"> | string | null
   escalationClaimedAt?: Prisma.DateTimeNullableFilter<"ConversationSession"> | Date | string | null
   bookingId?: Prisma.StringNullableFilter<"ConversationSession"> | string | null
+  handoffActive?: Prisma.BoolFilter<"ConversationSession"> | boolean
+  slotOfferedAt?: Prisma.DateTimeNullableFilter<"ConversationSession"> | Date | string | null
   expiresAt?: Prisma.DateTimeFilter<"ConversationSession"> | Date | string
   createdAt?: Prisma.DateTimeFilter<"ConversationSession"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"ConversationSession"> | Date | string
@@ -1114,6 +1164,8 @@ export type ConversationSessionCreateWithoutSlotServiceInput = {
   escalationClaimedBy?: string | null
   escalationClaimedAt?: Date | string | null
   bookingId?: string | null
+  handoffActive?: boolean
+  slotOfferedAt?: Date | string | null
   expiresAt: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1144,6 +1196,8 @@ export type ConversationSessionUncheckedCreateWithoutSlotServiceInput = {
   escalationClaimedBy?: string | null
   escalationClaimedAt?: Date | string | null
   bookingId?: string | null
+  handoffActive?: boolean
+  slotOfferedAt?: Date | string | null
   expiresAt: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1196,6 +1250,8 @@ export type ConversationSessionCreateWithoutSlotTimeInput = {
   escalationClaimedBy?: string | null
   escalationClaimedAt?: Date | string | null
   bookingId?: string | null
+  handoffActive?: boolean
+  slotOfferedAt?: Date | string | null
   expiresAt: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1226,6 +1282,8 @@ export type ConversationSessionUncheckedCreateWithoutSlotTimeInput = {
   escalationClaimedBy?: string | null
   escalationClaimedAt?: Date | string | null
   bookingId?: string | null
+  handoffActive?: boolean
+  slotOfferedAt?: Date | string | null
   expiresAt: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1278,6 +1336,8 @@ export type ConversationSessionCreateWithoutMessagesInput = {
   escalationClaimedBy?: string | null
   escalationClaimedAt?: Date | string | null
   bookingId?: string | null
+  handoffActive?: boolean
+  slotOfferedAt?: Date | string | null
   expiresAt: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1309,6 +1369,8 @@ export type ConversationSessionUncheckedCreateWithoutMessagesInput = {
   escalationClaimedBy?: string | null
   escalationClaimedAt?: Date | string | null
   bookingId?: string | null
+  handoffActive?: boolean
+  slotOfferedAt?: Date | string | null
   expiresAt: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1350,6 +1412,8 @@ export type ConversationSessionUpdateWithoutMessagesInput = {
   escalationClaimedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   escalationClaimedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bookingId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  handoffActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  slotOfferedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1381,6 +1445,8 @@ export type ConversationSessionUncheckedUpdateWithoutMessagesInput = {
   escalationClaimedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   escalationClaimedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bookingId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  handoffActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  slotOfferedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1406,6 +1472,8 @@ export type ConversationSessionCreateWithoutStateTransitionsInput = {
   escalationClaimedBy?: string | null
   escalationClaimedAt?: Date | string | null
   bookingId?: string | null
+  handoffActive?: boolean
+  slotOfferedAt?: Date | string | null
   expiresAt: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1437,6 +1505,8 @@ export type ConversationSessionUncheckedCreateWithoutStateTransitionsInput = {
   escalationClaimedBy?: string | null
   escalationClaimedAt?: Date | string | null
   bookingId?: string | null
+  handoffActive?: boolean
+  slotOfferedAt?: Date | string | null
   expiresAt: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1478,6 +1548,8 @@ export type ConversationSessionUpdateWithoutStateTransitionsInput = {
   escalationClaimedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   escalationClaimedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bookingId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  handoffActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  slotOfferedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1509,6 +1581,8 @@ export type ConversationSessionUncheckedUpdateWithoutStateTransitionsInput = {
   escalationClaimedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   escalationClaimedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bookingId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  handoffActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  slotOfferedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1536,6 +1610,8 @@ export type ConversationSessionCreateManyClinicInput = {
   escalationClaimedBy?: string | null
   escalationClaimedAt?: Date | string | null
   bookingId?: string | null
+  handoffActive?: boolean
+  slotOfferedAt?: Date | string | null
   expiresAt: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1560,6 +1636,8 @@ export type ConversationSessionUpdateWithoutClinicInput = {
   escalationClaimedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   escalationClaimedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bookingId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  handoffActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  slotOfferedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1590,6 +1668,8 @@ export type ConversationSessionUncheckedUpdateWithoutClinicInput = {
   escalationClaimedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   escalationClaimedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bookingId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  handoffActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  slotOfferedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1618,6 +1698,8 @@ export type ConversationSessionUncheckedUpdateManyWithoutClinicInput = {
   escalationClaimedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   escalationClaimedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bookingId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  handoffActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  slotOfferedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1644,6 +1726,8 @@ export type ConversationSessionCreateManySlotServiceInput = {
   escalationClaimedBy?: string | null
   escalationClaimedAt?: Date | string | null
   bookingId?: string | null
+  handoffActive?: boolean
+  slotOfferedAt?: Date | string | null
   expiresAt: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1668,6 +1752,8 @@ export type ConversationSessionUpdateWithoutSlotServiceInput = {
   escalationClaimedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   escalationClaimedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bookingId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  handoffActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  slotOfferedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1698,6 +1784,8 @@ export type ConversationSessionUncheckedUpdateWithoutSlotServiceInput = {
   escalationClaimedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   escalationClaimedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bookingId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  handoffActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  slotOfferedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1726,6 +1814,8 @@ export type ConversationSessionUncheckedUpdateManyWithoutSlotServiceInput = {
   escalationClaimedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   escalationClaimedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bookingId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  handoffActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  slotOfferedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1752,6 +1842,8 @@ export type ConversationSessionCreateManySlotTimeInput = {
   escalationClaimedBy?: string | null
   escalationClaimedAt?: Date | string | null
   bookingId?: string | null
+  handoffActive?: boolean
+  slotOfferedAt?: Date | string | null
   expiresAt: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1776,6 +1868,8 @@ export type ConversationSessionUpdateWithoutSlotTimeInput = {
   escalationClaimedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   escalationClaimedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bookingId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  handoffActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  slotOfferedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1806,6 +1900,8 @@ export type ConversationSessionUncheckedUpdateWithoutSlotTimeInput = {
   escalationClaimedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   escalationClaimedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bookingId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  handoffActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  slotOfferedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1834,6 +1930,8 @@ export type ConversationSessionUncheckedUpdateManyWithoutSlotTimeInput = {
   escalationClaimedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   escalationClaimedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   bookingId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  handoffActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  slotOfferedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   expiresAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1901,6 +1999,8 @@ export type ConversationSessionSelect<ExtArgs extends runtime.Types.Extensions.I
   escalationClaimedBy?: boolean
   escalationClaimedAt?: boolean
   bookingId?: boolean
+  handoffActive?: boolean
+  slotOfferedAt?: boolean
   expiresAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -1934,6 +2034,8 @@ export type ConversationSessionSelectCreateManyAndReturn<ExtArgs extends runtime
   escalationClaimedBy?: boolean
   escalationClaimedAt?: boolean
   bookingId?: boolean
+  handoffActive?: boolean
+  slotOfferedAt?: boolean
   expiresAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -1964,6 +2066,8 @@ export type ConversationSessionSelectUpdateManyAndReturn<ExtArgs extends runtime
   escalationClaimedBy?: boolean
   escalationClaimedAt?: boolean
   bookingId?: boolean
+  handoffActive?: boolean
+  slotOfferedAt?: boolean
   expiresAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -1994,13 +2098,15 @@ export type ConversationSessionSelectScalar = {
   escalationClaimedBy?: boolean
   escalationClaimedAt?: boolean
   bookingId?: boolean
+  handoffActive?: boolean
+  slotOfferedAt?: boolean
   expiresAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   resolvedAt?: boolean
 }
 
-export type ConversationSessionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "clinicId" | "phoneNumber" | "currentState" | "previousState" | "slotServiceId" | "slotDate" | "slotTimeId" | "slotPatientName" | "slotPatientDob" | "slotPhoneConfirmed" | "detectedLanguage" | "retryCount" | "maxRetriesPerState" | "invalidInputCount" | "ambiguousIntents" | "escalationReason" | "escalationClaimedBy" | "escalationClaimedAt" | "bookingId" | "expiresAt" | "createdAt" | "updatedAt" | "resolvedAt", ExtArgs["result"]["conversationSession"]>
+export type ConversationSessionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "clinicId" | "phoneNumber" | "currentState" | "previousState" | "slotServiceId" | "slotDate" | "slotTimeId" | "slotPatientName" | "slotPatientDob" | "slotPhoneConfirmed" | "detectedLanguage" | "retryCount" | "maxRetriesPerState" | "invalidInputCount" | "ambiguousIntents" | "escalationReason" | "escalationClaimedBy" | "escalationClaimedAt" | "bookingId" | "handoffActive" | "slotOfferedAt" | "expiresAt" | "createdAt" | "updatedAt" | "resolvedAt", ExtArgs["result"]["conversationSession"]>
 export type ConversationSessionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   clinic?: boolean | Prisma.ClinicDefaultArgs<ExtArgs>
   slotService?: boolean | Prisma.ConversationSession$slotServiceArgs<ExtArgs>
@@ -2050,6 +2156,8 @@ export type $ConversationSessionPayload<ExtArgs extends runtime.Types.Extensions
     escalationClaimedBy: string | null
     escalationClaimedAt: Date | null
     bookingId: string | null
+    handoffActive: boolean
+    slotOfferedAt: Date | null
     expiresAt: Date
     createdAt: Date
     updatedAt: Date
@@ -2502,6 +2610,8 @@ export interface ConversationSessionFieldRefs {
   readonly escalationClaimedBy: Prisma.FieldRef<"ConversationSession", 'String'>
   readonly escalationClaimedAt: Prisma.FieldRef<"ConversationSession", 'DateTime'>
   readonly bookingId: Prisma.FieldRef<"ConversationSession", 'String'>
+  readonly handoffActive: Prisma.FieldRef<"ConversationSession", 'Boolean'>
+  readonly slotOfferedAt: Prisma.FieldRef<"ConversationSession", 'DateTime'>
   readonly expiresAt: Prisma.FieldRef<"ConversationSession", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"ConversationSession", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"ConversationSession", 'DateTime'>
