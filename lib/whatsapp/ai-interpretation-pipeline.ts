@@ -92,6 +92,14 @@ function countPatternMatches(text: string, patterns: RegExp[]) {
   return patterns.reduce((score, pattern) => (pattern.test(text) ? score + 1 : score), 0)
 }
 
+function hasPhrase(text: string, phrase: string) {
+  return text.includes(normalizeForNlu(phrase))
+}
+
+function hasAnyPhrase(text: string, phrases: string[]) {
+  return phrases.some((phrase) => hasPhrase(text, phrase))
+}
+
 function extractPreferredDateOffsetDays(canonicalText: string) {
   if (tokenExists(canonicalText, 'day_after_tomorrow')) {
     return 2
@@ -166,6 +174,162 @@ function interpretIncomingMessage(bodyRaw: string): AiInterpretation {
   const dayOfWeek = extractPreferredDayOfWeek(canonicalText)
   const period = extractPreferredPeriod(canonicalText)
   const doctorHint = extractDoctorHint(normalized)
+
+  const explicitBookingPhrases = [
+    'ابي احجز',
+    'ابغى احجز',
+    'ابغي احجز',
+    'اريد احجز',
+    'ابي حجز',
+    'ابغى حجز',
+    'ابغي حجز',
+    'اريد حجز',
+    'ابي موعد',
+    'ابغى موعد',
+    'ابغي موعد',
+    'اريد موعد',
+    'احجز',
+    'احجز موعد',
+    'حجز موعد',
+    'موعد جديد',
+  ]
+
+  const explicitCancelPhrases = [
+    'ابي الغي',
+    'ابغى الغي',
+    'ابغي الغي',
+    'اريد الغي',
+    'الغ الموعد',
+    'الغاء الموعد',
+    'الغي الموعد',
+    'cancel',
+  ]
+
+  const explicitReschedulePhrases = [
+    'ابي اغير الموعد',
+    'ابغى اغير الموعد',
+    'ابغي اغير الموعد',
+    'اريد اغير الموعد',
+    'ابي موعد ثاني',
+    'غير الموعد',
+    'تغيير الموعد',
+    'reschedule',
+  ]
+
+  const explicitPricePhrases = [
+    'كم سعر',
+    'السعر',
+    'بكم',
+    'كم التكلفه',
+    'كم التكلفة',
+    'price',
+    'cost',
+  ]
+
+  const explicitDoctorPhrases = [
+    'ابي دكتور',
+    'ابغى دكتور',
+    'اريد دكتور',
+    'مين الدكتور',
+    'مين الدكتوره',
+    'doctor',
+    'dr',
+  ]
+
+  const explicitAvailabilityPhrases = [
+    'متى عندكم',
+    'وش المواعيد المتاحه',
+    'وش المواعيد المتاحة',
+    'فيه موعد',
+    'عندكم موعد',
+    'متاح',
+    'availability',
+    'available',
+  ]
+
+  // Hard overrides first — these fix the false escalation path caused by weak NLU
+  if (hasAnyPhrase(normalized, explicitBookingPhrases)) {
+    return {
+      intent: 'new_booking',
+      confidence: 'high',
+      preferredDateOffsetDays: dateOffset,
+      preferredWeekOffsetDays: weekOffsetDays,
+      preferredDayOfWeek: dayOfWeek,
+      preferredPeriod: period,
+      doctorHint,
+      canonicalText,
+    }
+  }
+
+  if (hasAnyPhrase(normalized, explicitCancelPhrases)) {
+    return {
+      intent: 'cancel',
+      confidence: 'high',
+      preferredDateOffsetDays: dateOffset,
+      preferredWeekOffsetDays: weekOffsetDays,
+      preferredDayOfWeek: dayOfWeek,
+      preferredPeriod: period,
+      doctorHint,
+      canonicalText,
+    }
+  }
+
+  if (hasAnyPhrase(normalized, explicitReschedulePhrases)) {
+    return {
+      intent: 'reschedule',
+      confidence: 'high',
+      preferredDateOffsetDays: dateOffset,
+      preferredWeekOffsetDays: weekOffsetDays,
+      preferredDayOfWeek: dayOfWeek,
+      preferredPeriod: period,
+      doctorHint,
+      canonicalText,
+    }
+  }
+
+  if (hasAnyPhrase(normalized, explicitPricePhrases)) {
+    return {
+      intent: 'inquiry_price',
+      confidence: 'high',
+      preferredDateOffsetDays: dateOffset,
+      preferredWeekOffsetDays: weekOffsetDays,
+      preferredDayOfWeek: dayOfWeek,
+      preferredPeriod: period,
+      doctorHint,
+      canonicalText,
+    }
+  }
+
+  if (hasAnyPhrase(normalized, explicitDoctorPhrases)) {
+    return {
+      intent: 'inquiry_doctor',
+      confidence: 'high',
+      preferredDateOffsetDays: dateOffset,
+      preferredWeekOffsetDays: weekOffsetDays,
+      preferredDayOfWeek: dayOfWeek,
+      preferredPeriod: period,
+      doctorHint,
+      canonicalText,
+    }
+  }
+
+  if (
+    hasAnyPhrase(normalized, explicitAvailabilityPhrases) ||
+    dateOffset !== null ||
+    dayOfWeek !== null ||
+    period !== null
+  ) {
+    return {
+      intent: 'availability_check',
+      confidence: 'high',
+      preferredDateOffsetDays: dateOffset,
+      preferredWeekOffsetDays: weekOffsetDays,
+      preferredDayOfWeek: dayOfWeek,
+      preferredPeriod: period,
+      doctorHint,
+      canonicalText,
+    }
+  }
 
   const intentScores: Record<AiIntent, number> = {
     confirm: countPatternMatches(canonicalText, [/\bconfirm\b/, /\bتاكيد\b/, /\bاكد\b/]),
