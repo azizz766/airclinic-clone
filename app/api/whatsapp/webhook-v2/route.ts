@@ -37,6 +37,7 @@ import {
   parseDateInput,
 } from '@/lib/whatsapp/input-parsers'
 import { saveLead, type DropReason } from '@/lib/whatsapp/lead-handler'
+import { generateReply } from '@/lib/whatsapp/response-generator'
 
 // Slot TTL: how long a presented slot list remains valid before re-checking.
 // Override with SLOT_TTL_MS env var. Default: 10 minutes.
@@ -156,7 +157,7 @@ async function handleEntryState(ctx: HandlerContext): Promise<HandlerResult> {
     }
   }
 
-  if (intent === 'new_booking') {
+    if (intent === 'new_booking') {
     const services = await prisma.service.findMany({
       where: { clinicId },
       select: { id: true, name: true },
@@ -174,7 +175,6 @@ async function handleEntryState(ctx: HandlerContext): Promise<HandlerResult> {
       }
     }
 
-    // Store service list in session so selection step can validate without a DB round-trip
     await prisma.conversationSession.update({
       where: { id: session.id },
       data: {
@@ -190,7 +190,15 @@ async function handleEntryState(ctx: HandlerContext): Promise<HandlerResult> {
     )
 
     const list = services.map((s, i) => `${i + 1}. ${s.name}`).join('\n')
-    return { reply: `أهلاً! 😊 اختر الخدمة المطلوبة:\n\n${list}` }
+
+    return {
+      reply: await generateReply({
+        action: 'ask_for_service',
+        context: {
+          customText: `الخدمات المتاحة:\n${list}`,
+        },
+      }),
+    }
   }
 
   if (intent === 'cancel') {
@@ -283,12 +291,14 @@ async function handleServiceSelection(
     'SLOT_VALID',
   )
 
-  return {
-    reply:
-      `ممتاز! اخترت: *${selected.name}* ✅\n\n` +
-      'متى تفضل الموعد؟\n' +
-      'مثال: بكره، هذا الأسبوع، صباح الثلاثاء، مساء',
-  }
+ return {
+  reply: await generateReply({
+    action: 'ask_for_date',
+    context: {
+      serviceName: selected.name,
+    },
+  }),
+}
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -411,8 +421,13 @@ async function handleDateCollection(
     .join('\n')
 
   return {
-    reply: `المواعيد المتاحة:\n\n${list}\n\nاختر رقم الموعد المناسب.`,
-  }
+  reply: await generateReply({
+    action: 'show_slots',
+    context: {
+      slotsText: list,
+    },
+  }),
+}
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -651,15 +666,17 @@ async function handlePhoneConfirm(
   )
 
   return {
-    reply:
-      '📋 *ملخص الحجز:*\n' +
-      `• الخدمة: ${service?.name ?? 'غير محدد'}\n` +
-      `• الموعد: ${slotLabel}\n` +
-      `• الاسم: ${session.slotPatientName ?? 'غير محدد'}\n` +
-      `• الجوال: ${confirmedPhone}\n\n` +
-      'هل تريد تأكيد الحجز؟\n' +
-      'اكتب *نعم* للتأكيد أو *لا* لتعديل البيانات.',
-  }
+  reply: await generateReply({
+    action: 'confirm_details',
+    context: {
+      summaryText:
+        `الخدمة: ${service?.name ?? 'غير محدد'}\n` +
+        `الموعد: ${slotLabel}\n` +
+        `الاسم: ${session.slotPatientName ?? 'غير محدد'}\n` +
+        `الجوال: ${confirmedPhone}`,
+    },
+  }),
+}
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -822,12 +839,16 @@ async function handleConfirmation(
     await new Promise(resolve => setTimeout(resolve, 2000))
     await transitionSession(session.id, clinicId, 'IDLE', 'SESSION_RESET_AFTER_BOOKING')
     return {
-      reply:
-        '✅ *تم الحجز بنجاح!*\n\n' +
-        `موعدك: ${slotLabel}\n` +
-        'بيوصلك تذكير قبل الموعد.\n\n' +
-        'شكراً لاختيارك عيادتنا! 🙏',
-    }
+  reply: await generateReply({
+    action: 'confirm_booking',
+    context: {
+      serviceName: 'تم الحجز',
+      dateLabel: slotLabel,
+      timeLabel: slotLabel,
+      customText: `موعدك: ${slotLabel}`,
+    },
+  }),
+}
   } catch (err) {
     if (err instanceof SlotConflictError) {
       // Slot was taken — try to find fresh slots for the same date
