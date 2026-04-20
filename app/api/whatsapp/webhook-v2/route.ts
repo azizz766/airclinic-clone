@@ -123,7 +123,7 @@ async function escalate(
   })
   await saveLead(ctx.session, 'other')
 
-  return { reply: 'سيتواصل معك أحد من فريقنا قريبًا 🙏\nشكراً على صبرك.' }
+  return { reply: 'بيتواصل معك أحد من فريقنا  🙏\nشكراً على الأنتظار.' }
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -152,7 +152,7 @@ async function handleEntryState(ctx: HandlerContext): Promise<HandlerResult> {
       'MAX_RETRIES',
     )
     return {
-      reply: 'آسف، ما قدرت أفهم طلبك 😔\nسيتواصل معك أحد من فريقنا قريبًا.',
+      reply: '\nبيتواصل معك أحد من فريقنا قريبًا.',
     }
   }
 
@@ -170,7 +170,7 @@ async function handleEntryState(ctx: HandlerContext): Promise<HandlerResult> {
         'NO_SERVICES_AVAILABLE',
       )
       return {
-        reply: 'عذراً، لا توجد خدمات متاحة حالياً. سيتواصل معك فريقنا.',
+        reply: 'عذراً، لا توجد خدمات متاحة حالياً. بيتواصل معك فريقنا.',
       }
     }
 
@@ -214,7 +214,7 @@ async function handleEntryState(ctx: HandlerContext): Promise<HandlerResult> {
 
   return {
     reply:
-      'أهلاً! 👋 كيف يمكنني مساعدتك؟\n\n' +
+      'أهلاً! 👋 كيف أقدر اساعدك\n\n' +
       'اكتب *احجز* لحجز موعد، أو *الغ* لإلغاء حجز.',
   }
 }
@@ -246,7 +246,7 @@ async function handleServiceSelection(
       'HUMAN_ESCALATION_PENDING',
       'CORRUPTED_STATE',
     )
-    return { reply: 'حدث خطأ تقني. سيتواصل معك فريقنا.' }
+    return { reply: 'حدث خطأ تقني. بيتواصل معك فريقنا.' }
   }
 
   const selection = parseSelection(body)
@@ -313,7 +313,7 @@ async function handleDateCollection(
       'HUMAN_ESCALATION_PENDING',
       'CORRUPTED_STATE',
     )
-    return { reply: 'حدث خطأ تقني. سيتواصل معك فريقنا.' }
+    return { reply: 'حدث خطأ تقني. بيتواصل معك فريقنا.' }
   }
 
   const offsetDays = interpretation.preferredDateOffsetDays ?? 0
@@ -370,7 +370,7 @@ async function handleDateCollection(
     return {
       reply:
         'عذراً، لا توجد مواعيد متاحة في هذا الوقت.\n' +
-        'جرّب يوماً آخر أو وقتاً مختلفاً.',
+        'جرّب يوم آخر أو وقت مختلف.',
     }
   }
 
@@ -442,7 +442,7 @@ async function handleTimeSelection(
       'HUMAN_ESCALATION_PENDING',
       'CORRUPTED_STATE',
     )
-    return { reply: 'حدث خطأ تقني. سيتواصل معك فريقنا.' }
+    return { reply: 'حدث خطأ تقني. بيتواصل معك فريقنا.' }
   }
 
   const selection = parseSelection(body)
@@ -489,7 +489,7 @@ async function handleTimeSelection(
     'SLOT_VALID',
   )
 
-  return { reply: 'ممتاز! ✅ ما اسمك الكامل؟' }
+  return { reply: 'ممتاز! ✅ ممكن اسمك الكامل؟' }
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -502,7 +502,7 @@ async function handlePatientName(ctx: HandlerContext): Promise<HandlerResult> {
   // Skip if already set
   if (ctx.session.slotPatientName) {
     await transitionSession(ctx.session.id, ctx.clinicId, 'SLOT_COLLECTION_PATIENT_DOB', 'SKIP_ALREADY_SET')
-    return { reply: `تمام، سجلناك باسم ${ctx.session.slotPatientName} 👍\nما هو تاريخ ميلادك؟ (مثال: 1990/05/15)` }
+    return { reply: `تمام، سجلناك باسم ${ctx.session.slotPatientName} 👍\مممكن تاريخ ميلادك؟ (مثال: 1990/05/15)` }
   }
 
   // Original validation — must stay
@@ -511,7 +511,7 @@ async function handlePatientName(ctx: HandlerContext): Promise<HandlerResult> {
     const escalation = await checkRetryLimit(session, clinicId)
     if (escalation) return escalation
     return {
-      reply: 'الرجاء إدخال اسمك الكامل.\nمثال: محمد عبدالله العمري',
+      reply: 'الرجاء إدخال اسمك الثلاثي.\nمثال: محمد عبدالله فهد',
     }
   }
 
@@ -595,7 +595,7 @@ async function handlePhoneConfirm(
 
   let confirmedPhone: string
   const isAffirmative = (t: string) =>
-    ['نعم', 'yes', 'اه', 'أه', 'ايه', 'آه', 'ok', 'okay', 'يس', 'نعم.'].includes(t.toLowerCase())
+    ['يب','ايهه','اييه','نعم', 'yes', 'اه', 'أيه', 'ايه', 'اي', 'ok', 'اايه', 'يس', 'نعم.'].includes(t.toLowerCase())
 
   if (isAffirmative(trimmed)) {
     confirmedPhone = from
@@ -697,7 +697,7 @@ async function handleConfirmation(
     await transitionSession(session.id, clinicId, 'SLOT_COLLECTION_SERVICE', 'DENY')
 
     const list = services.map((s, i) => `${i + 1}. ${s.name}`).join('\n')
-    return { reply: `حسناً، لنبدأ من جديد. اختر الخدمة:\n\n${list}` }
+    return { reply: `ممتاز، يلا نبدأ من جديد. اختر الخدمة:\n\n${list}` }
   }
 
   if (!isAffirmative(body)) {
@@ -825,7 +825,7 @@ async function handleConfirmation(
       reply:
         '✅ *تم الحجز بنجاح!*\n\n' +
         `موعدك: ${slotLabel}\n` +
-        'سيصلك تذكير قبل الموعد.\n\n' +
+        'بيوصلك تذكير قبل الموعد.\n\n' +
         'شكراً لاختيارك عيادتنا! 🙏',
     }
   } catch (err) {
@@ -892,7 +892,7 @@ async function handleConfirmation(
 
           return {
             reply:
-              'عذراً، تم حجز الموعد السابق للتو.\n\n' +
+              'اسف، الموعد غير متوفر.\n\n' +
               `المواعيد المتاحة الأخرى:\n\n${list}\n\n` +
               'اختر رقم الموعد المناسب.',
           }
@@ -912,7 +912,7 @@ async function handleConfirmation(
       )
       return {
         reply:
-          'عذراً، لا توجد مواعيد متاحة في هذا اليوم.\n' +
+          'اسف، مافيه مواعيد متاحة في هذا اليوم.\n' +
           'متى يناسبك؟',
       }
     }
@@ -929,7 +929,7 @@ async function handleConfirmation(
         'BOOKING_ERROR',
       )
       return {
-        reply: 'حدث خطأ في بيانات الحجز. سيتواصل معك فريقنا لإتمام الحجز.',
+        reply: 'حدث خطأ في بيانات الحجز. بيتواصل معك فريقنا لإتمام الحجز.',
       }
     }
 
@@ -943,7 +943,7 @@ async function handleConfirmation(
       'BOOKING_FAILED',
       'BOOKING_ERROR',
     )
-    return { reply: 'حدث خطأ تقني. سيتواصل معك فريقنا قريبًا.' }
+    return { reply: 'حدث خطأ تقني. بيتواصل معك فريقنا قريبًا.' }
   }
 }
 
@@ -959,7 +959,7 @@ async function handleCancellationConfirm(
 
   if (isNegative(body)) {
     await transitionSession(session.id, clinicId, 'IDLE', 'DENY')
-    return { reply: 'تم إلغاء طلب الإلغاء. كيف يمكنني مساعدتك؟' }
+    return { reply: 'تم إلغاء طلب الإلغاء. كيف ممكن اساعدك' }
   }
 
   if (!isAffirmative(body)) {
@@ -973,7 +973,7 @@ async function handleCancellationConfirm(
 
   if (!patient) {
     await transitionSession(session.id, clinicId, 'IDLE', 'DENY')
-    return { reply: 'لا يوجد لديك حجز نشط للإلغاء.' }
+    return { reply: 'ماعندك حجز نشط للإلغاء.' }
   }
 
   const appointment = await prisma.appointment.findFirst({
@@ -990,7 +990,7 @@ async function handleCancellationConfirm(
 
   if (!appointment) {
     await transitionSession(session.id, clinicId, 'IDLE', 'DENY')
-    return { reply: 'لا يوجد لديك حجز نشط للإلغاء.' }
+    return { reply: ' ماعندك حجز نشط للإلغاء.' }
   }
 
   await prisma.appointment.update({
@@ -1011,7 +1011,7 @@ async function handleCancellationConfirm(
   return {
     reply:
       'تم إلغاء حجزك بنجاح ✅\n' +
-      'إذا احتجت أي شيء في المستقبل، نحن هنا.',
+      'إذا احتجت أي شيء في المستقبل، حنا هنا.',
   }
 }
 
@@ -1074,7 +1074,7 @@ async function dispatch(ctx: HandlerContext): Promise<HandlerResult> {
     case 'HUMAN_ESCALATION_PENDING':
     case 'HUMAN_ESCALATION_ACTIVE':
       return {
-        reply: 'محادثتك مع أحد من فريقنا — سيردون عليك قريبًا. 🙏',
+        reply: 'محادثتك مع أحد أعضاء فريقنا — بيتواصلون معك قريبًا. 🙏',
       }
 
     default: {
@@ -1090,7 +1090,7 @@ async function dispatch(ctx: HandlerContext): Promise<HandlerResult> {
         'HUMAN_ESCALATION_PENDING',
         'CORRUPTED_STATE',
       )
-      return { reply: 'حدث خطأ غير متوقع. سيتواصل معك فريقنا.' }
+      return { reply: 'حدث خطأ غير متوقع. بيتواصل معك فريقنا.' }
     }
   }
 }
@@ -1167,7 +1167,7 @@ export async function POST(req: NextRequest) {
 
   // ── 5.5. Handoff lock check ───────────────────────────────────────────────
   if (session.handoffActive) {
-    const holdReply = 'محادثتك مع أحد من فريقنا — سيردون عليك قريبًا. 🙏'
+    const holdReply = 'محادثتك مع أحد أعضاء فريقنا — بيتواصلون معك قريبًا. 🙏'
     try {
       await sendWhatsAppReply(from, clinicNumber, holdReply)
     } catch (holdErr) {
@@ -1306,7 +1306,7 @@ export async function POST(req: NextRequest) {
       from,
       error: dispatchErr,
     })
-    result = { reply: 'حدث خطأ تقني. سيتواصل معك فريقنا قريبًا.' }
+    result = { reply: 'حدث خطأ تقني. بيتواصل معك فريقنا قريبًا.' }
     try {
       await transitionSession(
         session.id,
