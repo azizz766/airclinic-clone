@@ -1074,7 +1074,7 @@ async function dispatch(ctx: HandlerContext): Promise<HandlerResult> {
     case 'HUMAN_ESCALATION_PENDING':
     case 'HUMAN_ESCALATION_ACTIVE':
       return {
-        reply: 'محادثتك مع أحد أعضاء فريقنا — بيتواصلون معك قريبًا. 🙏',
+        reply: 'أبشر — بيتواصلون معك قريبًا. 🙏',
       }
 
     default: {
@@ -1167,7 +1167,7 @@ export async function POST(req: NextRequest) {
 
   // ── 5.5. Handoff lock check ───────────────────────────────────────────────
   if (session.handoffActive) {
-    const holdReply = 'محادثتك مع أحد أعضاء فريقنا — بيتواصلون معك قريبًا. 🙏'
+    const holdReply = 'أبشر — بيتواصلون معك قريبًا. 🙏'
     try {
       await sendWhatsAppReply(from, clinicNumber, holdReply)
     } catch (holdErr) {
