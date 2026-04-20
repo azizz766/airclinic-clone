@@ -89,7 +89,7 @@ async function checkRetryLimit(
       'MAX_RETRIES',
     )
     await saveLead(session, 'vague_repeated')
-    return { reply: 'سيتواصل معك أحد من فريقنا قريبًا 🙏' }
+    return { reply: 'بيتواصل معك أحد من فريقنا قريبًا 🙏' }
   }
 
   return null
