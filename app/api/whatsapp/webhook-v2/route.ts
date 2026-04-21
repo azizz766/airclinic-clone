@@ -296,14 +296,15 @@ async function handleServiceSelection(
     'SLOT_VALID',
   )
 
- return {
-  reply: await generateReply({
+  console.log('[DEBUG GENERATE REPLY] calling generateReply for ask_for_date', { serviceName: selected.name })
+  const dateReply = await generateReply({
     action: 'ask_for_date',
     context: {
       serviceName: selected.name,
     },
-  }),
-}
+  })
+  console.log('[DEBUG GENERATE REPLY] ask_for_date result:', dateReply)
+  return { reply: dateReply }
 }
 
 // ─────────────────────────────────────────────────────────────────────────────

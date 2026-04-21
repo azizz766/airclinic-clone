@@ -48,11 +48,28 @@ export async function generateReply(payload: unknown): Promise<string> {
         : ''
 
     // 4) Post-LLM guardrails
-    if (!text || text.length < 2) return fallback()
-    if (text.includes('{') || text.includes('}')) return fallback()
-    if (text.toLowerCase().includes('json')) return fallback()
-    if (text.split('\n').length > 3) return fallback()
+    console.log('[DEBUG GENERATE REPLY] raw LLM text:', JSON.stringify(text))
+    if (!text || text.length < 2) {
+      console.log('[DEBUG GENERATE REPLY] fallback: text too short')
+      return fallback()
+    }
+    if (text.includes('{') || text.includes('}')) {
+      console.log('[DEBUG GENERATE REPLY] fallback: contains braces')
+      return fallback()
+    }
+    if (text.toLowerCase().includes('json')) {
+      console.log('[DEBUG GENERATE REPLY] fallback: contains json keyword')
+      return fallback()
+    }
+    // Count only non-empty lines — LLM Arabic responses often include blank separator lines.
+    // Original `> 3` was too tight: a 3-content-line response with 1 blank line = 4 split parts → fallback.
+    const contentLines = text.split('\n').filter(l => l.trim() !== '').length
+    if (contentLines > 5) {
+      console.log('[DEBUG GENERATE REPLY] fallback: too many content lines', contentLines)
+      return fallback()
+    }
 
+    console.log('[DEBUG GENERATE REPLY] reply accepted, contentLines:', contentLines)
     return text
   } catch (err) {
     console.error('[response-generator] LLM failed', err)
