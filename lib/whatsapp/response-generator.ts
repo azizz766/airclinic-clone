@@ -19,13 +19,6 @@ export async function generateReply(payload: unknown): Promise<string> {
 
   // 2) Pre-LLM guardrails
   if (
-    safePayload.action === 'show_slots' &&
-    !safePayload.context.slotsText
-  ) {
-    return fallback()
-  }
-
-  if (
     safePayload.action === 'confirm_booking' &&
     (!safePayload.context.dateLabel ||
       !safePayload.context.timeLabel ||

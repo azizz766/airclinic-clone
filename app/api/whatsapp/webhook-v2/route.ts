@@ -191,13 +191,18 @@ async function handleEntryState(ctx: HandlerContext): Promise<HandlerResult> {
 
     const list = services.map((s, i) => `${i + 1}. ${s.name}`).join('\n')
 
+    console.log('[DEBUG ENTRY] fetched services count:', services.length)
+    console.log('[DEBUG GENERATE REPLY] calling generateReply for ask_for_service')
+    // Generate only the preamble — do NOT embed the list in generateReply context,
+    // because the LLM echoes it back producing 4+ lines which trips the 3-line guardrail.
+    const preamble = await generateReply({
+      action: 'ask_for_service',
+      context: {},
+    })
+    console.log('[DEBUG GENERATE REPLY] preamble result:', preamble)
+
     return {
-      reply: await generateReply({
-        action: 'ask_for_service',
-        context: {
-          customText: `الخدمات المتاحة:\n${list}`,
-        },
-      }),
+      reply: `${preamble}\n\n${list}`,
     }
   }
 
@@ -420,14 +425,16 @@ async function handleDateCollection(
     })
     .join('\n')
 
-  return {
-  reply: await generateReply({
+  console.log('[DEBUG GENERATE REPLY] calling generateReply for show_slots')
+  // Same pattern: don't embed the list inside generateReply — it produces 4+ lines and trips the guardrail.
+  const slotsPreamble = await generateReply({
     action: 'show_slots',
-    context: {
-      slotsText: list,
-    },
-  }),
-}
+    context: {},
+  })
+  console.log('[DEBUG GENERATE REPLY] show_slots preamble:', slotsPreamble)
+  return {
+    reply: `${slotsPreamble}\n\n${list}`,
+  }
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
