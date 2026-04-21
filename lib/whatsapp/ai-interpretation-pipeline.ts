@@ -101,38 +101,17 @@ function hasAnyPhrase(text: string, phrases: string[]) {
 }
 
 function extractPreferredDateOffsetDays(canonicalText: string) {
-  if (tokenExists(canonicalText, 'day_after_tomorrow')) {
-    return 2
-  }
-
-  if (tokenExists(canonicalText, 'tomorrow')) {
-    return 1
-  }
-
-  if (/(^|\s)(today|اليوم|now)(\s|$)/.test(canonicalText)) {
-    return 0
-  }
-
+  if (tokenExists(canonicalText, 'day_after_tomorrow')) return 2
+  if (tokenExists(canonicalText, 'tomorrow')) return 1
+  if (/(^|\s)(today|اليوم|now)(\s|$)/.test(canonicalText)) return 0
   return null
 }
 
 function extractPreferredPeriod(canonicalText: string): PreferredPeriod | null {
-  if (tokenExists(canonicalText, 'after_isha')) {
-    return 'after_isha'
-  }
-
-  if (tokenExists(canonicalText, 'evening')) {
-    return 'evening'
-  }
-
-  if (tokenExists(canonicalText, 'afternoon')) {
-    return 'afternoon'
-  }
-
-  if (tokenExists(canonicalText, 'morning')) {
-    return 'morning'
-  }
-
+  if (tokenExists(canonicalText, 'after_isha')) return 'after_isha'
+  if (tokenExists(canonicalText, 'evening')) return 'evening'
+  if (tokenExists(canonicalText, 'afternoon')) return 'afternoon'
+  if (tokenExists(canonicalText, 'morning')) return 'morning'
   return null
 }
 
@@ -148,26 +127,43 @@ function extractPreferredDayOfWeek(canonicalText: string): number | null {
 }
 
 function extractPreferredWeekOffsetDays(canonicalText: string) {
-  if (tokenExists(canonicalText, 'next_week')) {
-    return 7
-  }
-
+  if (tokenExists(canonicalText, 'next_week')) return 7
   return 0
 }
 
 function extractDoctorHint(text: string) {
-  const doctorMatch = text.match(/(?:دكتور|دكتوره|doctor|dr\.?)[\s:]+([\p{L}]+(?:\s+[\p{L}]+)?)/iu)
-  if (!doctorMatch) {
-    return null
-  }
-
+  const doctorMatch = text.match(
+    /(?:دكتور|دكتوره|doctor|dr\.?)[\s:]+([\p{L}]+(?:\s+[\p{L}]+)?)/iu,
+  )
+  if (!doctorMatch) return null
   const value = doctorMatch[1]?.trim()
   return value || null
 }
 
 function interpretIncomingMessage(bodyRaw: string): AiInterpretation {
   const normalized = normalizeForNlu(bodyRaw)
-  const canonicalText = applySynonymNormalization(` ${normalized} `).replace(/\s+/g, ' ').trim()
+
+  // Hard stop for booking phrases so "ابي احجز" never falls through to unknown/escalation
+  if (
+    normalized.includes('حجز') ||
+    normalized.includes('احجز') ||
+    normalized.includes('موعد')
+  ) {
+    return {
+      intent: 'new_booking',
+      confidence: 'high',
+      preferredDateOffsetDays: null,
+      preferredWeekOffsetDays: 0,
+      preferredDayOfWeek: null,
+      preferredPeriod: null,
+      doctorHint: null,
+      canonicalText: normalized,
+    }
+  }
+
+  const canonicalText = applySynonymNormalization(` ${normalized} `)
+    .replace(/\s+/g, ' ')
+    .trim()
 
   const dateOffset = extractPreferredDateOffsetDays(canonicalText)
   const weekOffsetDays = extractPreferredWeekOffsetDays(canonicalText)
@@ -247,7 +243,6 @@ function interpretIncomingMessage(bodyRaw: string): AiInterpretation {
     'available',
   ]
 
-  // Hard overrides first — these fix the false escalation path caused by weak NLU
   if (hasAnyPhrase(normalized, explicitBookingPhrases)) {
     return {
       intent: 'new_booking',
@@ -336,7 +331,17 @@ function interpretIncomingMessage(bodyRaw: string): AiInterpretation {
     cancel: countPatternMatches(canonicalText, [/\bcancel\b/, /\bالغاء\b/, /\bالغ\b/, /\bالغي\b/]),
     reschedule: countPatternMatches(canonicalText, [/\breschedule\b/, /\bتغيير\b/, /\bغير\b/, /\bموعد ثاني\b/]),
     new_booking: countPatternMatches(canonicalText, [/\bbooking\b/, /\bحجز\b/, /\bموعد جديد\b/]),
-    availability_check: countPatternMatches(canonicalText, [/\bavailability\b/, /\bمتاح\b/, /\bعندكم\b/, /\bمتى\b/, /\bflexible_time\b/, /\bwork_schedule\b/, /\bvague_time\b/, /\btomorrow\b/, /\bday_after_tomorrow\b/]),
+    availability_check: countPatternMatches(canonicalText, [
+      /\bavailability\b/,
+      /\bمتاح\b/,
+      /\bعندكم\b/,
+      /\bمتى\b/,
+      /\bflexible_time\b/,
+      /\bwork_schedule\b/,
+      /\bvague_time\b/,
+      /\btomorrow\b/,
+      /\bday_after_tomorrow\b/,
+    ]),
     inquiry_price: countPatternMatches(canonicalText, [/\bprice_inquiry\b/, /\bسعر\b/, /\bبكم\b/]),
     inquiry_doctor: countPatternMatches(canonicalText, [/\bdoctor\b/, /\bمين الدكتور\b/]),
     unknown: 0,
@@ -429,18 +434,35 @@ function parseLlmIntentResponse(raw: string): LlmIntentResponse | null {
       'unknown',
     ]
     const validConfidence = ['low', 'medium', 'high'] as const
-    const validPeriods: Array<PreferredPeriod | null> = ['morning', 'afternoon', 'evening', 'after_isha', null]
+    const validPeriods: Array<PreferredPeriod | null> = [
+      'morning',
+      'afternoon',
+      'evening',
+      'after_isha',
+      null,
+    ]
 
-    const intent = validIntent.includes(parsed.intent as AiIntent) ? (parsed.intent as AiIntent) : null
-    const confidence = validConfidence.includes(parsed.confidence as (typeof validConfidence)[number])
+    const intent = validIntent.includes(parsed.intent as AiIntent)
+      ? (parsed.intent as AiIntent)
+      : null
+
+    const confidence = validConfidence.includes(
+      parsed.confidence as (typeof validConfidence)[number],
+    )
       ? (parsed.confidence as (typeof validConfidence)[number])
       : 'medium'
-    const preferredPeriod = validPeriods.includes((parsed.preferredPeriod as PreferredPeriod | null) ?? null)
+
+    const preferredPeriod = validPeriods.includes(
+      (parsed.preferredPeriod as PreferredPeriod | null) ?? null,
+    )
       ? ((parsed.preferredPeriod as PreferredPeriod | null) ?? null)
       : null
-    const preferredDateOffsetDays = typeof parsed.preferredDateOffsetDays === 'number'
-      ? Math.max(0, Math.floor(parsed.preferredDateOffsetDays))
-      : null
+
+    const preferredDateOffsetDays =
+      typeof parsed.preferredDateOffsetDays === 'number'
+        ? Math.max(0, Math.floor(parsed.preferredDateOffsetDays))
+        : null
+
     const notes = typeof parsed.notes === 'string' ? parsed.notes : ''
 
     if (!intent) return null
@@ -457,7 +479,10 @@ function parseLlmIntentResponse(raw: string): LlmIntentResponse | null {
   }
 }
 
-async function interpretWithLlmFallback(params: { rawMessage: string; normalizedText: string }) {
+async function interpretWithLlmFallback(params: {
+  rawMessage: string
+  normalizedText: string
+}) {
   const apiKey = process.env.ANTHROPIC_API_KEY
   if (!apiKey) return null
 
@@ -474,7 +499,7 @@ Your ONLY job is to analyze incoming user messages and return structured JSON.
 You do NOT generate responses. You do NOT control the conversation flow.
 
 EXTRACT:
-1. intent — one of: new_booking | availability_check | reschedule | confirm | cancel | inquiry_price | inquiry_doctor | human_request | unknown
+1. intent — one of: new_booking | availability_check | reschedule | confirm | cancel | inquiry_price | inquiry_doctor | unknown
 2. confidence — low | medium | high
 3. preferredPeriod — morning | afternoon | evening | after_isha | null
 4. preferredDateOffsetDays — number | null
@@ -486,7 +511,6 @@ RULES:
 - Return JSON only — no markdown, no explanation
 - Never invent slots, times, or service names
 - If multiple fields in one message extract all
-- "ابي احد يكلمني" or "وصلني موظف" → human_request
 - Implicit Arabic scheduling → new_booking or availability_check
 - Truly unrelated → unknown
 
@@ -526,9 +550,7 @@ SCHEMA:
         max_tokens: 200,
         temperature: 0,
         system: systemPrompt,
-        messages: [
-          { role: 'user', content: userPrompt },
-        ],
+        messages: [{ role: 'user', content: userPrompt }],
       }),
     })
 
@@ -544,7 +566,7 @@ SCHEMA:
       return null
     }
 
-    const data = await response.json() as {
+    const data = (await response.json()) as {
       content?: Array<{ type?: string; text?: string }>
     }
 
@@ -582,15 +604,24 @@ SCHEMA:
   }
 }
 
-function mergeInterpretationWithLlm(base: AiInterpretation, llm: LlmIntentResponse): AiInterpretation {
+function mergeInterpretationWithLlm(
+  base: AiInterpretation,
+  llm: LlmIntentResponse,
+): AiInterpretation {
   const mergedIntent = llm.intent !== 'unknown' ? llm.intent : base.intent
 
   return {
     ...base,
     intent: mergedIntent,
-    confidence: mergedIntent !== base.intent ? llm.confidence : (base.confidence === 'high' ? 'high' : llm.confidence),
+    confidence:
+      mergedIntent !== base.intent
+        ? llm.confidence
+        : base.confidence === 'high'
+          ? 'high'
+          : llm.confidence,
     preferredPeriod: base.preferredPeriod ?? llm.preferredPeriod,
-    preferredDateOffsetDays: base.preferredDateOffsetDays ?? llm.preferredDateOffsetDays,
+    preferredDateOffsetDays:
+      base.preferredDateOffsetDays ?? llm.preferredDateOffsetDays,
   }
 }
 
@@ -615,14 +646,13 @@ export async function runAiInterpretationPipeline(params: {
   let llmFallbackUsed = false
   let llmFallbackNotes: string | null = null
 
-  const shouldCallLlm = (
-    normalizedReply === null
-    && (
-      ruleInterpretation.intent === 'unknown'
-      || ruleInterpretation.confidence === 'low'
-      || params.bodyRaw.trim().length > 3
+  const shouldCallLlm =
+    normalizedReply === null &&
+    (
+      ruleInterpretation.intent === 'unknown' ||
+      ruleInterpretation.confidence === 'low' ||
+      params.bodyRaw.trim().length > 3
     )
-  )
 
   console.log('[AI DEBUG]', {
     normalizedReply,
