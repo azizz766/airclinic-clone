@@ -648,26 +648,13 @@ export async function runAiInterpretationPipeline(params: {
 
   const shouldCallLlm =
     normalizedReply === null &&
-    (
-      ruleInterpretation.intent === 'unknown' ||
-      ruleInterpretation.confidence === 'low' ||
-      params.bodyRaw.trim().length > 3
-    )
-
-  console.log('[AI DEBUG]', {
-    normalizedReply,
-    shouldCallLlm,
-    intent: aiInterpretation.intent,
-    confidence: aiInterpretation.confidence,
-  })
+    (ruleInterpretation.intent === 'unknown' || ruleInterpretation.confidence !== 'high')
 
   if (shouldCallLlm) {
     const llmResult = await interpretWithLlmFallback({
       rawMessage: params.bodyRaw,
       normalizedText: ruleInterpretation.canonicalText,
     })
-
-    console.log('[LLM RESULT]', llmResult)
 
     if (llmResult) {
       aiInterpretation = mergeInterpretationWithLlm(aiInterpretation, llmResult)
@@ -685,8 +672,7 @@ export async function runAiInterpretationPipeline(params: {
     finalInterpretation: aiInterpretation,
   }
 
-  console.log('[AI DECISION]', decision.finalInterpretation)
-  console.log('[AI DECISION DETAIL]', {
+  console.log('[AI DECISION]', {
     messageSid: params.messageSid || null,
     from: params.from,
     originalRepliedSid: params.originalRepliedSid || null,

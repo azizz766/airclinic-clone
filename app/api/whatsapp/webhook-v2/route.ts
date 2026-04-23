@@ -13,20 +13,24 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server'
+import {
+  holdAvailableSlot,
+  SlotAlreadyBookedError,
+  SlotHeldByAnotherSessionError,
+  SlotNotFoundError,
+} from '@/lib/booking/slot-hold'
 import { prisma } from '@/lib/prisma'
 import { Prisma } from '@/lib/prisma-client/client'
 import { resolveSession, transitionSession, persistMessage } from '@/lib/whatsapp/session'
 import {
   runAiInterpretationPipeline,
   type AiInterpretation,
-  type AiDecisionRecord,
 } from '@/lib/whatsapp/ai-interpretation-pipeline'
 import {
   processBooking,
   SlotConflictError,
   BookingValidationError,
 } from '@/lib/whatsapp/booking-handler'
-import { ConversationState } from '@/lib/prisma-client/enums'
 import twilio from 'twilio'
 import { sendWhatsAppReply } from '@/lib/whatsapp/twilio-sender'
 import {
@@ -36,8 +40,9 @@ import {
   isEscalationRequest,
   parseDateInput,
 } from '@/lib/whatsapp/input-parsers'
-import { saveLead, type DropReason } from '@/lib/whatsapp/lead-handler'
+import { saveLead } from '@/lib/whatsapp/lead-handler'
 import { generateReply } from '@/lib/whatsapp/response-generator'
+import { handleInquiryInterrupt } from '@/lib/inquiry-interrupt'
 
 // Slot TTL: how long a presented slot list remains valid before re-checking.
 // Override with SLOT_TTL_MS env var. Default: 10 minutes.
@@ -52,9 +57,9 @@ type Session = Awaited<ReturnType<typeof resolveSession>>
 type HandlerContext = {
   session: Session
   clinicId: string
-  from: string         // patient WhatsApp number  e.g. "+966XXXXXXXXX"
-  clinicNumber: string // clinic Twilio number      e.g. "+9660XXXXXXXX"
-  body: string         // raw user message text
+  from: string
+  clinicNumber: string
+  body: string
   messageSid: string
   interpretation: AiInterpretation
 }
@@ -67,10 +72,6 @@ type HandlerResult = {
 // Shared Retry Logic
 // ─────────────────────────────────────────────────────────────────────────────
 
-/**
- * Increment retryCount and escalate if limit reached.
- * Returns an escalation HandlerResult, or null to continue with re-prompt.
- */
 async function checkRetryLimit(
   session: Session,
   clinicId: string,
@@ -90,7 +91,7 @@ async function checkRetryLimit(
       'MAX_RETRIES',
     )
     await saveLead(session, 'vague_repeated')
-    return { reply: 'بيتواصل معك أحد من فريقنا قريبًا 🙏' }
+    return { reply: 'بيتواصل معك أحد من فريقنا قريبًا.' }
   }
 
   return null
@@ -118,30 +119,25 @@ async function escalate(
     'USER_REQUESTED_ESCALATION',
     reason,
   )
+
   await prisma.conversationSession.update({
     where: { id: ctx.session.id },
     data: { handoffActive: true },
   })
+
   await saveLead(ctx.session, 'other')
 
-  return { reply: 'بيتواصل معك أحد من فريقنا  🙏\nشكراً على الأنتظار.' }
+  return { reply: 'بيتواصل معك أحد من فريقنا.\nشكراً على الانتظار.' }
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
 // State Handlers
 // ─────────────────────────────────────────────────────────────────────────────
 
-/**
- * IDLE | LANGUAGE_DETECTION | INTENT_DISAMBIGUATION
- * + Terminal states after resolveSession reset them to IDLE-equivalent.
- *
- * Detect intent → route to first booking step.
- */
 async function handleEntryState(ctx: HandlerContext): Promise<HandlerResult> {
   const { interpretation, session, clinicId } = ctx
   const { intent, confidence } = interpretation
 
-  // Low-confidence after retries → hand off to staff
   if (
     confidence === 'low' &&
     session.retryCount >= session.maxRetriesPerState - 1
@@ -153,11 +149,11 @@ async function handleEntryState(ctx: HandlerContext): Promise<HandlerResult> {
       'MAX_RETRIES',
     )
     return {
-      reply: '\nبيتواصل معك أحد من فريقنا قريبًا.',
+      reply: 'بيتواصل معك أحد من فريقنا قريبًا.',
     }
   }
 
-    if (intent === 'new_booking') {
+  if (intent === 'new_booking') {
     const services = await prisma.service.findMany({
       where: { clinicId },
       select: { id: true, name: true },
@@ -191,18 +187,13 @@ async function handleEntryState(ctx: HandlerContext): Promise<HandlerResult> {
 
     const list = services.map((s, i) => `${i + 1}. ${s.name}`).join('\n')
 
-    console.log('[DEBUG ENTRY] fetched services count:', services.length)
-    console.log('[DEBUG GENERATE REPLY] calling generateReply for ask_for_service')
-    // Generate only the preamble — do NOT embed the list in generateReply context,
-    // because the LLM echoes it back producing 4+ lines which trips the 3-line guardrail.
-    const preamble = await generateReply({
-      action: 'ask_for_service',
-      context: {},
-    })
-    console.log('[DEBUG GENERATE REPLY] preamble result:', preamble)
-
     return {
-      reply: `${preamble}\n\n${list}`,
+      reply: await generateReply({
+        action: 'ask_for_service',
+        context: {
+          customText: list,
+        },
+      }),
     }
   }
 
@@ -219,25 +210,18 @@ async function handleEntryState(ctx: HandlerContext): Promise<HandlerResult> {
     }
   }
 
-  // Unknown intent — increment and re-prompt
   await prisma.conversationSession.update({
     where: { id: session.id },
     data: { retryCount: { increment: 1 } },
   })
 
   return {
-    reply:
-      'أهلاً! 👋 كيف أقدر اساعدك\n\n' +
-      'اكتب *احجز* لحجز موعد، أو *الغ* لإلغاء حجز.',
+    reply: 'كيف أقدر أساعدك؟',
   }
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
 
-/**
- * SLOT_COLLECTION_SERVICE
- * User is replying with their service selection from the displayed list.
- */
 async function handleServiceSelection(
   ctx: HandlerContext,
 ): Promise<HandlerResult> {
@@ -275,7 +259,7 @@ async function handleServiceSelection(
     const list = storedServices
       .map((s, i) => `${i + 1}. ${s.name}`)
       .join('\n')
-    return { reply: `الرجاء اختيار رقم من القائمة:\n\n${list}` }
+    return { reply: `هذه الخدمات المتاحة:\n\n${list}\n\nاختر رقم الخدمة.` }
   }
 
   const selected = storedServices[selection - 1]!
@@ -296,23 +280,18 @@ async function handleServiceSelection(
     'SLOT_VALID',
   )
 
-  console.log('[DEBUG GENERATE REPLY] calling generateReply for ask_for_date', { serviceName: selected.name })
-  const dateReply = await generateReply({
-    action: 'ask_for_date',
-    context: {
-      serviceName: selected.name,
-    },
-  })
-  console.log('[DEBUG GENERATE REPLY] ask_for_date result:', dateReply)
-  return { reply: dateReply }
+  return {
+    reply: await generateReply({
+      action: 'ask_for_date',
+      context: {
+        serviceName: selected.name,
+      },
+    }),
+  }
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
 
-/**
- * SLOT_COLLECTION_DATE
- * Parse user's time preference → query real slots → store → show list.
- */
 async function handleDateCollection(
   ctx: HandlerContext,
 ): Promise<HandlerResult> {
@@ -346,10 +325,10 @@ async function handleDateCollection(
     evening: [17, 22],
     after_isha: [20, 23],
   }
+
   const [hourStart, hourEnd] = interpretation.preferredPeriod
     ? (hourRanges[interpretation.preferredPeriod] ?? [0, 23])
     : [0, 23]
-
 
   const slots = await prisma.availableSlot.findMany({
     where: {
@@ -361,22 +340,21 @@ async function handleDateCollection(
     },
     select: { id: true, startTime: true },
     orderBy: { startTime: 'asc' },
-    take: 20, // fetch more, filter in-memory
+    take: 20,
   })
 
-  // Day-of-week filter
   let dayFiltered = slots
   if (interpretation.preferredDayOfWeek != null) {
-    dayFiltered = dayFiltered.filter((s) => s.startTime.getDay() === interpretation.preferredDayOfWeek)
+    dayFiltered = dayFiltered.filter(
+      (s) => s.startTime.getDay() === interpretation.preferredDayOfWeek,
+    )
   }
 
-  // Apply hour-of-day filter in-memory to avoid DB timezone arithmetic
   const filtered = dayFiltered.filter((s) => {
     const h = s.startTime.getHours()
     return h >= hourStart && h <= hourEnd
   })
 
-  // Fall back to unfiltered if preference yields nothing
   const candidates = filtered.length > 0 ? filtered.slice(0, 5) : dayFiltered.slice(0, 5)
 
   if (candidates.length === 0) {
@@ -384,9 +362,7 @@ async function handleDateCollection(
     if (escalation) return escalation
 
     return {
-      reply:
-        'عذراً، لا توجد مواعيد متاحة في هذا الوقت.\n' +
-        'جرّب يوم آخر أو وقت مختلف.',
+      reply: 'للأسف ما فيه مواعيد متاحة.\n\nاختر وقت آخر.',
     }
   }
 
@@ -412,7 +388,6 @@ async function handleDateCollection(
     'SLOT_VALID',
   )
 
-  const SLOT_NUMBERS = ['1️⃣','2️⃣','3️⃣','4️⃣','5️⃣','6️⃣','7️⃣','8️⃣','9️⃣','🔟']
   const list = candidates
     .map((s, i) => {
       const label = new Date(s.startTime).toLocaleDateString('ar-SA', {
@@ -422,28 +397,22 @@ async function handleDateCollection(
         hour: '2-digit',
         minute: '2-digit',
       })
-      return `${SLOT_NUMBERS[i] ?? `${i + 1}.`} ${label}`
+      return `${i + 1}. ${label}`
     })
     .join('\n')
 
-  console.log('[DEBUG GENERATE REPLY] calling generateReply for show_slots')
-  // Same pattern: don't embed the list inside generateReply — it produces 4+ lines and trips the guardrail.
-  const slotsPreamble = await generateReply({
-    action: 'show_slots',
-    context: {},
-  })
-  console.log('[DEBUG GENERATE REPLY] show_slots preamble:', slotsPreamble)
   return {
-    reply: `${slotsPreamble}\n\n${list}`,
+    reply: await generateReply({
+      action: 'show_slots',
+      context: {
+        slotsText: list,
+      },
+    }),
   }
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
 
-/**
- * SLOT_COLLECTION_TIME
- * User selects a slot from the numbered list shown in the previous message.
- */
 async function handleTimeSelection(
   ctx: HandlerContext,
 ): Promise<HandlerResult> {
@@ -491,19 +460,101 @@ async function handleTimeSelection(
       })
       .join('\n')
 
-    return { reply: `الرجاء اختيار رقم من المواعيد:\n\n${list}` }
+    return { reply: `هذه المواعيد المتاحة:\n\n${list}\n\nاختر رقم الموعد.` }
   }
 
   const selected = storedSlots[selection - 1]!
 
-  await prisma.conversationSession.update({
-    where: { id: session.id },
-    data: {
-      slotTimeId: selected.id,
-      retryCount: 0,
-      ambiguousIntents: Prisma.JsonNull,
-    },
-  })
+  try {
+    await prisma.$transaction(async (tx) => {
+      await holdAvailableSlot(tx, {
+        slotId: selected.id,
+        sessionId: session.id,
+      })
+
+      await tx.conversationSession.update({
+        where: { id: session.id },
+        data: {
+          slotTimeId: selected.id,
+          retryCount: 0,
+          ambiguousIntents: Prisma.JsonNull,
+        },
+      })
+    })
+  } catch (holdErr) {
+    const isExpectedConflict =
+      holdErr instanceof SlotAlreadyBookedError ||
+      holdErr instanceof SlotHeldByAnotherSessionError ||
+      holdErr instanceof SlotNotFoundError
+
+    console.error('[SLOT HOLD ERROR]', {
+      sessionId: session.id,
+      slotId: selected.id,
+      errorName: (holdErr as Error).name,
+      message: (holdErr as Error).message,
+      expected: isExpectedConflict,
+    })
+
+    // Query fresh slots — do NOT reuse stale storedSlots (that's what caused the infinite loop)
+    if (session.slotServiceId && session.slotDate) {
+      const freshSlots = await prisma.availableSlot.findMany({
+        where: {
+          clinicId,
+          serviceId: session.slotServiceId,
+          isBooked: false,
+          OR: [{ isHeld: false }, { heldBySessionId: session.id }],
+          startTime: { gte: session.slotDate },
+        },
+        select: { id: true, startTime: true },
+        orderBy: { startTime: 'asc' },
+        take: 5,
+      })
+
+      if (freshSlots.length > 0) {
+        const slotData = freshSlots.map((s) => ({
+          id: s.id,
+          startTime: s.startTime.toISOString(),
+        }))
+
+        await prisma.conversationSession.update({
+          where: { id: session.id },
+          data: {
+            slotOfferedAt: new Date(),
+            ambiguousIntents: slotData as unknown as Prisma.InputJsonValue,
+          },
+        })
+
+        const list = freshSlots
+          .map((s, i) => {
+            const label = new Date(s.startTime).toLocaleDateString('ar-SA', {
+              weekday: 'long',
+              month: 'short',
+              day: 'numeric',
+              hour: '2-digit',
+              minute: '2-digit',
+            })
+            return `${i + 1}. ${label}`
+          })
+          .join('\n')
+
+        return {
+          reply: `هذه المواعيد المتاحة:\n\n${list}\n\nاختر رقم الموعد.`,
+        }
+      }
+    }
+
+    // No fresh slots at all — fall back to date collection
+    await prisma.conversationSession.update({
+      where: { id: session.id },
+      data: { slotDate: null, ambiguousIntents: Prisma.JsonNull },
+    })
+
+    await transitionSession(session.id, clinicId, 'SLOT_COLLECTION_DATE', 'SLOT_CONFLICT')
+
+    return {
+      reply: 'للأسف ما فيه مواعيد متاحة.\n\nاختر وقت آخر.',
+    }
+  }
 
   await transitionSession(
     session.id,
@@ -512,30 +563,29 @@ async function handleTimeSelection(
     'SLOT_VALID',
   )
 
-  return { reply: 'ممتاز! ✅ ممكن اسمك الكامل؟' }
+  return { reply: 'ممكن اسمك الكامل.' }
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
 
-/**
- * SLOT_COLLECTION_PATIENT_NAME
- */
 async function handlePatientName(ctx: HandlerContext): Promise<HandlerResult> {
   const { session, clinicId, body } = ctx
-  // Skip if already set
+
   if (ctx.session.slotPatientName) {
-    await transitionSession(ctx.session.id, ctx.clinicId, 'SLOT_COLLECTION_PATIENT_DOB', 'SKIP_ALREADY_SET')
-    return { reply: `تمام، سجلناك باسم ${ctx.session.slotPatientName} 👍\مممكن تاريخ ميلادك؟ (مثال: 1990/05/15)` }
+    await transitionSession(
+      ctx.session.id,
+      ctx.clinicId,
+      'SLOT_COLLECTION_PATIENT_DOB',
+      'SKIP_ALREADY_SET',
+    )
+    return { reply: 'اكتب تاريخ ميلادك.\n\nمثال:\n1990-05-15' }
   }
 
-  // Original validation — must stay
   const name = body.trim()
   if (name.length < 3 || name.length > 100) {
     const escalation = await checkRetryLimit(session, clinicId)
     if (escalation) return escalation
-    return {
-      reply: 'الرجاء إدخال اسمك الثلاثي.\nمثال: محمد عبدالله فهد',
-    }
+    return { reply: 'المدخل غير واضح. حاول مرة ثانية.' }
   }
 
   await prisma.conversationSession.update({
@@ -550,34 +600,30 @@ async function handlePatientName(ctx: HandlerContext): Promise<HandlerResult> {
     'SLOT_VALID',
   )
 
-  return {
-    reply: 'ما تاريخ ميلادك؟\nمثال: 15/03/1990 أو 1990-03-15',
-  }
+  return { reply: 'اكتب تاريخ ميلادك.\n\nمثال:\n1990-05-15' }
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
 
-/**
- * SLOT_COLLECTION_PATIENT_DOB
- */
 async function handlePatientDob(ctx: HandlerContext): Promise<HandlerResult> {
   const { session, clinicId, body } = ctx
-  // Skip if already set
+
   if (ctx.session.slotPatientDob) {
-    await transitionSession(ctx.session.id, ctx.clinicId, 'SLOT_COLLECTION_PHONE_CONFIRM', 'SKIP_ALREADY_SET')
-    return { reply: `تمام 👍 ننتقل لتأكيد رقم جوالك.` }
+    await transitionSession(
+      ctx.session.id,
+      ctx.clinicId,
+      'SLOT_COLLECTION_PHONE_CONFIRM',
+      'SKIP_ALREADY_SET',
+    )
+    const maskedSkip = `${ctx.from.slice(0, 5)}*****${ctx.from.slice(-2)}`
+    return { reply: `هذا رقمك؟\n\n${maskedSkip}\n\nاكتب نعم أو أرسل الرقم الصحيح.` }
   }
 
-  // Original validation — must stay
   const parsed = parseDateInput(body)
   if (!parsed) {
     const escalation = await checkRetryLimit(session, clinicId)
     if (escalation) return escalation
-    return {
-      reply:
-        'تأكد من صحة التاريخ وأعد المحاولة.\n' +
-        'مثال: 15/03/1990 أو 1990-03-15',
-    }
+    return { reply: 'المدخل غير واضح. حاول مرة ثانية.' }
   }
 
   await prisma.conversationSession.update({
@@ -592,44 +638,56 @@ async function handlePatientDob(ctx: HandlerContext): Promise<HandlerResult> {
     'SLOT_VALID',
   )
 
-  // Show masked number for privacy
   const masked = `${ctx.from.slice(0, 5)}*****${ctx.from.slice(-2)}`
   return {
-    reply:
-      `هل رقم جوالك المسجل صحيح؟\n${masked}\n\n` +
-      'اكتب *نعم* للتأكيد، أو أرسل رقمك الصحيح.',
+    reply: `هذا رقمك؟\n\n${masked}\n\nاكتب نعم أو أرسل الرقم الصحيح.`,
   }
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
 
-/**
- * SLOT_COLLECTION_PHONE_CONFIRM
- */
 async function handlePhoneConfirm(
   ctx: HandlerContext,
 ): Promise<HandlerResult> {
   const { session, clinicId, body, from } = ctx
-  if (ctx.session.slotPhoneConfirmed) {
-    await transitionSession(ctx.session.id, ctx.clinicId, 'CONFIRMATION_PENDING', 'SKIP_ALREADY_SET')
-    return { reply: `ممتاز 👍 جاهزين نأكد موعدك — اكتب "تأكيد" للمتابعة.` }
-  }
   const trimmed = body.trim()
 
-  let confirmedPhone: string
-  const isAffirmative = (t: string) =>
-    ['يب','ايهه','اييه','نعم', 'yes', 'اه', 'أيه', 'ايه', 'اي', 'ok', 'اايه', 'يس', 'نعم.'].includes(t.toLowerCase())
+  if (ctx.session.slotPhoneConfirmed) {
+    await transitionSession(
+      ctx.session.id,
+      ctx.clinicId,
+      'CONFIRMATION_PENDING',
+      'SKIP_ALREADY_SET',
+    )
+    return { reply: 'اكتب نعم للتأكيد أو لا للتعديل.' }
+  }
 
-  if (isAffirmative(trimmed)) {
+  const affirmativeValues = [
+    'يب',
+    'ايهه',
+    'اييه',
+    'نعم',
+    'yes',
+    'اه',
+    'أيه',
+    'ايه',
+    'اي',
+    'ok',
+    'اايه',
+    'يس',
+    'نعم.',
+  ]
+
+  let confirmedPhone: string
+
+  if (affirmativeValues.includes(trimmed.toLowerCase())) {
     confirmedPhone = from
   } else {
     const digits = trimmed.replace(/[\s\-\(\)]/g, '')
     if (!/^\+?\d{9,15}$/.test(digits)) {
       const escalation = await checkRetryLimit(session, clinicId)
       if (escalation) return escalation
-      return {
-        reply: 'اكتب *نعم* إذا كان الرقم صحيح، أو أرسل رقمك الصحيح.',
-      }
+      return { reply: 'المدخل غير واضح. حاول مرة ثانية.' }
     }
     confirmedPhone = digits
   }
@@ -639,7 +697,6 @@ async function handlePhoneConfirm(
     data: { slotPhoneConfirmed: confirmedPhone, retryCount: 0 },
   })
 
-  // Fetch booking summary for the confirmation card
   const [service, slot] = await Promise.all([
     session.slotServiceId
       ? prisma.service.findUnique({
@@ -674,32 +731,27 @@ async function handlePhoneConfirm(
   )
 
   return {
-  reply: await generateReply({
-    action: 'confirm_details',
-    context: {
-      summaryText:
-        `الخدمة: ${service?.name ?? 'غير محدد'}\n` +
-        `الموعد: ${slotLabel}\n` +
-        `الاسم: ${session.slotPatientName ?? 'غير محدد'}\n` +
-        `الجوال: ${confirmedPhone}`,
-    },
-  }),
-}
+    reply: await generateReply({
+      action: 'confirm_details',
+      context: {
+        summaryText:
+          `الخدمة: ${service?.name ?? 'غير محدد'}\n` +
+          `الموعد: ${slotLabel}\n` +
+          `الاسم: ${session.slotPatientName ?? 'غير محدد'}\n` +
+          `الجوال: ${confirmedPhone}`,
+      },
+    }),
+  }
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
 
-/**
- * CONFIRMATION_PENDING
- * Final gate before writing the booking to the database.
- */
 async function handleConfirmation(
   ctx: HandlerContext,
 ): Promise<HandlerResult> {
   const { session, clinicId, body } = ctx
 
   if (isNegative(body)) {
-    // User wants to change something — restart from service selection
     const services = await prisma.service.findMany({
       where: { clinicId },
       select: { id: true, name: true },
@@ -722,15 +774,13 @@ async function handleConfirmation(
     await transitionSession(session.id, clinicId, 'SLOT_COLLECTION_SERVICE', 'DENY')
 
     const list = services.map((s, i) => `${i + 1}. ${s.name}`).join('\n')
-    return { reply: `ممتاز، يلا نبدأ من جديد. اختر الخدمة:\n\n${list}` }
+    return { reply: `هذه الخدمات المتاحة:\n\n${list}\n\nاختر رقم الخدمة.` }
   }
 
   if (!isAffirmative(body)) {
-    // Ambiguous — re-prompt without consuming a retry
-    return { reply: 'اكتب *نعم* لتأكيد الحجز أو *لا* لتعديل البيانات.' }
+    return { reply: 'المدخل غير واضح. حاول مرة ثانية.' }
   }
 
-  // ── Slot TTL check ────────────────────────────────────
   if (session.slotOfferedAt) {
     const elapsed = Date.now() - new Date(session.slotOfferedAt).getTime()
     if (elapsed > SLOT_TTL_MS) {
@@ -758,6 +808,7 @@ async function handleConfirmation(
             id: s.id,
             startTime: s.startTime.toISOString(),
           }))
+
           await prisma.conversationSession.update({
             where: { id: session.id },
             data: {
@@ -765,43 +816,39 @@ async function handleConfirmation(
               ambiguousIntents: slotData as unknown as Prisma.InputJsonValue,
             },
           })
+
           await transitionSession(session.id, clinicId, 'SLOT_COLLECTION_TIME', 'SLOT_TTL_EXPIRED')
 
-          const SLOT_NUMBERS = ['1️⃣','2️⃣','3️⃣','4️⃣','5️⃣','6️⃣','7️⃣','8️⃣','9️⃣','🔟']
           const list = freshSlots
             .map((s, i) => {
               const label = new Date(s.startTime).toLocaleDateString('ar-SA', {
-                weekday: 'long', month: 'short', day: 'numeric',
-                hour: '2-digit', minute: '2-digit',
+                weekday: 'long',
+                month: 'short',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
               })
-              return `${SLOT_NUMBERS[i] ?? `${i + 1}.`} ${label}`
+              return `${i + 1}. ${label}`
             })
             .join('\n')
 
           return {
-            reply:
-              'انتهت مدة صلاحية الموعد المختار.\n\n' +
-              `المواعيد المتاحة الآن:\n\n${list}\n\n` +
-              'اختر رقم الموعد المناسب.',
+            reply: `هذه المواعيد المتاحة:\n\n${list}\n\nاختر رقم الموعد.`,
           }
         }
       }
 
-      // No fresh slots — restart date collection
       await prisma.conversationSession.update({
         where: { id: session.id },
         data: { slotDate: null, ambiguousIntents: Prisma.JsonNull },
       })
+
       await transitionSession(session.id, clinicId, 'SLOT_COLLECTION_DATE', 'SLOT_TTL_EXPIRED')
-      return {
-        reply:
-          'انتهت مدة صلاحية الموعد المختار.\n' +
-          'متى يناسبك؟',
-      }
+
+      return { reply: 'متى يناسبك الموعد؟' }
     }
   }
 
-  // ── User confirmed — write to DB ─────────────────────
   await transitionSession(
     session.id,
     clinicId,
@@ -824,42 +871,57 @@ async function handleConfirmation(
       'BOOKING_SUCCESS',
     )
 
-    // Fetch slot time for the success message
-    const slot = session.slotTimeId
-      ? await prisma.availableSlot.findUnique({
-          where: { id: session.slotTimeId },
-          select: { startTime: true },
-        })
-      : null
+    const [slot, service] = await Promise.all([
+      session.slotTimeId
+        ? prisma.availableSlot.findUnique({
+            where: { id: session.slotTimeId },
+            select: { startTime: true },
+          })
+        : null,
+      session.slotServiceId
+        ? prisma.service.findUnique({
+            where: { id: session.slotServiceId },
+            select: { name: true },
+          })
+        : null,
+    ])
 
-    const slotLabel = slot?.startTime
-      ? new Date(slot.startTime).toLocaleDateString('ar-SA', {
+    const startTime = slot?.startTime ?? null
+
+    const dateLabel = startTime
+      ? new Date(startTime).toLocaleDateString('ar-SA', {
           weekday: 'long',
           year: 'numeric',
           month: 'long',
           day: 'numeric',
-          hour: '2-digit',
-          minute: '2-digit',
         })
       : 'غير محدد'
 
-    // Auto-reset session to IDLE after booking
-    await new Promise(resolve => setTimeout(resolve, 2000))
+    const timeLabel = startTime
+      ? new Date(startTime).toLocaleTimeString('ar-SA', {
+          hour: '2-digit',
+          minute: '2-digit',
+        })
+      : ''
+
+    const msUntil = startTime ? startTime.getTime() - Date.now() : Infinity
+    const closing =
+      msUntil > 0 && msUntil <= 24 * 60 * 60 * 1000
+        ? 'ننتظرك في الموعد.'
+        : 'سيصلك تذكير قبل الموعد.'
+
+    await new Promise((resolve) => setTimeout(resolve, 2000))
     await transitionSession(session.id, clinicId, 'IDLE', 'SESSION_RESET_AFTER_BOOKING')
+
     return {
-  reply: await generateReply({
-    action: 'confirm_booking',
-    context: {
-      serviceName: 'تم الحجز',
-      dateLabel: slotLabel,
-      timeLabel: slotLabel,
-      customText: `موعدك: ${slotLabel}`,
-    },
-  }),
-}
+      reply:
+        `تم تأكيد الحجز.\n\n` +
+        `الخدمة: ${service?.name ?? '—'}\n` +
+        `الموعد: ${dateLabel}${timeLabel ? ` – ${timeLabel}` : ''}\n\n` +
+        closing,
+    }
   } catch (err) {
     if (err instanceof SlotConflictError) {
-      // Slot was taken — try to find fresh slots for the same date
       console.warn('[webhook-v2] slot conflict — searching for alternatives', {
         sessionId: session.id,
         slotTimeId: session.slotTimeId,
@@ -905,7 +967,6 @@ async function handleConfirmation(
             'SLOT_CONFLICT',
           )
 
-          const SLOT_NUMBERS = ['1️⃣','2️⃣','3️⃣','4️⃣','5️⃣','6️⃣','7️⃣','8️⃣','9️⃣','🔟']
           const list = freshSlots
             .map((s, i) => {
               const label = new Date(s.startTime).toLocaleDateString('ar-SA', {
@@ -915,35 +976,29 @@ async function handleConfirmation(
                 hour: '2-digit',
                 minute: '2-digit',
               })
-              return `${SLOT_NUMBERS[i] ?? `${i + 1}.`} ${label}`
+              return `${i + 1}. ${label}`
             })
             .join('\n')
 
           return {
-            reply:
-              'اسف، الموعد غير متوفر.\n\n' +
-              `المواعيد المتاحة الأخرى:\n\n${list}\n\n` +
-              'اختر رقم الموعد المناسب.',
+            reply: `هذه المواعيد المتاحة:\n\n${list}\n\nاختر رقم الموعد.`,
           }
         }
       }
 
-      // No alternatives — go back to date collection
       await prisma.conversationSession.update({
         where: { id: session.id },
         data: { slotDate: null, ambiguousIntents: Prisma.JsonNull },
       })
+
       await transitionSession(
         session.id,
         clinicId,
         'SLOT_COLLECTION_DATE',
         'SLOT_CONFLICT',
       )
-      return {
-        reply:
-          'اسف، مافيه مواعيد متاحة في هذا اليوم.\n' +
-          'متى يناسبك؟',
-      }
+
+      return { reply: 'للأسف ما فيه مواعيد متاحة.\n\nاختر وقت آخر.' }
     }
 
     if (err instanceof BookingValidationError) {
@@ -951,36 +1006,35 @@ async function handleConfirmation(
         sessionId: session.id,
         message: (err as Error).message,
       })
+
       await transitionSession(
         session.id,
         clinicId,
         'BOOKING_FAILED',
         'BOOKING_ERROR',
       )
-      return {
-        reply: 'حدث خطأ في بيانات الحجز. بيتواصل معك فريقنا لإتمام الحجز.',
-      }
+
+      return { reply: 'المدخل غير واضح. حاول مرة ثانية.' }
     }
 
     console.error('[webhook-v2] unexpected booking error', {
       sessionId: session.id,
       err,
     })
+
     await transitionSession(
       session.id,
       clinicId,
       'BOOKING_FAILED',
       'BOOKING_ERROR',
     )
-    return { reply: 'حدث خطأ تقني. بيتواصل معك فريقنا قريبًا.' }
+
+    return { reply: 'المدخل غير واضح. حاول مرة ثانية.' }
   }
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
 
-/**
- * CANCELLATION_PENDING
- */
 async function handleCancellationConfirm(
   ctx: HandlerContext,
 ): Promise<HandlerResult> {
@@ -988,7 +1042,7 @@ async function handleCancellationConfirm(
 
   if (isNegative(body)) {
     await transitionSession(session.id, clinicId, 'IDLE', 'DENY')
-    return { reply: 'تم إلغاء طلب الإلغاء. كيف ممكن اساعدك' }
+    return { reply: 'تم إلغاء طلب الإلغاء. كيف ممكن أساعدك' }
   }
 
   if (!isAffirmative(body)) {
@@ -1002,7 +1056,7 @@ async function handleCancellationConfirm(
 
   if (!patient) {
     await transitionSession(session.id, clinicId, 'IDLE', 'DENY')
-    return { reply: 'ماعندك حجز نشط للإلغاء.' }
+    return { reply: 'ما عندك حجز نشط للإلغاء.' }
   }
 
   const appointment = await prisma.appointment.findFirst({
@@ -1019,7 +1073,7 @@ async function handleCancellationConfirm(
 
   if (!appointment) {
     await transitionSession(session.id, clinicId, 'IDLE', 'DENY')
-    return { reply: ' ماعندك حجز نشط للإلغاء.' }
+    return { reply: 'ما عندك حجز نشط للإلغاء.' }
   }
 
   await prisma.appointment.update({
@@ -1034,13 +1088,13 @@ async function handleCancellationConfirm(
     'AFFIRM',
   )
 
-  // Auto-reset session to IDLE after cancellation
-  await new Promise(resolve => setTimeout(resolve, 2000))
+  await new Promise((resolve) => setTimeout(resolve, 2000))
   await transitionSession(session.id, clinicId, 'IDLE', 'SESSION_RESET_AFTER_CANCELLATION')
+
   return {
     reply:
-      'تم إلغاء حجزك بنجاح ✅\n' +
-      'إذا احتجت أي شيء في المستقبل، حنا هنا.',
+      'تم إلغاء حجزك.\n' +
+      'إذا احتجت أي شيء، حنا هنا.',
   }
 }
 
@@ -1049,7 +1103,6 @@ async function handleCancellationConfirm(
 // ─────────────────────────────────────────────────────────────────────────────
 
 async function dispatch(ctx: HandlerContext): Promise<HandlerResult> {
-  // Global escalation check — runs before any state handler, from any state
   if (isEscalationRequest(ctx.body)) {
     return escalate(ctx, 'USER_REQUESTED')
   }
@@ -1057,7 +1110,6 @@ async function dispatch(ctx: HandlerContext): Promise<HandlerResult> {
   const { currentState } = ctx.session
 
   switch (currentState) {
-    // Entry states + terminal states (resolveSession already reset these to IDLE-equivalent)
     case 'IDLE':
     case 'LANGUAGE_DETECTION':
     case 'INTENT_DISAMBIGUATION':
@@ -1090,7 +1142,6 @@ async function dispatch(ctx: HandlerContext): Promise<HandlerResult> {
       return handleConfirmation(ctx)
 
     case 'BOOKING_PROCESSING':
-      // Transient state — booking is in flight, user should not send messages here
       console.warn('[webhook-v2] message received during BOOKING_PROCESSING', {
         sessionId: ctx.session.id,
         from: ctx.from,
@@ -1103,22 +1154,23 @@ async function dispatch(ctx: HandlerContext): Promise<HandlerResult> {
     case 'HUMAN_ESCALATION_PENDING':
     case 'HUMAN_ESCALATION_ACTIVE':
       return {
-        reply: 'أبشر، بيتواصلون معك قريبًا. 🙏',
+        reply: 'بيتواصلون معك قريبًا.',
       }
 
     default: {
-      // TypeScript exhaustiveness check — surfaces unhandled states at compile time
       const _exhaustive: never = currentState
       console.error('[webhook-v2] unhandled FSM state', {
         state: _exhaustive,
         sessionId: ctx.session.id,
       })
+
       await transitionSession(
         ctx.session.id,
         ctx.clinicId,
         'HUMAN_ESCALATION_PENDING',
         'CORRUPTED_STATE',
       )
+
       return { reply: 'حدث خطأ غير متوقع. بيتواصل معك فريقنا.' }
     }
   }
@@ -1131,24 +1183,24 @@ async function dispatch(ctx: HandlerContext): Promise<HandlerResult> {
 export async function POST(req: NextRequest) {
   const bodyRaw = await req.text()
 
-  // ── 1. Validate Twilio signature (enforced in production) ──────────────────
   if (process.env.NODE_ENV === 'production') {
     const signature = req.headers.get('x-twilio-signature') ?? ''
     const webhookUrl = process.env.TWILIO_WEBHOOK_V2_URL!
     const params = Object.fromEntries(new URLSearchParams(bodyRaw))
+
     const isValid = twilio.validateRequest(
       process.env.TWILIO_AUTH_TOKEN!,
       signature,
       webhookUrl,
       params,
     )
+
     if (!isValid) {
       console.warn('[webhook-v2] rejected: invalid Twilio signature')
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
     }
   }
 
-  // ── 2. Parse Twilio payload ────────────────────────────────────────────────
   const params = Object.fromEntries(new URLSearchParams(bodyRaw))
   const from = (params['From'] ?? '').replace('whatsapp:', '').trim()
   const to = (params['To'] ?? '').replace('whatsapp:', '').trim()
@@ -1165,8 +1217,6 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Bad Request' }, { status: 400 })
   }
 
-  // ── 3. Resolve clinic from the inbound Twilio number ──────────────────────
-  // NOTE: Clinic model must have a `whatsappNumber` field for this lookup.
   const clinic = await prisma.clinic.findFirst({
     where: { twilioPhoneNumber: to },
     select: { id: true, twilioPhoneNumber: true },
@@ -1180,10 +1230,23 @@ export async function POST(req: NextRequest) {
   const clinicId = clinic.id
   const clinicNumber = clinic.twilioPhoneNumber!
 
-  // ── 4. Resolve or reset session ───────────────────────────────────────────
   const session = await resolveSession(from, clinicId)
 
-  // ── 5. Persist inbound message ────────────────────────────────────────────
+  if (messageSid) {
+    const existingInbound = await prisma.conversationMessage.findFirst({
+      where: {
+        sessionId: session.id,
+        role: 'patient',
+        twilioMessageSid: messageSid,
+      },
+      select: { id: true },
+    })
+
+    if (existingInbound) {
+      return NextResponse.json({ ok: true, duplicate: true }, { status: 200 })
+    }
+  }
+
   await persistMessage({
     sessionId: session.id,
     clinicId,
@@ -1194,22 +1257,6 @@ export async function POST(req: NextRequest) {
     currentState: session.currentState,
   })
 
-  // ── 5.5. Handoff lock check ───────────────────────────────────────────────
-  if (session.handoffActive) {
-    const holdReply = 'أبشر، بيتواصلون معك قريبًا. 🙏'
-    try {
-      await sendWhatsAppReply(from, clinicNumber, holdReply)
-    } catch (holdErr) {
-      console.error('[webhook-v2] handoff hold reply failed', {
-        sessionId: session.id,
-        from,
-        error: holdErr,
-      })
-    }
-    return NextResponse.json({ ok: true }, { status: 200 })
-  }
-
-  // ── 6. AI interpretation ──────────────────────────────────────────────────
   let interpretation: AiInterpretation
   try {
     const decision = await runAiInterpretationPipeline({
@@ -1218,10 +1265,8 @@ export async function POST(req: NextRequest) {
       messageSid,
       originalRepliedSid,
     })
-    // Always prefer finalInterpretation — it fuses rule-based + LLM results
     interpretation = decision.finalInterpretation
   } catch (pipelineErr) {
-    // Non-fatal: log and fall back to 'unknown' so FSM can re-prompt gracefully
     console.error('[webhook-v2] AI pipeline failure — using safe fallback', {
       sessionId: session.id,
       from,
@@ -1247,49 +1292,73 @@ export async function POST(req: NextRequest) {
     confidence: interpretation.confidence,
   })
 
-  // Prefill session fields from extractedFields (Phase 1, hardened)
-  // Insert after interpretation is set, before HandlerContext is built
-  try {
-    const ef = (interpretation as any).extractedFields;
-    const updates: Record<string, any> = {};
-    let didUpdate = false;
+  // ── 6.5. Recover from stuck handoff for explicit booking intents ───────────
+  if (
+    session.handoffActive &&
+    interpretation.intent === 'new_booking'
+  ) {
+    await prisma.conversationSession.update({
+      where: { id: session.id },
+      data: {
+        handoffActive: false,
+        currentState: 'IDLE',
+        retryCount: 0,
+      },
+    })
 
-    // patientName
+    session.handoffActive = false
+    session.currentState = 'IDLE'
+    session.retryCount = 0
+
+    console.log('[webhook-v2] recovered session from handoff lock for booking', {
+      sessionId: session.id,
+      from,
+    })
+  }
+
+  // If still in handoff after interpretation and not a booking recovery, hold silently
+  if (session.handoffActive) {
+    return NextResponse.json({ ok: true }, { status: 200 })
+  }
+
+  try {
+    const ef = (interpretation as any).extractedFields
+    const updates: Record<string, any> = {}
+    let didUpdate = false
+
     if (
       !session.slotPatientName &&
       ef?.patientName &&
       typeof ef.patientName === 'string'
     ) {
-      const trimmedName = ef.patientName.trim();
+      const trimmedName = ef.patientName.trim()
       if (trimmedName.length >= 3 && trimmedName.length <= 100) {
-        updates.slotPatientName = trimmedName;
-        didUpdate = true;
+        updates.slotPatientName = trimmedName
+        didUpdate = true
       }
     }
 
-    // patientDob
     if (
       !session.slotPatientDob &&
       ef?.patientDob &&
       typeof ef.patientDob === 'string'
     ) {
-      const parsedDob = parseDateInput(ef.patientDob);
+      const parsedDob = parseDateInput(ef.patientDob)
       if (parsedDob) {
-        updates.slotPatientDob = parsedDob;
-        didUpdate = true;
+        updates.slotPatientDob = parsedDob
+        didUpdate = true
       }
     }
 
-    // phone
     if (
       !session.slotPhoneConfirmed &&
       ef?.phone &&
       typeof ef.phone === 'string'
     ) {
-      const normalizedPhone = ef.phone.replace(/[\s\-\(\)]/g, '');
+      const normalizedPhone = ef.phone.replace(/[\s\-\(\)]/g, '')
       if (/^\+?\d{9,15}$/.test(normalizedPhone)) {
-        updates.slotPhoneConfirmed = normalizedPhone;
-        didUpdate = true;
+        updates.slotPhoneConfirmed = normalizedPhone
+        didUpdate = true
       }
     }
 
@@ -1297,25 +1366,16 @@ export async function POST(req: NextRequest) {
       await prisma.conversationSession.update({
         where: { id: session.id },
         data: updates,
-      });
-      if (updates.slotPatientName) {
-        session.slotPatientName = updates.slotPatientName;
-        console.log('[prefill] slotPatientName set');
-      }
-      if (updates.slotPatientDob) {
-        session.slotPatientDob = updates.slotPatientDob;
-        console.log('[prefill] slotPatientDob set');
-      }
-      if (updates.slotPhoneConfirmed) {
-        session.slotPhoneConfirmed = updates.slotPhoneConfirmed;
-        console.log('[prefill] slotPhoneConfirmed set');
-      }
+      })
+
+      if (updates.slotPatientName) session.slotPatientName = updates.slotPatientName
+      if (updates.slotPatientDob) session.slotPatientDob = updates.slotPatientDob
+      if (updates.slotPhoneConfirmed) session.slotPhoneConfirmed = updates.slotPhoneConfirmed
     }
   } catch (prefillErr) {
-    console.error('[prefill] error during extractedFields prefill', prefillErr);
+    console.error('[prefill] error during extractedFields prefill', prefillErr)
   }
 
-  // ── 7. Dispatch to the correct state handler ──────────────────────────────
   const ctx: HandlerContext = {
     session,
     clinicId,
@@ -1328,14 +1388,36 @@ export async function POST(req: NextRequest) {
 
   let result: HandlerResult
   try {
-    result = await dispatch(ctx)
+    let inquiryIntent: 'inquiry_price' | 'inquiry_doctor' | null = null
+
+    if (
+      interpretation.intent === 'inquiry_price' ||
+      body.includes('بكم') ||
+      body.includes('كم السعر')
+    ) {
+      inquiryIntent = 'inquiry_price'
+    } else if (
+      interpretation.intent === 'inquiry_doctor' ||
+      body.includes('أي دكتور') ||
+      body.includes('مين الدكتور')
+    ) {
+      inquiryIntent = 'inquiry_doctor'
+    }
+
+    if (inquiryIntent) {
+      result = await handleInquiryInterrupt(session, inquiryIntent)
+    } else {
+      result = await dispatch(ctx)
+    }
   } catch (dispatchErr) {
     console.error('[webhook-v2] unhandled dispatch error', {
       sessionId: session.id,
       from,
       error: dispatchErr,
     })
+
     result = { reply: 'حدث خطأ تقني. بيتواصل معك فريقنا قريبًا.' }
+
     try {
       await transitionSession(
         session.id,
@@ -1351,7 +1433,6 @@ export async function POST(req: NextRequest) {
     }
   }
 
-  // ── 8. Deliver WhatsApp reply ─────────────────────────────────────────────
   let outboundSid: string
   try {
     outboundSid = await sendWhatsAppReply(from, clinicNumber, result.reply)
@@ -1361,11 +1442,9 @@ export async function POST(req: NextRequest) {
       from,
       error: sendErr,
     })
-    // Return 500 so Twilio retries the webhook
     return NextResponse.json({ error: 'Message delivery failed' }, { status: 500 })
   }
 
-  // ── 9. Persist outbound message (with post-dispatch state) ────────────────
   const updatedSession = await prisma.conversationSession.findUnique({
     where: { id: session.id },
     select: { currentState: true },
