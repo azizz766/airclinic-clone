@@ -1102,12 +1102,29 @@ async function handleCancellationConfirm(
 // Main Dispatch — State-Driven
 // ─────────────────────────────────────────────────────────────────────────────
 
+const BOOKING_SLOT_STATES = new Set([
+  'SLOT_COLLECTION_SERVICE',
+  'SLOT_COLLECTION_DATE',
+  'SLOT_COLLECTION_TIME',
+  'SLOT_COLLECTION_PATIENT_NAME',
+  'SLOT_COLLECTION_PATIENT_DOB',
+  'SLOT_COLLECTION_PHONE_CONFIRM',
+  'CONFIRMATION_PENDING',
+])
+
 async function dispatch(ctx: HandlerContext): Promise<HandlerResult> {
   if (isEscalationRequest(ctx.body)) {
     return escalate(ctx, 'USER_REQUESTED')
   }
 
   const { currentState } = ctx.session
+
+  if (ctx.interpretation.intent === 'cancel' && BOOKING_SLOT_STATES.has(currentState)) {
+    await transitionSession(ctx.session.id, ctx.clinicId, 'CANCELLATION_PENDING', 'INTENT_CANCEL')
+    return {
+      reply: 'هل تريد إلغاء آخر حجز لديك؟\n\nاكتب *نعم* للتأكيد أو *لا* للرجوع.',
+    }
+  }
 
   switch (currentState) {
     case 'IDLE':
