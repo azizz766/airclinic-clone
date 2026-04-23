@@ -1,28 +1,20 @@
 import { prisma } from '@/lib/prisma'
 import { Prisma } from '@/lib/prisma-client/client'
-import { ConversationState, DetectedLanguage } from '@/lib/prisma-client/enums'
-
-const TERMINAL_STATES: ConversationState[] = [
-  'BOOKING_CONFIRMED',
-  'CANCELLATION_CONFIRMED',
-  'BOOKING_FAILED',
-  'EXPIRED',
-  'CORRUPTED',
-]
+import { ConversationState } from '@/lib/prisma-client/enums'
+import { transition, isTerminal } from './fsm'
 
 export async function resolveSession(phoneNumber: string, clinicId: string) {
+  const expiresAt = new Date(Date.now() + 30 * 60 * 1000)
+
   const existing = await prisma.conversationSession.findUnique({
     where: { phoneNumber_clinicId: { phoneNumber, clinicId } },
   })
 
-  if (existing && !TERMINAL_STATES.includes(existing.currentState)) {
+  if (existing && !isTerminal(existing.currentState)) {
     return existing
   }
 
-  const expiresAt = new Date(Date.now() + 30 * 60 * 1000)
-
   if (existing) {
-    // Session exists but is in terminal state — update it instead of creating
     const updated = await prisma.conversationSession.update({
       where: { id: existing.id },
       data: {
@@ -40,12 +32,14 @@ export async function resolveSession(phoneNumber: string, clinicId: string) {
         slotPatientDob: null,
         slotPhoneConfirmed: null,
         bookingId: null,
+        handoffActive: false,
         escalationReason: null,
         escalationClaimedBy: null,
         escalationClaimedAt: null,
         ambiguousIntents: Prisma.JsonNull,
       },
     })
+
     await prisma.stateTransitionLog.create({
       data: {
         sessionId: updated.id,
@@ -55,40 +49,31 @@ export async function resolveSession(phoneNumber: string, clinicId: string) {
         triggerType: 'SESSION_RESET',
       },
     })
+
     return updated
   }
 
-  // No session exists — create new one
-  try {
-    const session = await prisma.conversationSession.create({
-      data: {
-        clinicId,
-        phoneNumber,
-        currentState: 'IDLE',
-        detectedLanguage: 'UNKNOWN',
-        expiresAt,
-      },
-    })
-    await prisma.stateTransitionLog.create({
-      data: {
-        sessionId: session.id,
-        clinicId,
-        fromState: 'IDLE',
-        toState: 'IDLE',
-        triggerType: 'SESSION_CREATED',
-      },
-    })
-    return session
-  } catch (err: any) {
-    // Handle race condition: fetch the session if unique constraint error
-    if (err.code === 'P2002') {
-      const session = await prisma.conversationSession.findUnique({
-        where: { phoneNumber_clinicId: { phoneNumber, clinicId } },
-      })
-      if (session) return session
-    }
-    throw err
-  }
+  const session = await prisma.conversationSession.create({
+    data: {
+      clinicId,
+      phoneNumber,
+      currentState: 'IDLE',
+      detectedLanguage: 'UNKNOWN',
+      expiresAt,
+    },
+  })
+
+  await prisma.stateTransitionLog.create({
+    data: {
+      sessionId: session.id,
+      clinicId,
+      fromState: 'IDLE',
+      toState: 'IDLE',
+      triggerType: 'SESSION_CREATED',
+    },
+  })
+
+  return session
 }
 
 export async function transitionSession(
@@ -102,14 +87,33 @@ export async function transitionSession(
     where: { id: sessionId },
   })
 
+  let nextState: ConversationState
+
+  try {
+    nextState = transition(session.currentState, triggerType)
+  } catch {
+    await prisma.stateTransitionLog.create({
+      data: {
+        sessionId,
+        clinicId,
+        fromState: session.currentState,
+        toState: session.currentState,
+        triggerType: 'INVALID_' + triggerType,
+        triggeredBy: triggeredBy ?? null,
+      },
+    })
+
+    return session
+  }
+
   const updatedSession = await prisma.conversationSession.update({
     where: { id: sessionId },
     data: {
       previousState: session.currentState,
-      currentState: toState,
+      currentState: nextState,
       retryCount: 0,
       expiresAt: new Date(Date.now() + 30 * 60 * 1000),
-      resolvedAt: TERMINAL_STATES.includes(toState) ? new Date() : undefined,
+      resolvedAt: isTerminal(nextState) ? new Date() : undefined,
     },
   })
 
@@ -118,7 +122,7 @@ export async function transitionSession(
       sessionId,
       clinicId,
       fromState: session.currentState,
-      toState,
+      toState: nextState,
       triggerType,
       triggeredBy: triggeredBy ?? null,
     },
@@ -134,8 +138,9 @@ export async function incrementRetry(sessionId: string): Promise<number> {
       retryCount: { increment: 1 },
       invalidInputCount: { increment: 1 },
     },
-    select: { retryCount: true, maxRetriesPerState: true },
+    select: { retryCount: true },
   })
+
   return updated.retryCount
 }
 
@@ -151,17 +156,11 @@ export async function persistMessage(params: {
   claudeInputTokens?: number
   claudeOutputTokens?: number
 }) {
-  const roleMap = {
-    patient: 'patient',
-    assistant: 'assistant',
-    system: 'system',
-  } as const
-
   return prisma.conversationMessage.create({
     data: {
       sessionId: params.sessionId,
       clinicId: params.clinicId,
-      role: roleMap[params.role],
+      role: params.role,
       channel: params.channel === 'whatsapp' ? 'whatsapp' : 'web',
       content: params.content,
       contentNormalized: params.content.toLowerCase().trim(),
@@ -178,11 +177,5 @@ export async function getMessageHistory(sessionId: string) {
   return prisma.conversationMessage.findMany({
     where: { sessionId },
     orderBy: { createdAt: 'asc' },
-    select: {
-      role: true,
-      content: true,
-      sessionStateAtSend: true,
-      createdAt: true,
-    },
   })
 }

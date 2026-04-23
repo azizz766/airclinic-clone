@@ -1,4 +1,5 @@
 import { Prisma } from '@/lib/prisma-client/client'
+import { notificationQueue } from '@/lib/queue'
 
 type ReminderNotificationInput = {
   clinicId: string
@@ -128,7 +129,7 @@ export async function prepareReminderNotificationJob(
     reminderId: input.reminderId,
   })
 
-  return tx.notificationJob.upsert({
+  const notificationJob = await tx.notificationJob.upsert({
     where: {
       reminderId_channel_destination: {
         reminderId: input.reminderId,
@@ -163,6 +164,12 @@ export async function prepareReminderNotificationJob(
       scheduledFor: input.reminderScheduledFor,
     },
   })
+
+  await notificationQueue.add('send', {
+    id: notificationJob.id
+  })
+
+  return notificationJob
 }
 
 const REMINDER_OFFSETS_HOURS = [24, 3] as const

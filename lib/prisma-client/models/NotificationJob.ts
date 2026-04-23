@@ -20,11 +20,22 @@ export type NotificationJobModel = runtime.Types.Result.DefaultSelection<Prisma.
 
 export type AggregateNotificationJob = {
   _count: NotificationJobCountAggregateOutputType | null
+  _avg: NotificationJobAvgAggregateOutputType | null
+  _sum: NotificationJobSumAggregateOutputType | null
   _min: NotificationJobMinAggregateOutputType | null
   _max: NotificationJobMaxAggregateOutputType | null
 }
 
+export type NotificationJobAvgAggregateOutputType = {
+  retryCount: number | null
+}
+
+export type NotificationJobSumAggregateOutputType = {
+  retryCount: number | null
+}
+
 export type NotificationJobMinAggregateOutputType = {
+  retryCount: number | null
   id: string | null
   clinicId: string | null
   reminderId: string | null
@@ -44,6 +55,7 @@ export type NotificationJobMinAggregateOutputType = {
 }
 
 export type NotificationJobMaxAggregateOutputType = {
+  retryCount: number | null
   id: string | null
   clinicId: string | null
   reminderId: string | null
@@ -63,6 +75,7 @@ export type NotificationJobMaxAggregateOutputType = {
 }
 
 export type NotificationJobCountAggregateOutputType = {
+  retryCount: number
   id: number
   clinicId: number
   reminderId: number
@@ -83,7 +96,16 @@ export type NotificationJobCountAggregateOutputType = {
 }
 
 
+export type NotificationJobAvgAggregateInputType = {
+  retryCount?: true
+}
+
+export type NotificationJobSumAggregateInputType = {
+  retryCount?: true
+}
+
 export type NotificationJobMinAggregateInputType = {
+  retryCount?: true
   id?: true
   clinicId?: true
   reminderId?: true
@@ -103,6 +125,7 @@ export type NotificationJobMinAggregateInputType = {
 }
 
 export type NotificationJobMaxAggregateInputType = {
+  retryCount?: true
   id?: true
   clinicId?: true
   reminderId?: true
@@ -122,6 +145,7 @@ export type NotificationJobMaxAggregateInputType = {
 }
 
 export type NotificationJobCountAggregateInputType = {
+  retryCount?: true
   id?: true
   clinicId?: true
   reminderId?: true
@@ -179,6 +203,18 @@ export type NotificationJobAggregateArgs<ExtArgs extends runtime.Types.Extension
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
+   * Select which fields to average
+  **/
+  _avg?: NotificationJobAvgAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
+   * Select which fields to sum
+  **/
+  _sum?: NotificationJobSumAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
    * Select which fields to find the minimum value
   **/
   _min?: NotificationJobMinAggregateInputType
@@ -209,11 +245,14 @@ export type NotificationJobGroupByArgs<ExtArgs extends runtime.Types.Extensions.
   take?: number
   skip?: number
   _count?: NotificationJobCountAggregateInputType | true
+  _avg?: NotificationJobAvgAggregateInputType
+  _sum?: NotificationJobSumAggregateInputType
   _min?: NotificationJobMinAggregateInputType
   _max?: NotificationJobMaxAggregateInputType
 }
 
 export type NotificationJobGroupByOutputType = {
+  retryCount: number
   id: string
   clinicId: string
   reminderId: string
@@ -231,6 +270,8 @@ export type NotificationJobGroupByOutputType = {
   createdAt: Date
   updatedAt: Date
   _count: NotificationJobCountAggregateOutputType | null
+  _avg: NotificationJobAvgAggregateOutputType | null
+  _sum: NotificationJobSumAggregateOutputType | null
   _min: NotificationJobMinAggregateOutputType | null
   _max: NotificationJobMaxAggregateOutputType | null
 }
@@ -254,6 +295,7 @@ export type NotificationJobWhereInput = {
   AND?: Prisma.NotificationJobWhereInput | Prisma.NotificationJobWhereInput[]
   OR?: Prisma.NotificationJobWhereInput[]
   NOT?: Prisma.NotificationJobWhereInput | Prisma.NotificationJobWhereInput[]
+  retryCount?: Prisma.IntFilter<"NotificationJob"> | number
   id?: Prisma.StringFilter<"NotificationJob"> | string
   clinicId?: Prisma.StringFilter<"NotificationJob"> | string
   reminderId?: Prisma.StringFilter<"NotificationJob"> | string
@@ -277,6 +319,7 @@ export type NotificationJobWhereInput = {
 }
 
 export type NotificationJobOrderByWithRelationInput = {
+  retryCount?: Prisma.SortOrder
   id?: Prisma.SortOrder
   clinicId?: Prisma.SortOrder
   reminderId?: Prisma.SortOrder
@@ -305,6 +348,7 @@ export type NotificationJobWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.NotificationJobWhereInput | Prisma.NotificationJobWhereInput[]
   OR?: Prisma.NotificationJobWhereInput[]
   NOT?: Prisma.NotificationJobWhereInput | Prisma.NotificationJobWhereInput[]
+  retryCount?: Prisma.IntFilter<"NotificationJob"> | number
   clinicId?: Prisma.StringFilter<"NotificationJob"> | string
   reminderId?: Prisma.StringFilter<"NotificationJob"> | string
   appointmentId?: Prisma.StringFilter<"NotificationJob"> | string
@@ -327,6 +371,7 @@ export type NotificationJobWhereUniqueInput = Prisma.AtLeast<{
 }, "id" | "reminderId_channel_destination">
 
 export type NotificationJobOrderByWithAggregationInput = {
+  retryCount?: Prisma.SortOrder
   id?: Prisma.SortOrder
   clinicId?: Prisma.SortOrder
   reminderId?: Prisma.SortOrder
@@ -344,14 +389,17 @@ export type NotificationJobOrderByWithAggregationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.NotificationJobCountOrderByAggregateInput
+  _avg?: Prisma.NotificationJobAvgOrderByAggregateInput
   _max?: Prisma.NotificationJobMaxOrderByAggregateInput
   _min?: Prisma.NotificationJobMinOrderByAggregateInput
+  _sum?: Prisma.NotificationJobSumOrderByAggregateInput
 }
 
 export type NotificationJobScalarWhereWithAggregatesInput = {
   AND?: Prisma.NotificationJobScalarWhereWithAggregatesInput | Prisma.NotificationJobScalarWhereWithAggregatesInput[]
   OR?: Prisma.NotificationJobScalarWhereWithAggregatesInput[]
   NOT?: Prisma.NotificationJobScalarWhereWithAggregatesInput | Prisma.NotificationJobScalarWhereWithAggregatesInput[]
+  retryCount?: Prisma.IntWithAggregatesFilter<"NotificationJob"> | number
   id?: Prisma.StringWithAggregatesFilter<"NotificationJob"> | string
   clinicId?: Prisma.StringWithAggregatesFilter<"NotificationJob"> | string
   reminderId?: Prisma.StringWithAggregatesFilter<"NotificationJob"> | string
@@ -371,6 +419,7 @@ export type NotificationJobScalarWhereWithAggregatesInput = {
 }
 
 export type NotificationJobCreateInput = {
+  retryCount?: number
   id?: string
   channel: $Enums.Channel
   destination: string
@@ -390,6 +439,7 @@ export type NotificationJobCreateInput = {
 }
 
 export type NotificationJobUncheckedCreateInput = {
+  retryCount?: number
   id?: string
   clinicId: string
   reminderId: string
@@ -409,6 +459,7 @@ export type NotificationJobUncheckedCreateInput = {
 }
 
 export type NotificationJobUpdateInput = {
+  retryCount?: Prisma.IntFieldUpdateOperationsInput | number
   id?: Prisma.StringFieldUpdateOperationsInput | string
   channel?: Prisma.EnumChannelFieldUpdateOperationsInput | $Enums.Channel
   destination?: Prisma.StringFieldUpdateOperationsInput | string
@@ -428,6 +479,7 @@ export type NotificationJobUpdateInput = {
 }
 
 export type NotificationJobUncheckedUpdateInput = {
+  retryCount?: Prisma.IntFieldUpdateOperationsInput | number
   id?: Prisma.StringFieldUpdateOperationsInput | string
   clinicId?: Prisma.StringFieldUpdateOperationsInput | string
   reminderId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -447,6 +499,7 @@ export type NotificationJobUncheckedUpdateInput = {
 }
 
 export type NotificationJobCreateManyInput = {
+  retryCount?: number
   id?: string
   clinicId: string
   reminderId: string
@@ -466,6 +519,7 @@ export type NotificationJobCreateManyInput = {
 }
 
 export type NotificationJobUpdateManyMutationInput = {
+  retryCount?: Prisma.IntFieldUpdateOperationsInput | number
   id?: Prisma.StringFieldUpdateOperationsInput | string
   channel?: Prisma.EnumChannelFieldUpdateOperationsInput | $Enums.Channel
   destination?: Prisma.StringFieldUpdateOperationsInput | string
@@ -481,6 +535,7 @@ export type NotificationJobUpdateManyMutationInput = {
 }
 
 export type NotificationJobUncheckedUpdateManyInput = {
+  retryCount?: Prisma.IntFieldUpdateOperationsInput | number
   id?: Prisma.StringFieldUpdateOperationsInput | string
   clinicId?: Prisma.StringFieldUpdateOperationsInput | string
   reminderId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -516,6 +571,7 @@ export type NotificationJobReminderIdChannelDestinationCompoundUniqueInput = {
 }
 
 export type NotificationJobCountOrderByAggregateInput = {
+  retryCount?: Prisma.SortOrder
   id?: Prisma.SortOrder
   clinicId?: Prisma.SortOrder
   reminderId?: Prisma.SortOrder
@@ -534,7 +590,12 @@ export type NotificationJobCountOrderByAggregateInput = {
   updatedAt?: Prisma.SortOrder
 }
 
+export type NotificationJobAvgOrderByAggregateInput = {
+  retryCount?: Prisma.SortOrder
+}
+
 export type NotificationJobMaxOrderByAggregateInput = {
+  retryCount?: Prisma.SortOrder
   id?: Prisma.SortOrder
   clinicId?: Prisma.SortOrder
   reminderId?: Prisma.SortOrder
@@ -554,6 +615,7 @@ export type NotificationJobMaxOrderByAggregateInput = {
 }
 
 export type NotificationJobMinOrderByAggregateInput = {
+  retryCount?: Prisma.SortOrder
   id?: Prisma.SortOrder
   clinicId?: Prisma.SortOrder
   reminderId?: Prisma.SortOrder
@@ -570,6 +632,10 @@ export type NotificationJobMinOrderByAggregateInput = {
   sentAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+}
+
+export type NotificationJobSumOrderByAggregateInput = {
+  retryCount?: Prisma.SortOrder
 }
 
 export type NotificationJobCreateNestedManyWithoutClinicInput = {
@@ -745,6 +811,7 @@ export type EnumNotificationJobStatusFieldUpdateOperationsInput = {
 }
 
 export type NotificationJobCreateWithoutClinicInput = {
+  retryCount?: number
   id?: string
   channel: $Enums.Channel
   destination: string
@@ -763,6 +830,7 @@ export type NotificationJobCreateWithoutClinicInput = {
 }
 
 export type NotificationJobUncheckedCreateWithoutClinicInput = {
+  retryCount?: number
   id?: string
   reminderId: string
   appointmentId: string
@@ -810,6 +878,7 @@ export type NotificationJobScalarWhereInput = {
   AND?: Prisma.NotificationJobScalarWhereInput | Prisma.NotificationJobScalarWhereInput[]
   OR?: Prisma.NotificationJobScalarWhereInput[]
   NOT?: Prisma.NotificationJobScalarWhereInput | Prisma.NotificationJobScalarWhereInput[]
+  retryCount?: Prisma.IntFilter<"NotificationJob"> | number
   id?: Prisma.StringFilter<"NotificationJob"> | string
   clinicId?: Prisma.StringFilter<"NotificationJob"> | string
   reminderId?: Prisma.StringFilter<"NotificationJob"> | string
@@ -829,6 +898,7 @@ export type NotificationJobScalarWhereInput = {
 }
 
 export type NotificationJobCreateWithoutPatientInput = {
+  retryCount?: number
   id?: string
   channel: $Enums.Channel
   destination: string
@@ -847,6 +917,7 @@ export type NotificationJobCreateWithoutPatientInput = {
 }
 
 export type NotificationJobUncheckedCreateWithoutPatientInput = {
+  retryCount?: number
   id?: string
   clinicId: string
   reminderId: string
@@ -891,6 +962,7 @@ export type NotificationJobUpdateManyWithWhereWithoutPatientInput = {
 }
 
 export type NotificationJobCreateWithoutAppointmentInput = {
+  retryCount?: number
   id?: string
   channel: $Enums.Channel
   destination: string
@@ -909,6 +981,7 @@ export type NotificationJobCreateWithoutAppointmentInput = {
 }
 
 export type NotificationJobUncheckedCreateWithoutAppointmentInput = {
+  retryCount?: number
   id?: string
   clinicId: string
   reminderId: string
@@ -953,6 +1026,7 @@ export type NotificationJobUpdateManyWithWhereWithoutAppointmentInput = {
 }
 
 export type NotificationJobCreateWithoutReminderInput = {
+  retryCount?: number
   id?: string
   channel: $Enums.Channel
   destination: string
@@ -971,6 +1045,7 @@ export type NotificationJobCreateWithoutReminderInput = {
 }
 
 export type NotificationJobUncheckedCreateWithoutReminderInput = {
+  retryCount?: number
   id?: string
   clinicId: string
   appointmentId: string
@@ -1015,6 +1090,7 @@ export type NotificationJobUpdateManyWithWhereWithoutReminderInput = {
 }
 
 export type NotificationJobCreateManyClinicInput = {
+  retryCount?: number
   id?: string
   reminderId: string
   appointmentId: string
@@ -1033,6 +1109,7 @@ export type NotificationJobCreateManyClinicInput = {
 }
 
 export type NotificationJobUpdateWithoutClinicInput = {
+  retryCount?: Prisma.IntFieldUpdateOperationsInput | number
   id?: Prisma.StringFieldUpdateOperationsInput | string
   channel?: Prisma.EnumChannelFieldUpdateOperationsInput | $Enums.Channel
   destination?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1051,6 +1128,7 @@ export type NotificationJobUpdateWithoutClinicInput = {
 }
 
 export type NotificationJobUncheckedUpdateWithoutClinicInput = {
+  retryCount?: Prisma.IntFieldUpdateOperationsInput | number
   id?: Prisma.StringFieldUpdateOperationsInput | string
   reminderId?: Prisma.StringFieldUpdateOperationsInput | string
   appointmentId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1069,6 +1147,7 @@ export type NotificationJobUncheckedUpdateWithoutClinicInput = {
 }
 
 export type NotificationJobUncheckedUpdateManyWithoutClinicInput = {
+  retryCount?: Prisma.IntFieldUpdateOperationsInput | number
   id?: Prisma.StringFieldUpdateOperationsInput | string
   reminderId?: Prisma.StringFieldUpdateOperationsInput | string
   appointmentId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1087,6 +1166,7 @@ export type NotificationJobUncheckedUpdateManyWithoutClinicInput = {
 }
 
 export type NotificationJobCreateManyPatientInput = {
+  retryCount?: number
   id?: string
   clinicId: string
   reminderId: string
@@ -1105,6 +1185,7 @@ export type NotificationJobCreateManyPatientInput = {
 }
 
 export type NotificationJobUpdateWithoutPatientInput = {
+  retryCount?: Prisma.IntFieldUpdateOperationsInput | number
   id?: Prisma.StringFieldUpdateOperationsInput | string
   channel?: Prisma.EnumChannelFieldUpdateOperationsInput | $Enums.Channel
   destination?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1123,6 +1204,7 @@ export type NotificationJobUpdateWithoutPatientInput = {
 }
 
 export type NotificationJobUncheckedUpdateWithoutPatientInput = {
+  retryCount?: Prisma.IntFieldUpdateOperationsInput | number
   id?: Prisma.StringFieldUpdateOperationsInput | string
   clinicId?: Prisma.StringFieldUpdateOperationsInput | string
   reminderId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1141,6 +1223,7 @@ export type NotificationJobUncheckedUpdateWithoutPatientInput = {
 }
 
 export type NotificationJobUncheckedUpdateManyWithoutPatientInput = {
+  retryCount?: Prisma.IntFieldUpdateOperationsInput | number
   id?: Prisma.StringFieldUpdateOperationsInput | string
   clinicId?: Prisma.StringFieldUpdateOperationsInput | string
   reminderId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1159,6 +1242,7 @@ export type NotificationJobUncheckedUpdateManyWithoutPatientInput = {
 }
 
 export type NotificationJobCreateManyAppointmentInput = {
+  retryCount?: number
   id?: string
   clinicId: string
   reminderId: string
@@ -1177,6 +1261,7 @@ export type NotificationJobCreateManyAppointmentInput = {
 }
 
 export type NotificationJobUpdateWithoutAppointmentInput = {
+  retryCount?: Prisma.IntFieldUpdateOperationsInput | number
   id?: Prisma.StringFieldUpdateOperationsInput | string
   channel?: Prisma.EnumChannelFieldUpdateOperationsInput | $Enums.Channel
   destination?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1195,6 +1280,7 @@ export type NotificationJobUpdateWithoutAppointmentInput = {
 }
 
 export type NotificationJobUncheckedUpdateWithoutAppointmentInput = {
+  retryCount?: Prisma.IntFieldUpdateOperationsInput | number
   id?: Prisma.StringFieldUpdateOperationsInput | string
   clinicId?: Prisma.StringFieldUpdateOperationsInput | string
   reminderId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1213,6 +1299,7 @@ export type NotificationJobUncheckedUpdateWithoutAppointmentInput = {
 }
 
 export type NotificationJobUncheckedUpdateManyWithoutAppointmentInput = {
+  retryCount?: Prisma.IntFieldUpdateOperationsInput | number
   id?: Prisma.StringFieldUpdateOperationsInput | string
   clinicId?: Prisma.StringFieldUpdateOperationsInput | string
   reminderId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1231,6 +1318,7 @@ export type NotificationJobUncheckedUpdateManyWithoutAppointmentInput = {
 }
 
 export type NotificationJobCreateManyReminderInput = {
+  retryCount?: number
   id?: string
   clinicId: string
   appointmentId: string
@@ -1249,6 +1337,7 @@ export type NotificationJobCreateManyReminderInput = {
 }
 
 export type NotificationJobUpdateWithoutReminderInput = {
+  retryCount?: Prisma.IntFieldUpdateOperationsInput | number
   id?: Prisma.StringFieldUpdateOperationsInput | string
   channel?: Prisma.EnumChannelFieldUpdateOperationsInput | $Enums.Channel
   destination?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1267,6 +1356,7 @@ export type NotificationJobUpdateWithoutReminderInput = {
 }
 
 export type NotificationJobUncheckedUpdateWithoutReminderInput = {
+  retryCount?: Prisma.IntFieldUpdateOperationsInput | number
   id?: Prisma.StringFieldUpdateOperationsInput | string
   clinicId?: Prisma.StringFieldUpdateOperationsInput | string
   appointmentId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1285,6 +1375,7 @@ export type NotificationJobUncheckedUpdateWithoutReminderInput = {
 }
 
 export type NotificationJobUncheckedUpdateManyWithoutReminderInput = {
+  retryCount?: Prisma.IntFieldUpdateOperationsInput | number
   id?: Prisma.StringFieldUpdateOperationsInput | string
   clinicId?: Prisma.StringFieldUpdateOperationsInput | string
   appointmentId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1305,6 +1396,7 @@ export type NotificationJobUncheckedUpdateManyWithoutReminderInput = {
 
 
 export type NotificationJobSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  retryCount?: boolean
   id?: boolean
   clinicId?: boolean
   reminderId?: boolean
@@ -1328,6 +1420,7 @@ export type NotificationJobSelect<ExtArgs extends runtime.Types.Extensions.Inter
 }, ExtArgs["result"]["notificationJob"]>
 
 export type NotificationJobSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  retryCount?: boolean
   id?: boolean
   clinicId?: boolean
   reminderId?: boolean
@@ -1351,6 +1444,7 @@ export type NotificationJobSelectCreateManyAndReturn<ExtArgs extends runtime.Typ
 }, ExtArgs["result"]["notificationJob"]>
 
 export type NotificationJobSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  retryCount?: boolean
   id?: boolean
   clinicId?: boolean
   reminderId?: boolean
@@ -1374,6 +1468,7 @@ export type NotificationJobSelectUpdateManyAndReturn<ExtArgs extends runtime.Typ
 }, ExtArgs["result"]["notificationJob"]>
 
 export type NotificationJobSelectScalar = {
+  retryCount?: boolean
   id?: boolean
   clinicId?: boolean
   reminderId?: boolean
@@ -1392,7 +1487,7 @@ export type NotificationJobSelectScalar = {
   updatedAt?: boolean
 }
 
-export type NotificationJobOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "clinicId" | "reminderId" | "appointmentId" | "patientId" | "channel" | "destination" | "messageBody" | "provider" | "providerMessageId" | "status" | "errorMessage" | "scheduledFor" | "sentAt" | "createdAt" | "updatedAt", ExtArgs["result"]["notificationJob"]>
+export type NotificationJobOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"retryCount" | "id" | "clinicId" | "reminderId" | "appointmentId" | "patientId" | "channel" | "destination" | "messageBody" | "provider" | "providerMessageId" | "status" | "errorMessage" | "scheduledFor" | "sentAt" | "createdAt" | "updatedAt", ExtArgs["result"]["notificationJob"]>
 export type NotificationJobInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   clinic?: boolean | Prisma.ClinicDefaultArgs<ExtArgs>
   reminder?: boolean | Prisma.ReminderDefaultArgs<ExtArgs>
@@ -1421,6 +1516,7 @@ export type $NotificationJobPayload<ExtArgs extends runtime.Types.Extensions.Int
     patient: Prisma.$PatientPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
+    retryCount: number
     id: string
     clinicId: string
     reminderId: string
@@ -1520,8 +1616,8 @@ export interface NotificationJobDelegate<ExtArgs extends runtime.Types.Extension
    * // Get first 10 NotificationJobs
    * const notificationJobs = await prisma.notificationJob.findMany({ take: 10 })
    * 
-   * // Only select the `id`
-   * const notificationJobWithIdOnly = await prisma.notificationJob.findMany({ select: { id: true } })
+   * // Only select the `retryCount`
+   * const notificationJobWithRetryCountOnly = await prisma.notificationJob.findMany({ select: { retryCount: true } })
    * 
    */
   findMany<T extends NotificationJobFindManyArgs>(args?: Prisma.SelectSubset<T, NotificationJobFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$NotificationJobPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
@@ -1565,9 +1661,9 @@ export interface NotificationJobDelegate<ExtArgs extends runtime.Types.Extension
    *   ]
    * })
    * 
-   * // Create many NotificationJobs and only return the `id`
-   * const notificationJobWithIdOnly = await prisma.notificationJob.createManyAndReturn({
-   *   select: { id: true },
+   * // Create many NotificationJobs and only return the `retryCount`
+   * const notificationJobWithRetryCountOnly = await prisma.notificationJob.createManyAndReturn({
+   *   select: { retryCount: true },
    *   data: [
    *     // ... provide data here
    *   ]
@@ -1656,9 +1752,9 @@ export interface NotificationJobDelegate<ExtArgs extends runtime.Types.Extension
    *   ]
    * })
    * 
-   * // Update zero or more NotificationJobs and only return the `id`
-   * const notificationJobWithIdOnly = await prisma.notificationJob.updateManyAndReturn({
-   *   select: { id: true },
+   * // Update zero or more NotificationJobs and only return the `retryCount`
+   * const notificationJobWithRetryCountOnly = await prisma.notificationJob.updateManyAndReturn({
+   *   select: { retryCount: true },
    *   where: {
    *     // ... provide filter here
    *   },
@@ -1864,6 +1960,7 @@ export interface Prisma__NotificationJobClient<T, Null = never, ExtArgs extends 
  * Fields of the NotificationJob model
  */
 export interface NotificationJobFieldRefs {
+  readonly retryCount: Prisma.FieldRef<"NotificationJob", 'Int'>
   readonly id: Prisma.FieldRef<"NotificationJob", 'String'>
   readonly clinicId: Prisma.FieldRef<"NotificationJob", 'String'>
   readonly reminderId: Prisma.FieldRef<"NotificationJob", 'String'>

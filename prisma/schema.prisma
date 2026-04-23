@@ -364,6 +364,7 @@ model ConversationMessage {
   @@index([sessionId, createdAt])
   @@index([twilioMessageSid])
   @@index([clinicId, createdAt])
+  @@unique([twilioMessageSid])
   @@map("conversation_messages")
 }
 
@@ -516,6 +517,7 @@ model Reminder {
 }
 
 model NotificationJob {
+  retryCount Int @default(0)
   id                String                @id @default(cuid())
   clinicId          String
   reminderId        String

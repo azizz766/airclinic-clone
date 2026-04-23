@@ -111,16 +111,32 @@ export async function POST(
       )
     }
 
-    const updated = await prisma.appointment.update({
-      where: { id: appointment.id },
-      data: {
-        status: 'cancelled',
-        cancellationReason: 'Cancelled from inbox operator panel',
-      },
-      select: {
-        id: true,
-        status: true,
-      },
+    let invalidatedNotificationJobCount = 0
+
+    const updated = await prisma.$transaction(async (tx) => {
+      const invalidatedJobs = await tx.notificationJob.updateMany({
+        where: {
+          appointmentId: appointment.id,
+          status: { in: ['pending', 'queued'] },
+        },
+        data: {
+          status: 'failed',
+          errorMessage: 'Appointment was cancelled. This job is no longer valid.',
+        },
+      })
+      invalidatedNotificationJobCount = invalidatedJobs.count
+
+      return tx.appointment.update({
+        where: { id: appointment.id },
+        data: {
+          status: 'cancelled',
+          cancellationReason: 'Cancelled from inbox operator panel',
+        },
+        select: {
+          id: true,
+          status: true,
+        },
+      })
     })
 
     await prisma.escalationLog.create({
@@ -138,6 +154,7 @@ export async function POST(
           patientId: appointment.patient.id,
           phoneNormalized: normalizePhone(appointment.patient.phone),
           actionResult: 'status_updated',
+          invalidatedNotificationJobCount,
         },
       },
     })

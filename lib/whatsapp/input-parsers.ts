@@ -8,7 +8,7 @@
  * into a 1-based integer. Returns null on failure.
  */
 export function parseSelection(text: string): number | null {
-  const t = text.trim()
+  const t = text.replace(/[​-‏﻿]/g, '').trim()
 
   // Latin digits: "1", "2", ...
   const latin = parseInt(t, 10)
@@ -52,68 +52,75 @@ export function isNegative(text: string): boolean {
 }
 
 export function isEscalationRequest(text: string): boolean {
-  const t = text.toLowerCase().trim().replace(/\s+/g, ' ')
+  // Normalize same as NLU pipeline
+  const t = text
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g, ' ')
+    .replace(/[أإآ]/g, 'ا')
+    .replace(/ى/g, 'ي')
+    .replace(/ة/g, 'ه')
+    .replace(/[.,!?،؟]/g, '')
+    .trim()
 
-  const triggers = [
-    // عربي - موظف
+  const tokens = t.split(' ')
+
+  // Booking protection: booking intent with no explicit escalation word → not escalation
+  const bookingTokens = ['احجز', 'حجز', 'موعد']
+  const escalationWords = ['بشري', 'انسان', 'موظف', 'موضف', 'support', 'agent', 'human']
+
+  const hasBooking = bookingTokens.some((tok) => tokens.includes(tok))
+  const hasEscalationWord = escalationWords.some((word) => tokens.includes(word))
+
+  if (hasBooking && !hasEscalationWord) return false
+
+  // Exact phrase matches (normalized, ة→ه already applied above)
+  const exactPhrases = [
     'ابي اتكلم مع الموظف',
     'ابي اكلم الموظف',
-    'ابغى اكلم الموظف',
-    'ابغى اتكلم مع الموظف',
+    'ابغي اكلم الموظف',
     'ابغي اتكلم مع الموظف',
     'اريد اتكلم مع الموظف',
-    'ابي الموظف',
-    'ابي موظف',
     'عطني الموظف',
     'عطني موظف',
+    'ابي موظف',
     'تكلم موظف',
     'اريد موظف',
-    'ابغى موظف',
-    'ابغي موظف',
-    'ابغى الموظف',
+    'ابي اكلم موظف',
 
-    // طلب مباشر مختصر
-    'موظف لو سمحت',
-    'ممكن الموظف',
-    'ممكن موظف',
-    'ابغى احد يرد علي',
-    'ابي احد يرد علي',
-    'ابي شخص يرد علي',
-    'ابغى شخص يرد علي',
+    'ابي اتكلم مع الموضف',
+    'ابي اكلم الموضف',
+    'ابغي اكلم الموضف',
+    'ابغي اتكلم مع الموضف',
+    'عطني الموضف',
+    'ابي موضف',
+    'تكلم موضف',
+    'اريد موضف',
 
-    // خدمة العملاء
-    'خدمة العملاء',
-    'اكلم خدمة العملاء',
-    'ابي خدمة العملاء',
-    'ابي اكلم خدمة العملاء',
-    'ابغى خدمة العملاء',
-    'حولني على خدمة العملاء',
-    'وصلني بخدمة العملاء',
+    'عطني خدمه العملاء',
+    'حولني علي خدمه العملاء',
+    'حولني خدمه العملاء',
+    'وصلني بخدمه العملاء',
+    'ابي اتكلم مع خدمه العملاء',
 
-    // تحويل
-    'حولني على موظف',
-    'حولني لموظف',
-    'وصلني بموظف',
-    'وصلني بالموظف',
-    'حولني على الموظف',
+    'ابي دعم',
+    'ابي انسان',
+    'ابي بشري',
 
-    // أخطاء إملائية
-    'موضف',
-    'الموضف',
-    
-
-    // إنجليزي
-    'human',
-    'agent',
-    'support',
-    'customer service',
     'talk to human',
     'talk to agent',
+    'i want agent',
     'i want human',
-    'i need support',
+    'customer service',
   ]
 
-  return triggers.some((trigger) => t.includes(trigger))
+  if (exactPhrases.some((phrase) => t === phrase)) return true
+
+  // Single English escalation tokens (standalone word only, not substring)
+  const englishEscalationTokens = ['human', 'agent', 'support']
+  if (englishEscalationTokens.some((word) => tokens.includes(word))) return true
+
+  return false
 }
 
 /**

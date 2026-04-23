@@ -1,0 +1,51 @@
+import { prisma } from '@/lib/prisma'
+
+export async function GET(req: Request) {
+  const auth = req.headers.get('authorization')
+  const SECRET = process.env.CRON_SECRET || 'test-local-cron-secret'
+
+  if (auth !== `Bearer ${SECRET}`) {
+    return new Response('Unauthorized', { status: 401 })
+  }
+
+  const jobs = await prisma.notificationJob.findMany({
+    where: {
+      status: 'pending',
+      retryCount: { lt: 5 },
+      scheduledFor: { lte: new Date() }
+    },
+    take: 10
+  })
+
+  let processed = 0
+
+  for (const job of jobs) {
+    try {
+      const delays = [0, 60, 300, 900, 3600]
+      const delay = delays[job.retryCount] ?? 3600
+      const nextRun = new Date(Date.now() + delay * 1000)
+
+      await prisma.notificationJob.update({
+        where: { id: job.id },
+        data: {
+          retryCount: { increment: 1 },
+          scheduledFor: nextRun
+        }
+      })
+
+      processed++
+    } catch (err) {
+      await prisma.notificationJob.update({
+        where: { id: job.id },
+        data: {
+          retryCount: { increment: 1 }
+        }
+      })
+    }
+  }
+
+  return new Response(JSON.stringify({ processed }), {
+    status: 200,
+    headers: { 'Content-Type': 'application/json' }
+  })
+}

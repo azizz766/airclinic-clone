@@ -320,6 +320,7 @@ export type ConversationMessageOrderByWithRelationInput = {
 
 export type ConversationMessageWhereUniqueInput = Prisma.AtLeast<{
   id?: string
+  twilioMessageSid?: string
   AND?: Prisma.ConversationMessageWhereInput | Prisma.ConversationMessageWhereInput[]
   OR?: Prisma.ConversationMessageWhereInput[]
   NOT?: Prisma.ConversationMessageWhereInput | Prisma.ConversationMessageWhereInput[]
@@ -329,7 +330,6 @@ export type ConversationMessageWhereUniqueInput = Prisma.AtLeast<{
   channel?: Prisma.EnumChannelFilter<"ConversationMessage"> | $Enums.Channel
   content?: Prisma.StringFilter<"ConversationMessage"> | string
   contentNormalized?: Prisma.StringNullableFilter<"ConversationMessage"> | string | null
-  twilioMessageSid?: Prisma.StringNullableFilter<"ConversationMessage"> | string | null
   twilioStatus?: Prisma.StringNullableFilter<"ConversationMessage"> | string | null
   claudeModel?: Prisma.StringNullableFilter<"ConversationMessage"> | string | null
   claudeInputTokens?: Prisma.IntNullableFilter<"ConversationMessage"> | number | null
@@ -338,7 +338,7 @@ export type ConversationMessageWhereUniqueInput = Prisma.AtLeast<{
   sessionStateAtSend?: Prisma.EnumConversationStateFilter<"ConversationMessage"> | $Enums.ConversationState
   createdAt?: Prisma.DateTimeFilter<"ConversationMessage"> | Date | string
   session?: Prisma.XOR<Prisma.ConversationSessionScalarRelationFilter, Prisma.ConversationSessionWhereInput>
-}, "id">
+}, "id" | "twilioMessageSid">
 
 export type ConversationMessageOrderByWithAggregationInput = {
   id?: Prisma.SortOrder

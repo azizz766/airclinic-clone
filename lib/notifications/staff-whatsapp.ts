@@ -34,44 +34,33 @@ export async function sendStaffBookingNotification(
     minute: '2-digit',
   })
 
-  const message = `🔔 طلب ديمو جديد
-🏥 العيادة: ${params.serviceName}
-👤 الاسم: ${params.patientName}
-📞 الرقم: ${params.phone || 'غير متوفر'}
-📅 الوقت: ${scheduledStr}`
-
-  console.log(JSON.stringify({
-    event: '[book-demo-whatsapp] pre_send',
-    from: `whatsapp:${twilioFrom}`,
-    to: `whatsapp:${staffNumber}`,
-    hasSid: !!accountSid,
-    hasToken: !!authToken,
-  }))
+  const message = `حجز جديد
+الخدمة: ${params.serviceName}
+الاسم: ${params.patientName}
+الجوال: ${params.phone || 'غير متوفر'}
+الموعد: ${scheduledStr}`
 
   try {
     const client = twilio(accountSid, authToken)
 
     const result = await client.messages.create({
-      from: `whatsapp:${twilioFrom}`, // ✅ أهم تعديل هنا
+      from: `whatsapp:${twilioFrom}`,
       to: `whatsapp:${staffNumber}`,
       body: message,
     })
 
     console.log(JSON.stringify({
-      event: '[book-demo-whatsapp] send_success',
+      event: '[staff-booking-whatsapp] send_success',
       sid: result.sid,
       status: result.status,
-      to: result.to,
-      from: result.from,
     }))
   } catch (err) {
     const e = err as Record<string, unknown>
     console.error(JSON.stringify({
-      event: '[book-demo-whatsapp] send_failure',
+      event: '[staff-booking-whatsapp] send_failure',
       code: e['code'],
       status: e['status'],
       message: e['message'],
-      moreInfo: e['moreInfo'] ?? null,
     }))
   }
 }

@@ -364,6 +364,7 @@ export type ReminderScalarFieldEnum = (typeof ReminderScalarFieldEnum)[keyof typ
 
 
 export const NotificationJobScalarFieldEnum = {
+  retryCount: 'retryCount',
   id: 'id',
   clinicId: 'clinicId',
   reminderId: 'reminderId',
