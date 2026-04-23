@@ -143,6 +143,26 @@ function extractDoctorHint(text: string) {
 function interpretIncomingMessage(bodyRaw: string): AiInterpretation {
   const normalized = normalizeForNlu(bodyRaw)
 
+  // Hard stop for cancellation — must precede booking check because "ألغي الحجز"
+  // contains "حجز" and would otherwise be misclassified as new_booking.
+  if (
+    normalized.includes('الغي') ||
+    normalized.includes('الغاء') ||
+    normalized.includes('كنسل') ||
+    (normalized.includes('الغ ') && (normalized.includes('حجز') || normalized.includes('موعد')))
+  ) {
+    return {
+      intent: 'cancel',
+      confidence: 'high',
+      preferredDateOffsetDays: null,
+      preferredWeekOffsetDays: 0,
+      preferredDayOfWeek: null,
+      preferredPeriod: null,
+      doctorHint: null,
+      canonicalText: normalized,
+    }
+  }
+
   // Hard stop for booking phrases so "ابي احجز" never falls through to unknown/escalation
   if (
     normalized.includes('حجز') ||
