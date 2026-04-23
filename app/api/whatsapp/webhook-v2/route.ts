@@ -859,11 +859,6 @@ async function handleConfirmation(
   try {
     const appointment = await processBooking(session.id)
 
-    await prisma.conversationSession.update({
-      where: { id: session.id },
-      data: { bookingId: appointment.id },
-    })
-
     await transitionSession(
       session.id,
       clinicId,
@@ -909,9 +904,6 @@ async function handleConfirmation(
       msUntil > 0 && msUntil <= 24 * 60 * 60 * 1000
         ? 'ننتظرك في الموعد.'
         : 'سيصلك تذكير قبل الموعد.'
-
-    await new Promise((resolve) => setTimeout(resolve, 2000))
-    await transitionSession(session.id, clinicId, 'IDLE', 'SESSION_RESET_AFTER_BOOKING')
 
     return {
       reply:
@@ -1068,7 +1060,7 @@ async function handleCancellationConfirm(
       },
     },
     orderBy: { scheduledAt: 'asc' },
-    select: { id: true },
+    select: { id: true, serviceId: true, scheduledAt: true },
   })
 
   if (!appointment) {
@@ -1076,9 +1068,45 @@ async function handleCancellationConfirm(
     return { reply: 'ما عندك حجز نشط للإلغاء.' }
   }
 
-  await prisma.appointment.update({
-    where: { id: appointment.id },
-    data: { status: 'cancelled' },
+  await prisma.$transaction(async (tx) => {
+    await tx.appointment.update({
+      where: { id: appointment.id },
+      data: { status: 'cancelled', cancellationReason: 'Cancelled by patient via WhatsApp' },
+    })
+
+    await tx.availableSlot.updateMany({
+      where: {
+        clinicId,
+        serviceId: appointment.serviceId,
+        startTime: appointment.scheduledAt,
+        isBooked: true,
+      },
+      data: {
+        isBooked: false,
+        isHeld: false,
+        heldBySessionId: null,
+        heldAt: null,
+      },
+    })
+
+    await tx.reminder.updateMany({
+      where: {
+        appointmentId: appointment.id,
+        status: 'pending',
+      },
+      data: { status: 'cancelled' },
+    })
+
+    await tx.notificationJob.updateMany({
+      where: {
+        appointmentId: appointment.id,
+        status: { in: ['pending', 'queued'] },
+      },
+      data: {
+        status: 'failed',
+        errorMessage: 'Appointment was cancelled. This job is no longer valid.',
+      },
+    })
   })
 
   await transitionSession(
@@ -1112,6 +1140,120 @@ const BOOKING_SLOT_STATES = new Set([
   'CONFIRMATION_PENDING',
 ])
 
+const DATE_OVERRIDE_STATES = new Set([
+  'SLOT_COLLECTION_TIME',
+  'SLOT_COLLECTION_PATIENT_NAME',
+  'SLOT_COLLECTION_PATIENT_DOB',
+  'CONFIRMATION_PENDING',
+])
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Date Override Handler
+//
+// Route-layer correction: same direct-write pattern as the handoff recovery
+// (~line 1440). Writes currentState + previousState + stateTransitionLog in one
+// atomic transaction, mirroring transitionSession's persistence contract exactly.
+// No FSM trigger is registered because this is a routing input correction, not
+// a state-machine event.
+// ─────────────────────────────────────────────────────────────────────────────
+
+async function handleDateOverride(
+  ctx: HandlerContext,
+  offsetDays: number,
+): Promise<HandlerResult> {
+  const { session, clinicId, interpretation } = ctx
+
+  const targetDate = new Date()
+  targetDate.setDate(targetDate.getDate() + offsetDays)
+  targetDate.setHours(0, 0, 0, 0)
+
+  if (interpretation.preferredDayOfWeek !== null) {
+    const diff = (interpretation.preferredDayOfWeek - targetDate.getDay() + 7) % 7
+    targetDate.setDate(targetDate.getDate() + diff)
+  }
+
+  const dayEnd = new Date(targetDate)
+  dayEnd.setDate(dayEnd.getDate() + 1)
+
+  const slots = await prisma.availableSlot.findMany({
+    where: {
+      clinicId,
+      serviceId: session.slotServiceId!,
+      isBooked: false,
+      OR: [{ isHeld: false }, { heldBySessionId: session.id }],
+      startTime: { gte: targetDate, lt: dayEnd },
+    },
+    select: { id: true, startTime: true },
+    orderBy: { startTime: 'asc' },
+    take: 5,
+  })
+
+  if (slots.length === 0) {
+    return {
+      reply: 'للأسف ما فيه مواعيد متاحة في هذا اليوم.\n\nاختر وقتاً آخر.',
+    }
+  }
+
+  const slotData = slots.map((s) => ({
+    id: s.id,
+    startTime: s.startTime.toISOString(),
+  }))
+
+  await prisma.$transaction(async (tx) => {
+    if (session.slotTimeId) {
+      await tx.availableSlot.updateMany({
+        where: { id: session.slotTimeId, isHeld: true, heldBySessionId: session.id },
+        data: { isHeld: false, heldBySessionId: null, heldAt: null },
+      })
+    }
+
+    await tx.conversationSession.update({
+      where: { id: session.id },
+      data: {
+        previousState: session.currentState,
+        currentState: 'SLOT_COLLECTION_TIME',
+        slotDate: targetDate,
+        slotTimeId: null,
+        slotOfferedAt: new Date(),
+        retryCount: 0,
+        expiresAt: new Date(Date.now() + 30 * 60 * 1000),
+        ambiguousIntents: slotData as unknown as Prisma.InputJsonValue,
+      },
+    })
+
+    await tx.stateTransitionLog.create({
+      data: {
+        sessionId: session.id,
+        clinicId,
+        fromState: session.currentState,
+        toState: 'SLOT_COLLECTION_TIME',
+        triggerType: 'DATE_OVERRIDE',
+        triggeredBy: null,
+      },
+    })
+  })
+
+  const list = slots
+    .map((s, i) => {
+      const label = new Date(s.startTime).toLocaleDateString('ar-SA', {
+        weekday: 'long',
+        month: 'short',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+      })
+      return `${i + 1}. ${label}`
+    })
+    .join('\n')
+
+  return {
+    reply: await generateReply({
+      action: 'show_slots',
+      context: { slotsText: list },
+    }),
+  }
+}
+
 async function dispatch(ctx: HandlerContext): Promise<HandlerResult> {
   if (isEscalationRequest(ctx.body)) {
     return escalate(ctx, 'USER_REQUESTED')
@@ -1124,6 +1266,15 @@ async function dispatch(ctx: HandlerContext): Promise<HandlerResult> {
     return {
       reply: 'هل تريد إلغاء آخر حجز لديك؟\n\nاكتب *نعم* للتأكيد أو *لا* للرجوع.',
     }
+  }
+
+  if (
+    DATE_OVERRIDE_STATES.has(currentState) &&
+    (ctx.interpretation.preferredDateOffsetDays !== null ||
+      ctx.interpretation.preferredDayOfWeek !== null) &&
+    ctx.session.slotServiceId
+  ) {
+    return handleDateOverride(ctx, ctx.interpretation.preferredDateOffsetDays ?? 0)
   }
 
   switch (currentState) {
