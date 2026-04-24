@@ -9,7 +9,11 @@ export default function HeroFull() {
         </div>
 
         <h1 className="max-w-3xl text-5xl font-extrabold leading-[1.05] tracking-tight text-[#1f1c18] md:text-6xl">
-          You’re losing booking requests on WhatsApp — and you don’t even see them.
+          <>
+  You’re losing bookings on WhatsApp.
+  <br />
+  And you don’t even see it.
+</>
         </h1>
 
         <p className="max-w-2xl text-2xl font-extrabold text-[#674db1]">
