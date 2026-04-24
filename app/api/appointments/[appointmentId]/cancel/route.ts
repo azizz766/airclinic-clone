@@ -43,6 +43,8 @@ export async function POST(
       select: {
         id: true,
         clinicId: true,
+        serviceId: true,
+        scheduledAt: true,
         status: true,
         patient: {
           select: {
@@ -125,6 +127,21 @@ export async function POST(
         },
       })
       invalidatedNotificationJobCount = invalidatedJobs.count
+
+      await tx.reminder.updateMany({
+        where: { appointmentId: appointment.id, status: 'pending' },
+        data: { status: 'cancelled' },
+      })
+
+      await tx.availableSlot.updateMany({
+        where: {
+          clinicId: appointment.clinicId,
+          serviceId: appointment.serviceId,
+          startTime: appointment.scheduledAt,
+          isBooked: true,
+        },
+        data: { isBooked: false, isHeld: false, heldBySessionId: null, heldAt: null },
+      })
 
       return tx.appointment.update({
         where: { id: appointment.id },
