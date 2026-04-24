@@ -39,6 +39,7 @@ import {
   isNegative,
   isEscalationRequest,
   parseDateInput,
+  parseDeterministicArabicDate,
 } from '@/lib/whatsapp/input-parsers'
 import { saveLead } from '@/lib/whatsapp/lead-handler'
 import { generateReply } from '@/lib/whatsapp/response-generator'
@@ -1402,7 +1403,21 @@ export async function POST(req: NextRequest) {
   })
 
   let interpretation: AiInterpretation
-  try {
+
+  // Early-exit: skip AI pipeline entirely for clear escalation requests.
+  // dispatch() will re-run isEscalationRequest() and call escalate().
+  if (isEscalationRequest(body)) {
+    interpretation = {
+      intent: 'unknown',
+      confidence: 'high',
+      canonicalText: body,
+      preferredDateOffsetDays: null,
+      preferredWeekOffsetDays: 0,
+      preferredDayOfWeek: null,
+      preferredPeriod: null,
+      doctorHint: null,
+    }
+  } else try {
     const decision = await runAiInterpretationPipeline({
       bodyRaw: body,
       from,
@@ -1426,6 +1441,14 @@ export async function POST(req: NextRequest) {
       doctorHint: null,
       canonicalText: body,
     }
+  }
+
+  // Deterministic Arabic relative date guard — runs before any AI/LLM date
+  // interpretation is consumed, preventing non-deterministic weekday drift.
+  const deterministicDate = parseDeterministicArabicDate(body)
+  if (deterministicDate !== null) {
+    interpretation.preferredDateOffsetDays = deterministicDate.offsetDays
+    interpretation.preferredDayOfWeek = null
   }
 
   console.log('[webhook-v2] inbound', {

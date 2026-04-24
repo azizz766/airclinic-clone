@@ -4,6 +4,23 @@
  */
 
 /**
+ * Deterministic Arabic normalization for intent matching.
+ * Strips diacritics, punctuation, normalizes letter variants, collapses spaces.
+ */
+export function normalizeArabicInput(message: string): string {
+  return message
+    .toLowerCase()
+    .trim()
+    .replace(/[أإآٱ]/g, 'ا')
+    .replace(/ى/g, 'ي')
+    .replace(/ة/g, 'ه')
+    .replace(/[ًٌٍَُِّْ]/g, '')
+    .replace(/[.,!?،؟;:()\[\]{}"']/g, '')
+    .replace(/\s+/g, ' ')
+    .trim()
+}
+
+/**
  * Parse Arabic-Indic digits, Arabic ordinal words, and Latin digits
  * into a 1-based integer. Returns null on failure.
  */
@@ -52,64 +69,48 @@ export function isNegative(text: string): boolean {
 }
 
 export function isEscalationRequest(text: string): boolean {
-  // Normalize same as NLU pipeline
-  const t = text
-    .toLowerCase()
-    .trim()
-    .replace(/\s+/g, ' ')
-    .replace(/[أإآ]/g, 'ا')
-    .replace(/ى/g, 'ي')
-    .replace(/ة/g, 'ه')
-    .replace(/[.,!?،؟]/g, '')
-    .trim()
-
+  const t = normalizeArabicInput(text)
   const tokens = t.split(' ')
 
   // Booking protection: booking intent with no explicit escalation word → not escalation
   const bookingTokens = ['احجز', 'حجز', 'موعد']
-  const escalationWords = ['بشري', 'انسان', 'موظف', 'موضف', 'support', 'agent', 'human']
+  const escalationWords = [
+    'بشري', 'انسان', 'موظف', 'موضف', 'دعم', 'كلموني', 'ادمي',
+    'support', 'agent', 'human',
+  ]
 
   const hasBooking = bookingTokens.some((tok) => tokens.includes(tok))
   const hasEscalationWord = escalationWords.some((word) => tokens.includes(word))
 
   if (hasBooking && !hasEscalationWord) return false
 
-  // Exact phrase matches (normalized, ة→ه already applied above)
+  // Any message containing a clear escalation keyword (without booking) → escalate
+  if (hasEscalationWord) return true
+
+  // Exact phrase matches for ambiguous triggers (احد, خدمه, بوت)
   const exactPhrases = [
-    'ابي اتكلم مع الموظف',
-    'ابي اكلم الموظف',
-    'ابغي اكلم الموظف',
-    'ابغي اتكلم مع الموظف',
-    'اريد اتكلم مع الموظف',
-    'عطني الموظف',
-    'عطني موظف',
-    'ابي موظف',
-    'تكلم موظف',
-    'اريد موظف',
-    'ابي اكلم موظف',
-    'اريد التحدث مع موظف',
-    'اريد التحدث مع الموظف',
-    'اريد اتكلم مع موظف',
-
-    'ابي اتكلم مع الموضف',
-    'ابي اكلم الموضف',
-    'ابغي اكلم الموضف',
-    'ابغي اتكلم مع الموضف',
-    'عطني الموضف',
-    'ابي موضف',
-    'تكلم موضف',
-    'اريد موضف',
-
+    // customer service
+    'خدمه عملاء',
     'عطني خدمه العملاء',
     'حولني علي خدمه العملاء',
+    'حولني لخدمه العملاء',
     'حولني خدمه العملاء',
     'وصلني بخدمه العملاء',
     'ابي اتكلم مع خدمه العملاء',
-
-    'ابي دعم',
-    'ابي انسان',
-    'ابي بشري',
-
+    'ابي خدمه العملاء',
+    'ابغي خدمه العملاء',
+    'ابغي اكلم خدمه العملاء',
+    // "anyone there" / احد
+    'فيه احد',
+    'في احد',
+    'ابي احد',
+    'ابغي احد',
+    'ابي اكلم احد',
+    'ابغي اكلم احد',
+    // anti-bot
+    'مو بوت',
+    'مابي بوت',
+    // English
     'talk to human',
     'talk to agent',
     'i want agent',
@@ -117,13 +118,44 @@ export function isEscalationRequest(text: string): boolean {
     'customer service',
   ]
 
-  if (exactPhrases.some((phrase) => t === phrase)) return true
+  if (exactPhrases.some((phrase) => t === phrase || t.includes(phrase))) return true
 
-  // Single English escalation tokens (standalone word only, not substring)
+  // Single English escalation tokens
   const englishEscalationTokens = ['human', 'agent', 'support']
   if (englishEscalationTokens.some((word) => tokens.includes(word))) return true
 
   return false
+}
+
+/**
+ * Deterministic parser for Arabic relative date phrases.
+ * Returns {offsetDays: 0|1|2} if matched, null otherwise.
+ * Must run before AI/LLM pipeline to prevent non-deterministic weekday drift.
+ */
+export function parseDeterministicArabicDate(
+  message: string,
+): { offsetDays: number } | null {
+  const t = normalizeArabicInput(message)
+
+  // Pre-normalized forms (after normalizeArabicInput). Order matters: check
+  // "بعد" phrases before standalone tomorrow words.
+  const DAY_AFTER_TOMORROW = ['بعد بكرا', 'بعد بكره', 'بعد غدا']
+  const TOMORROW = ['بكرا', 'بكره', 'غدا']
+
+  function containsWord(haystack: string, word: string): boolean {
+    return (
+      haystack === word ||
+      haystack.startsWith(word + ' ') ||
+      haystack.endsWith(' ' + word) ||
+      haystack.includes(' ' + word + ' ')
+    )
+  }
+
+  if (DAY_AFTER_TOMORROW.some((p) => containsWord(t, p))) return { offsetDays: 2 }
+  if (TOMORROW.some((p) => containsWord(t, p))) return { offsetDays: 1 }
+  if (t === 'اليوم') return { offsetDays: 0 }
+
+  return null
 }
 
 /**
