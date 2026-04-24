@@ -21,8 +21,8 @@ export default function HeroFull() {
         </p>
 
         <p className="max-w-lg text-xl leading-relaxed text-on-surface-variant">
-          Most clinics reply too late — or not at all. Velora replies instantly,
-          books automatically, and never misses a message.
+          Most clinics miss bookings on WhatsApp every day.
+          Velora replies instantly, books automatically, and turns every message into a confirmed appointment.        
         </p>
 
         <div className="flex flex-wrap gap-4">

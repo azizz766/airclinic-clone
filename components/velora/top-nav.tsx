@@ -38,7 +38,7 @@ export default function TopNav() {
         </div>
 
         {/* CTA */}
-        <Link href="/start-free-trial">
+        <Link href="/book-demo">
           <button
             style={{ backgroundColor: "#674db1" }}
             className="rounded-[2rem] px-4 py-2 font-bold text-white"
