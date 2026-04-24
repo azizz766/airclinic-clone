@@ -1106,6 +1106,7 @@ const DATE_OVERRIDE_STATES = new Set([
   'SLOT_COLLECTION_TIME',
   'SLOT_COLLECTION_PATIENT_NAME',
   'SLOT_COLLECTION_PATIENT_DOB',
+  'SLOT_COLLECTION_PHONE_CONFIRM',
   'CONFIRMATION_PENDING',
 ])
 
@@ -1153,8 +1154,6 @@ async function handleDateOverride(ctx: HandlerContext): Promise<HandlerResult> {
     startTime: s.startTime.toISOString(),
   }))
 
-  const fromState = session.currentState
-
   await prisma.$transaction(async (tx) => {
     if (session.slotTimeId) {
       await tx.availableSlot.updateMany({
@@ -1171,27 +1170,15 @@ async function handleDateOverride(ctx: HandlerContext): Promise<HandlerResult> {
     await tx.conversationSession.update({
       where: { id: session.id },
       data: {
-        previousState: fromState,
-        currentState: 'SLOT_COLLECTION_TIME',
         slotDate: targetDate,
         slotTimeId: null,
         slotOfferedAt: new Date(),
         ambiguousIntents: slotData as unknown as Prisma.InputJsonValue,
-        retryCount: 0,
-        expiresAt: new Date(Date.now() + 30 * 60 * 1000),
-      },
-    })
-
-    await tx.stateTransitionLog.create({
-      data: {
-        sessionId: session.id,
-        clinicId,
-        fromState,
-        toState: 'SLOT_COLLECTION_TIME',
-        triggerType: 'DATE_OVERRIDE',
       },
     })
   })
+
+  await transitionSession(session.id, clinicId, 'SLOT_COLLECTION_TIME', 'DATE_OVERRIDE')
 
   const list = slots
     .map((s, i) => {
