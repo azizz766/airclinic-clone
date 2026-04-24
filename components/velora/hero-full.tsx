@@ -26,17 +26,17 @@ export default function HeroFull() {
         </p>
 
         <div className="flex flex-wrap gap-4">
-          <Link href="/book-demo">
+          <Link href="/start-free-trial">
             <button
               style={{ backgroundColor: "#674db1" }}
               className="rounded-full px-8 py-4 text-lg font-bold text-white"
             >
-              Watch it handle a real booking
+              Try it on WhatsApp
             </button>
           </Link>
 
           <button className="rounded-full bg-surface-container-high px-8 py-4 text-lg font-bold text-on-surface transition hover:bg-surface-variant">
-            See how it works in 60 seconds
+            See how it works in 30 seconds
           </button>
         </div>
 
