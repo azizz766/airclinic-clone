@@ -62,7 +62,7 @@ export default function HeroFull() {
                 <h4 className="text-[14px] font-bold leading-tight">
                   Velora AI Receptionist
                 </h4>
-                <p className="text-[11px] text-white/80">Online</p>
+                <p className="text-[11px] text-white/80">Live Online</p>
               </div>
             </div>
 
@@ -89,7 +89,7 @@ export default function HeroFull() {
           >
             <div className="flex justify-start">
               <div className="relative max-w-[85%] rounded-lg rounded-tl-none border border-black/5 bg-white px-3 py-1.5 text-[13px] text-[#303030] shadow-sm">
-                HI’d like to book a teeth cleaning tomorrow.
+                Hi, I’d like to book a teeth cleaning tomorrow.
                 <div className="mt-1 text-right text-[10px] text-black/40">
                   10:42 AM
                 </div>
@@ -119,7 +119,7 @@ export default function HeroFull() {
 
             <div className="flex justify-start">
               <div className="relative max-w-[85%] rounded-lg rounded-tl-none border border-black/5 bg-white px-3 py-1.5 text-[13px] text-[#303030] shadow-sm">
-                4:15 PM is perfect!
+                2
                 <div className="mt-1 text-right text-[10px] text-black/40">
                   10:43 AM
                 </div>
@@ -128,7 +128,7 @@ export default function HeroFull() {
 
             <div className="flex justify-end">
               <div className="relative max-w-[85%] rounded-lg rounded-tr-none border border-black/5 bg-[#e1ffc7] px-3 py-1.5 text-[13px] text-[#303030] shadow-sm">
-                Booked. Your appointment is confirmed for tomorrow at 5:00 PM ✨
+                Booked. Your appointment is confirmed for tomorrow at 5:15 PM ✨
                 <br />
                 We’ll send a reminder before your visit.
                 <div className="mt-1 flex items-center justify-end gap-1">
