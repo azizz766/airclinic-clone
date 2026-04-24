@@ -910,9 +910,6 @@ async function handleConfirmation(
         ? 'ننتظرك في الموعد.'
         : 'سيصلك تذكير قبل الموعد.'
 
-    await new Promise((resolve) => setTimeout(resolve, 2000))
-    await transitionSession(session.id, clinicId, 'IDLE', 'SESSION_RESET_AFTER_BOOKING')
-
     return {
       reply:
         `تم تأكيد الحجز.\n\n` +
@@ -1068,7 +1065,7 @@ async function handleCancellationConfirm(
       },
     },
     orderBy: { scheduledAt: 'asc' },
-    select: { id: true },
+    select: { id: true, serviceId: true, scheduledAt: true },
   })
 
   if (!appointment) {
@@ -1076,9 +1073,31 @@ async function handleCancellationConfirm(
     return { reply: 'ما عندك حجز نشط للإلغاء.' }
   }
 
-  await prisma.appointment.update({
-    where: { id: appointment.id },
-    data: { status: 'cancelled' },
+  await prisma.$transaction(async (tx) => {
+    await tx.appointment.update({
+      where: { id: appointment.id },
+      data: { status: 'cancelled' },
+    })
+
+    await tx.availableSlot.updateMany({
+      where: {
+        clinicId,
+        serviceId: appointment.serviceId,
+        startTime: appointment.scheduledAt,
+        isBooked: true,
+      },
+      data: { isBooked: false },
+    })
+
+    await tx.reminder.updateMany({
+      where: { appointmentId: appointment.id, status: 'pending' },
+      data: { status: 'cancelled' },
+    })
+
+    await tx.notificationJob.updateMany({
+      where: { appointmentId: appointment.id, status: { in: ['pending', 'queued'] } },
+      data: { status: 'failed' },
+    })
   })
 
   await transitionSession(

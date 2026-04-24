@@ -71,6 +71,15 @@ async function scenario1() {
   log('SCENARIO 1: PERFECT FLOW (+966099990001)')
   log('═══════════════════════════════════════════')
 
+  // Clean PHONE1 session state before starting
+  const old1 = await getSession(PHONE1)
+  if (old1) {
+    await prisma.stateTransitionLog.deleteMany({ where: { sessionId: old1.id } })
+    await prisma.conversationMessage.deleteMany({ where: { sessionId: old1.id } })
+    await prisma.conversationSession.delete({ where: { id: old1.id } })
+    step(`Cleaned PHONE1 session ${old1.id}`)
+  }
+
   // Step 1: Booking intent
   step('Sending: أبغى أحجز تنظيف')
   let r = await send(PHONE1, 'أبغى أحجز تنظيف')
@@ -228,7 +237,7 @@ async function scenario1() {
 
   // Verify no duplicate appointment
   const apptsSameSlot = await prisma.appointment.findMany({
-    where: { clinicId: CLINIC_ID, scheduledAt: { equals: (await prisma.availableSlot.findUnique({ where: { id: slotIdToBook }, select: { startTime: true } }))?.startTime } }
+    where: { clinicId: CLINIC_ID, scheduledAt: { equals: (await prisma.availableSlot.findUnique({ where: { id: slotIdToBook }, select: { startTime: true } }))?.startTime }, status: { not: 'cancelled' } }
   })
   step(`Appointments at same slot time: ${apptsSameSlot.length}`)
   if (apptsSameSlot.length === 1) ok('No duplicate appointment')
@@ -331,6 +340,15 @@ async function scenario3() {
   log('═══════════════════════════════════════════')
   log('SCENARIO 3: ABANDON FLOW / SLOT HOLD TTL (+966099990002)')
   log('═══════════════════════════════════════════')
+
+  // Clean PHONE2 session state before starting
+  const old2 = await getSession(PHONE2)
+  if (old2) {
+    await prisma.stateTransitionLog.deleteMany({ where: { sessionId: old2.id } })
+    await prisma.conversationMessage.deleteMany({ where: { sessionId: old2.id } })
+    await prisma.conversationSession.delete({ where: { id: old2.id } })
+    step(`Cleaned PHONE2 session ${old2.id}`)
+  }
 
   // Fresh user
   step('Sending booking intent from +966099990002')
