@@ -62,7 +62,7 @@ export default function HeroFull() {
                 <h4 className="text-[14px] font-bold leading-tight">
                   Velora AI Receptionist
                 </h4>
-                <p className="text-[11px] text-white/80">Live Online</p>
+                <p className="text-[11px] text-white/80">Online</p>
               </div>
             </div>
 
