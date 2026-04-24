@@ -859,6 +859,11 @@ async function handleConfirmation(
   try {
     const appointment = await processBooking(session.id)
 
+    await prisma.conversationSession.update({
+      where: { id: session.id },
+      data: { bookingId: appointment.id },
+    })
+
     await transitionSession(
       session.id,
       clinicId,
@@ -904,6 +909,9 @@ async function handleConfirmation(
       msUntil > 0 && msUntil <= 24 * 60 * 60 * 1000
         ? 'ننتظرك في الموعد.'
         : 'سيصلك تذكير قبل الموعد.'
+
+    await new Promise((resolve) => setTimeout(resolve, 2000))
+    await transitionSession(session.id, clinicId, 'IDLE', 'SESSION_RESET_AFTER_BOOKING')
 
     return {
       reply:
@@ -1060,7 +1068,7 @@ async function handleCancellationConfirm(
       },
     },
     orderBy: { scheduledAt: 'asc' },
-    select: { id: true, serviceId: true, scheduledAt: true },
+    select: { id: true },
   })
 
   if (!appointment) {
@@ -1068,45 +1076,9 @@ async function handleCancellationConfirm(
     return { reply: 'ما عندك حجز نشط للإلغاء.' }
   }
 
-  await prisma.$transaction(async (tx) => {
-    await tx.appointment.update({
-      where: { id: appointment.id },
-      data: { status: 'cancelled', cancellationReason: 'Cancelled by patient via WhatsApp' },
-    })
-
-    await tx.availableSlot.updateMany({
-      where: {
-        clinicId,
-        serviceId: appointment.serviceId,
-        startTime: appointment.scheduledAt,
-        isBooked: true,
-      },
-      data: {
-        isBooked: false,
-        isHeld: false,
-        heldBySessionId: null,
-        heldAt: null,
-      },
-    })
-
-    await tx.reminder.updateMany({
-      where: {
-        appointmentId: appointment.id,
-        status: 'pending',
-      },
-      data: { status: 'cancelled' },
-    })
-
-    await tx.notificationJob.updateMany({
-      where: {
-        appointmentId: appointment.id,
-        status: { in: ['pending', 'queued'] },
-      },
-      data: {
-        status: 'failed',
-        errorMessage: 'Appointment was cancelled. This job is no longer valid.',
-      },
-    })
+  await prisma.appointment.update({
+    where: { id: appointment.id },
+    data: { status: 'cancelled' },
   })
 
   await transitionSession(
@@ -1127,18 +1099,8 @@ async function handleCancellationConfirm(
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Main Dispatch — State-Driven
+// Date Override — pre-routing correction for mid-booking date change
 // ─────────────────────────────────────────────────────────────────────────────
-
-const BOOKING_SLOT_STATES = new Set([
-  'SLOT_COLLECTION_SERVICE',
-  'SLOT_COLLECTION_DATE',
-  'SLOT_COLLECTION_TIME',
-  'SLOT_COLLECTION_PATIENT_NAME',
-  'SLOT_COLLECTION_PATIENT_DOB',
-  'SLOT_COLLECTION_PHONE_CONFIRM',
-  'CONFIRMATION_PENDING',
-])
 
 const DATE_OVERRIDE_STATES = new Set([
   'SLOT_COLLECTION_TIME',
@@ -1147,33 +1109,27 @@ const DATE_OVERRIDE_STATES = new Set([
   'CONFIRMATION_PENDING',
 ])
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Date Override Handler
-//
-// Route-layer correction: same direct-write pattern as the handoff recovery
-// (~line 1440). Writes currentState + previousState + stateTransitionLog in one
-// atomic transaction, mirroring transitionSession's persistence contract exactly.
-// No FSM trigger is registered because this is a routing input correction, not
-// a state-machine event.
-// ─────────────────────────────────────────────────────────────────────────────
-
-async function handleDateOverride(
-  ctx: HandlerContext,
-  offsetDays: number,
-): Promise<HandlerResult> {
+async function handleDateOverride(ctx: HandlerContext): Promise<HandlerResult> {
   const { session, clinicId, interpretation } = ctx
 
-  const targetDate = new Date()
-  targetDate.setDate(targetDate.getDate() + offsetDays)
-  targetDate.setHours(0, 0, 0, 0)
+  const offsetDays = interpretation.preferredDateOffsetDays ?? 0
+  const now = new Date()
+  const targetDate = new Date(Date.UTC(
+    now.getUTCFullYear(),
+    now.getUTCMonth(),
+    now.getUTCDate() + offsetDays,
+  ))
 
   if (interpretation.preferredDayOfWeek !== null) {
-    const diff = (interpretation.preferredDayOfWeek - targetDate.getDay() + 7) % 7
-    targetDate.setDate(targetDate.getDate() + diff)
+    const diff = (interpretation.preferredDayOfWeek - targetDate.getUTCDay() + 7) % 7
+    targetDate.setUTCDate(targetDate.getUTCDate() + (diff === 0 ? 7 : diff))
   }
 
-  const dayEnd = new Date(targetDate)
-  dayEnd.setDate(dayEnd.getDate() + 1)
+  const dayEnd = new Date(Date.UTC(
+    targetDate.getUTCFullYear(),
+    targetDate.getUTCMonth(),
+    targetDate.getUTCDate() + 1,
+  ))
 
   const slots = await prisma.availableSlot.findMany({
     where: {
@@ -1188,10 +1144,8 @@ async function handleDateOverride(
     take: 5,
   })
 
-  if (slots.length === 0) {
-    return {
-      reply: 'للأسف ما فيه مواعيد متاحة في هذا اليوم.\n\nاختر وقتاً آخر.',
-    }
+  if (!slots.length) {
+    return { reply: 'للأسف ما فيه مواعيد متاحة في هذا اليوم.' }
   }
 
   const slotData = slots.map((s) => ({
@@ -1199,10 +1153,17 @@ async function handleDateOverride(
     startTime: s.startTime.toISOString(),
   }))
 
+  const fromState = session.currentState
+
   await prisma.$transaction(async (tx) => {
     if (session.slotTimeId) {
       await tx.availableSlot.updateMany({
-        where: { id: session.slotTimeId, isHeld: true, heldBySessionId: session.id },
+        where: {
+          id: session.slotTimeId,
+          heldBySessionId: session.id,
+          isHeld: true,
+          isBooked: false,
+        },
         data: { isHeld: false, heldBySessionId: null, heldAt: null },
       })
     }
@@ -1210,14 +1171,14 @@ async function handleDateOverride(
     await tx.conversationSession.update({
       where: { id: session.id },
       data: {
-        previousState: session.currentState,
+        previousState: fromState,
         currentState: 'SLOT_COLLECTION_TIME',
         slotDate: targetDate,
         slotTimeId: null,
         slotOfferedAt: new Date(),
+        ambiguousIntents: slotData as unknown as Prisma.InputJsonValue,
         retryCount: 0,
         expiresAt: new Date(Date.now() + 30 * 60 * 1000),
-        ambiguousIntents: slotData as unknown as Prisma.InputJsonValue,
       },
     })
 
@@ -1225,19 +1186,17 @@ async function handleDateOverride(
       data: {
         sessionId: session.id,
         clinicId,
-        fromState: session.currentState,
+        fromState,
         toState: 'SLOT_COLLECTION_TIME',
         triggerType: 'DATE_OVERRIDE',
-        triggeredBy: null,
       },
     })
   })
 
   const list = slots
     .map((s, i) => {
-      const label = new Date(s.startTime).toLocaleDateString('ar-SA', {
+      const label = new Date(s.startTime).toLocaleString('ar-SA', {
         weekday: 'long',
-        month: 'short',
         day: 'numeric',
         hour: '2-digit',
         minute: '2-digit',
@@ -1247,12 +1206,23 @@ async function handleDateOverride(
     .join('\n')
 
   return {
-    reply: await generateReply({
-      action: 'show_slots',
-      context: { slotsText: list },
-    }),
+    reply: `تمام، هذه مواعيد اليوم الجديد:\n\n${list}\n\nاختر رقم الموعد.`,
   }
 }
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Main Dispatch — State-Driven
+// ─────────────────────────────────────────────────────────────────────────────
+
+const BOOKING_SLOT_STATES = new Set([
+  'SLOT_COLLECTION_SERVICE',
+  'SLOT_COLLECTION_DATE',
+  'SLOT_COLLECTION_TIME',
+  'SLOT_COLLECTION_PATIENT_NAME',
+  'SLOT_COLLECTION_PATIENT_DOB',
+  'SLOT_COLLECTION_PHONE_CONFIRM',
+  'CONFIRMATION_PENDING',
+])
 
 async function dispatch(ctx: HandlerContext): Promise<HandlerResult> {
   if (isEscalationRequest(ctx.body)) {
@@ -1274,7 +1244,7 @@ async function dispatch(ctx: HandlerContext): Promise<HandlerResult> {
       ctx.interpretation.preferredDayOfWeek !== null) &&
     ctx.session.slotServiceId
   ) {
-    return handleDateOverride(ctx, ctx.interpretation.preferredDateOffsetDays ?? 0)
+    return handleDateOverride(ctx)
   }
 
   switch (currentState) {
