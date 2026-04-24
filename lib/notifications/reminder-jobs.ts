@@ -1,5 +1,4 @@
 import { Prisma } from '@/lib/prisma-client/client'
-import { notificationQueue } from '@/lib/queue'
 
 type ReminderNotificationInput = {
   clinicId: string
@@ -163,10 +162,6 @@ export async function prepareReminderNotificationJob(
       errorMessage: target.errorMessage,
       scheduledFor: input.reminderScheduledFor,
     },
-  })
-
-  await notificationQueue.add('send', {
-    id: notificationJob.id
   })
 
   return notificationJob
