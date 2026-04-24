@@ -20,6 +20,7 @@ export async function GET(request: NextRequest) {
       status: 'pending',
       scheduledFor: { lte: now },
       channel: 'whatsapp',
+      appointment: { status: { not: 'cancelled' } },
     },
     select: {
       id: true,
