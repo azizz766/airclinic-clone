@@ -98,13 +98,13 @@ export default function HeroFull() {
 
             <div className="flex justify-end">
               <div className="relative max-w-[85%] rounded-lg rounded-tr-none border border-black/5 bg-[#e1ffc7] px-3 py-1.5 text-[13px] text-[#303030] shadow-sm">
-                Sure — I found these available times for tomorrow: 🦷
+                Sure, I found these available times for tomorrow: 🦷
                 <br />
                 1. 3:00 PM
                 <br />
                 2. 5:15 PM
                 <br />
-                  3. 7:00 PM
+                3. 7:00 PM
                   <br />
                   <br />
                   Reply with the number that works best.
@@ -121,7 +121,7 @@ export default function HeroFull() {
               <div className="relative max-w-[85%] rounded-lg rounded-tl-none border border-black/5 bg-white px-3 py-1.5 text-[13px] text-[#303030] shadow-sm">
                 4:15 PM is perfect!
                 <div className="mt-1 text-right text-[10px] text-black/40">
-                  2
+                  10:43 AM
                 </div>
               </div>
             </div>
