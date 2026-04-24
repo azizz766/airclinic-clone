@@ -163,6 +163,28 @@ function interpretIncomingMessage(bodyRaw: string): AiInterpretation {
     }
   }
 
+  // Hard stop for reschedule — must precede booking check because reschedule phrases
+  // contain "موعد"/"حجز" and would be misclassified as new_booking.
+  {
+    const RESCHEDULE_VERBS = ['اعدل', 'اغير', 'تعديل', 'تغيير', 'ااجل', 'اقدم', 'ااخر', 'تاجيل', 'تقديم', 'تاخير']
+    const RESCHEDULE_NOUNS = ['الموعد', 'موعد', 'الحجز', 'حجز']
+    if (
+      RESCHEDULE_VERBS.some((v) => normalized.includes(v)) &&
+      RESCHEDULE_NOUNS.some((n) => normalized.includes(n))
+    ) {
+      return {
+        intent: 'reschedule',
+        confidence: 'high',
+        preferredDateOffsetDays: null,
+        preferredWeekOffsetDays: 0,
+        preferredDayOfWeek: null,
+        preferredPeriod: null,
+        doctorHint: null,
+        canonicalText: normalized,
+      }
+    }
+  }
+
   // Hard stop for booking phrases so "ابي احجز" never falls through to unknown/escalation
   if (
     normalized.includes('حجز') ||

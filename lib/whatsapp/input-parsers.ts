@@ -137,10 +137,8 @@ export function parseDeterministicArabicDate(
 ): { offsetDays: number } | null {
   const t = normalizeArabicInput(message)
 
-  // Pre-normalized forms (after normalizeArabicInput). Order matters: check
-  // "بعد" phrases before standalone tomorrow words.
-  const DAY_AFTER_TOMORROW = ['بعد بكرا', 'بعد بكره', 'بعد غدا']
-  const TOMORROW = ['بكرا', 'بكره', 'غدا']
+  const DAY_AFTER_TOMORROW_RAW = ['بعد بكره', 'بعد بكرة', 'بعد بكرا', 'بعد غدا', 'بعد غداً']
+  const TOMORROW_RAW = ['بكره', 'بكرة', 'بكرا', 'باجر', 'غدا', 'غداً']
 
   function containsWord(haystack: string, word: string): boolean {
     return (
@@ -151,8 +149,9 @@ export function parseDeterministicArabicDate(
     )
   }
 
-  if (DAY_AFTER_TOMORROW.some((p) => containsWord(t, p))) return { offsetDays: 2 }
-  if (TOMORROW.some((p) => containsWord(t, p))) return { offsetDays: 1 }
+  // Normalize each raw phrase before comparing — order matters: day-after before tomorrow
+  if (DAY_AFTER_TOMORROW_RAW.some((p) => containsWord(t, normalizeArabicInput(p)))) return { offsetDays: 2 }
+  if (TOMORROW_RAW.some((p) => containsWord(t, normalizeArabicInput(p)))) return { offsetDays: 1 }
   if (t === 'اليوم') return { offsetDays: 0 }
 
   return null
