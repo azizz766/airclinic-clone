@@ -45,12 +45,50 @@ async function getMessages(sessionId: string) {
   })
 }
 
-async function getTransitions(sessionId: string) {
-  return prisma.stateTransitionLog.findMany({
-    where: { sessionId },
-    orderBy: { createdAt: 'asc' },
-    select: { fromState: true, toState: true, triggerType: true },
-  })
+type TimelineEntry = { fromState: string; toState: string; triggerType: string; createdAt: string }
+type TimelineResponse = { sessionId: string; timeline: TimelineEntry[] }
+
+async function fetchTimeline(sessionId: string): Promise<TimelineResponse | null> {
+  const res = await fetch(`http://localhost:3000/api/debug/session/${sessionId}/timeline`)
+  if (res.status === 404) return null
+  return res.json().catch(() => null)
+}
+
+const TERMINAL_STATES = new Set(['BOOKING_CONFIRMED', 'CANCELLATION_CONFIRMED', 'EXPIRED', 'CORRUPTED', 'BOOKING_FAILED'])
+const ALLOWED_RESET_TRIGGERS = new Set(['SESSION_RESET', 'SESSION_CREATED', 'SESSION_RESET_AFTER_BOOKING', 'SESSION_RESET_AFTER_CANCELLATION'])
+
+function validateTimeline(data: TimelineResponse | null, label: string, expectedTriggers: string[]) {
+  if (!data) { fail(`${label}: timeline fetch returned null`); return }
+  const { timeline } = data
+
+  const path = timeline.length > 0
+    ? [timeline[0].fromState, ...timeline.map(t => t.toState)]
+        .filter((s, i, arr) => i === 0 || s !== arr[i - 1])
+        .join(' → ')
+    : '(empty)'
+  const triggers = timeline.map(t => t.triggerType)
+
+  log(`Timeline [${label}]:\n  ${path}`)
+  step(`Triggers:\n  [${triggers.join(', ')}]`)
+
+  for (let i = 0; i < timeline.length - 1; i++) {
+    const a = timeline[i], b = timeline[i + 1]
+    if (a.fromState === b.fromState && a.toState === b.toState && a.triggerType === b.triggerType) {
+      fail(`Duplicate consecutive transition at [${i}]: ${a.fromState} → ${a.toState} [${a.triggerType}]`)
+    }
+  }
+
+  for (let i = 0; i < timeline.length - 1; i++) {
+    const t = timeline[i], next = timeline[i + 1]
+    if (TERMINAL_STATES.has(t.toState) && !ALLOWED_RESET_TRIGGERS.has(next.triggerType)) {
+      fail(`Impossible jump after terminal ${t.toState} → ${next.toState} [${next.triggerType}]`)
+    }
+  }
+
+  for (const expected of expectedTriggers) {
+    if (triggers.includes(expected)) ok(`Trigger present: ${expected}`)
+    else fail(`Missing expected trigger: ${expected}`)
+  }
 }
 
 async function wait(ms: number) {
@@ -243,10 +281,8 @@ async function scenario1() {
   if (apptsSameSlot.length === 1) ok('No duplicate appointment')
   else fail(`DUPLICATE APPOINTMENTS: ${apptsSameSlot.length}`)
 
-  // State transitions
-  const transitions = await getTransitions(sess!.id)
-  log('State transitions:')
-  transitions.forEach(t => step(`${t.fromState} → ${t.toState} [${t.triggerType}]`))
+  const tl1 = await fetchTimeline(sess!.id)
+  validateTimeline(tl1, 'S1 FULL BOOKING', ['INTENT_BOOKING', 'SLOT_VALID', 'BOOKING_SUCCESS'])
 
   log('─── SCENARIO 1 COMPLETE ───')
   return sess!.bookingId
@@ -524,6 +560,12 @@ async function scenario4(bookingIdFromS1?: string) {
   if (postAppt2?.status === 'cancelled') ok('Idempotent: still cancelled, not double-cancelled')
   else fail(`Status changed on second cancel: ${postAppt2?.status}`)
 
+  const sess4 = await getSession(PHONE1)
+  if (sess4) {
+    const tl4 = await fetchTimeline(sess4.id)
+    validateTimeline(tl4, 'S4 CANCEL', ['INTENT_CANCEL'])
+  }
+
   log('─── SCENARIO 4 COMPLETE ───')
 }
 
@@ -729,10 +771,8 @@ async function scenario6() {
     step(`Unexpected state: ${sess?.currentState}`)
   }
 
-  // State transitions audit
-  const transitions = await getTransitions(sess!.id)
-  log('State transitions:')
-  transitions.forEach(t => step(`${t.fromState} → ${t.toState} [${t.triggerType}]`))
+  const tl6 = await fetchTimeline(sess!.id)
+  validateTimeline(tl6, 'S6 ESCALATION', ['USER_REQUESTED_ESCALATION'])
 
   log('─── SCENARIO 6 COMPLETE ───')
 }
@@ -746,7 +786,7 @@ async function main() {
   log(`PHONES: ${PHONE1}, ${PHONE2}`)
 
   let bookingId: string | undefined
-  try { bookingId = await scenario1() } catch(e) { console.error('S1 CRASH:', e) }
+  try { bookingId = (await scenario1()) ?? undefined } catch(e) { console.error('S1 CRASH:', e) }
   try { await scenario2() } catch(e) { console.error('S2 CRASH:', e) }
   try { await scenario3() } catch(e) { console.error('S3 CRASH:', e) }
   try { await scenario4(bookingId) } catch(e) { console.error('S4 CRASH:', e) }

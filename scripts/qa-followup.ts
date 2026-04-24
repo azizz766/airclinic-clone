@@ -41,6 +41,52 @@ function ok(m: string) { console.log('  ✅ ' + m) }
 function fail(m: string) { console.log('  ❌ FAIL: ' + m) }
 function warn(m: string) { console.log('  ⚠️  ' + m) }
 
+type TimelineEntry = { fromState: string; toState: string; triggerType: string; createdAt: string }
+type TimelineResponse = { sessionId: string; timeline: TimelineEntry[] }
+
+async function fetchTimeline(sessionId: string): Promise<TimelineResponse | null> {
+  const res = await fetch(`http://localhost:3000/api/debug/session/${sessionId}/timeline`)
+  if (res.status === 404) return null
+  return res.json().catch(() => null)
+}
+
+const TERMINAL_STATES = new Set(['BOOKING_CONFIRMED', 'CANCELLATION_CONFIRMED', 'EXPIRED', 'CORRUPTED', 'BOOKING_FAILED'])
+const ALLOWED_RESET_TRIGGERS = new Set(['SESSION_RESET', 'SESSION_CREATED', 'SESSION_RESET_AFTER_BOOKING', 'SESSION_RESET_AFTER_CANCELLATION'])
+
+function validateTimeline(data: TimelineResponse | null, label: string, expectedTriggers: string[]) {
+  if (!data) { fail(`${label}: timeline fetch returned null`); return }
+  const { timeline } = data
+
+  const path = timeline.length > 0
+    ? [timeline[0].fromState, ...timeline.map(t => t.toState)]
+        .filter((s, i, arr) => i === 0 || s !== arr[i - 1])
+        .join(' → ')
+    : '(empty)'
+  const triggers = timeline.map(t => t.triggerType)
+
+  log(`Timeline [${label}]:\n  ${path}`)
+  step(`Triggers:\n  [${triggers.join(', ')}]`)
+
+  for (let i = 0; i < timeline.length - 1; i++) {
+    const a = timeline[i], b = timeline[i + 1]
+    if (a.fromState === b.fromState && a.toState === b.toState && a.triggerType === b.triggerType) {
+      fail(`Duplicate consecutive transition at [${i}]: ${a.fromState} → ${a.toState} [${a.triggerType}]`)
+    }
+  }
+
+  for (let i = 0; i < timeline.length - 1; i++) {
+    const t = timeline[i], next = timeline[i + 1]
+    if (TERMINAL_STATES.has(t.toState) && !ALLOWED_RESET_TRIGGERS.has(next.triggerType)) {
+      fail(`Impossible jump after terminal ${t.toState} → ${next.toState} [${next.triggerType}]`)
+    }
+  }
+
+  for (const expected of expectedTriggers) {
+    if (triggers.includes(expected)) ok(`Trigger present: ${expected}`)
+    else fail(`Missing expected trigger: ${expected}`)
+  }
+}
+
 // ─────────────────────────────────────────────────
 // SCENARIO 3 FOLLOWUP: TTL simulation
 // ─────────────────────────────────────────────────
@@ -186,6 +232,12 @@ async function scenario4_clean() {
   const anyPending = postJobs.some(j => ['pending', 'queued'].includes(j.status))
   if (!anyPending) ok('All notification jobs invalidated')
   else fail('Some notification jobs still pending after cancellation')
+
+  const sess4c = await getSession(PHONE1)
+  if (sess4c) {
+    const tl4c = await fetchTimeline(sess4c.id)
+    validateTimeline(tl4c, 'S4 CANCEL CLEAN', ['INTENT_CANCEL'])
+  }
 
   // Idempotency
   step('Idempotency: sending cancel again for same (now-cancelled) appointment...')
@@ -419,6 +471,9 @@ async function scenario6_clean() {
   } else {
     warn(`State=${sess?.currentState} — unexpected post-recovery state`)
   }
+
+  const tl6c = await fetchTimeline(sess!.id)
+  validateTimeline(tl6c, 'S6 ESCALATION CLEAN', ['USER_REQUESTED_ESCALATION'])
 
   // ── Test escalation from mid-booking state (Bug 5 confirmation) ──
   log('─── Sub-test: escalation from SLOT_COLLECTION_DATE ───')
