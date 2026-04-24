@@ -6,6 +6,7 @@ import { prisma } from '@/lib/prisma'
 import { normalizeClinicRole, canOperateInbox, canViewInbox } from '@/lib/auth/permissions'
 import { sendWhatsAppWithOutcomeLogging } from '@/lib/whatsapp/delivery-outcome'
 import { ConversationContextSidebar } from '@/components/inbox/ConversationContextSidebar'
+import { SessionFsmTimeline } from '@/components/inbox/SessionFsmTimeline'
 
 type InboxPageProps = {
   params: Promise<{
@@ -1008,6 +1009,16 @@ export default async function InboxPage({ params, searchParams }: InboxPageProps
       }
     : null
 
+  const fsmSession = selectedConversationLast8
+    ? await prisma.conversationSession.findFirst({
+        where: { clinicId, phoneNumber: { endsWith: selectedConversationLast8 } },
+        orderBy: { createdAt: 'desc' },
+        select: { id: true },
+      })
+    : null
+
+  const fsmSessionId = fsmSession?.id ?? null
+
   return (
     <div className="min-h-screen bg-[linear-gradient(180deg,#f7f4ef_0%,#f4f1fb_44%,#f8f6f2_100%)]">
       <main className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
@@ -1212,14 +1223,17 @@ export default async function InboxPage({ params, searchParams }: InboxPageProps
             )}
           </section>
 
-          {/* Patient context */}
-          <section className="lg:col-span-1">
+          {/* Patient context + FSM Timeline */}
+          <section className="flex flex-col gap-4 lg:col-span-1">
             <ConversationContextSidebar
               clinicId={clinicId}
               patient={sidebarPatient}
               appointment={sidebarAppointment}
               canManageAppointmentActions={canOperateInboxActions}
             />
+            {selectedConversation && (
+              <SessionFsmTimeline sessionId={fsmSessionId} />
+            )}
           </section>
         </div>
       </main>
