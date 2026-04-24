@@ -90,7 +90,6 @@ export default function HeroFull() {
             <div className="flex justify-start">
               <div className="relative max-w-[85%] rounded-lg rounded-tl-none border border-black/5 bg-white px-3 py-1.5 text-[13px] text-[#303030] shadow-sm">
                 HI’d like to book a teeth cleaning tomorrow.
-                
                 <div className="mt-1 text-right text-[10px] text-black/40">
                   10:42 AM
                 </div>
@@ -100,7 +99,6 @@ export default function HeroFull() {
             <div className="flex justify-end">
               <div className="relative max-w-[85%] rounded-lg rounded-tr-none border border-black/5 bg-[#e1ffc7] px-3 py-1.5 text-[13px] text-[#303030] shadow-sm">
                 Sure — I found these available times for tomorrow: 🦷
-                <br />
                 <br />
                 1. 3:00 PM
                 <br />
@@ -130,8 +128,7 @@ export default function HeroFull() {
 
             <div className="flex justify-end">
               <div className="relative max-w-[85%] rounded-lg rounded-tr-none border border-black/5 bg-[#e1ffc7] px-3 py-1.5 text-[13px] text-[#303030] shadow-sm">
-                Booked. Your appointment is confirmed for tomorrow at 5:00 PM. ✨
-                <br />
+                Booked. Your appointment is confirmed for tomorrow at 5:00 PM ✨
                 <br />
                 We’ll send a reminder before your visit.
                 <div className="mt-1 flex items-center justify-end gap-1">
