@@ -3,7 +3,7 @@ import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { prisma } from '@/lib/prisma'
-import { normalizeClinicRole, canOperateInbox, canViewInbox } from '@/lib/auth/permissions'
+import { normalizeClinicRole, canOperateInbox, canViewInbox, canRetryNotificationJob } from '@/lib/auth/permissions'
 import { sendWhatsAppWithOutcomeLogging } from '@/lib/whatsapp/delivery-outcome'
 import { ConversationContextSidebar } from '@/components/inbox/ConversationContextSidebar'
 import { SessionFsmTimeline } from '@/components/inbox/SessionFsmTimeline'
@@ -1232,7 +1232,7 @@ export default async function InboxPage({ params, searchParams }: InboxPageProps
               canManageAppointmentActions={canOperateInboxActions}
             />
             {selectedConversation && (
-              <SessionFsmTimeline sessionId={fsmSessionId} />
+              <SessionFsmTimeline sessionId={fsmSessionId} isAdmin={canRetryNotificationJob(role)} />
             )}
           </section>
         </div>

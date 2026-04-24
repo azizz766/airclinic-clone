@@ -11,6 +11,7 @@ type Transition = {
 
 type Props = {
   sessionId: string | null
+  isAdmin: boolean
 }
 
 function fmtState(state: string) {
@@ -39,7 +40,8 @@ function fmtDate(iso: string) {
   })
 }
 
-export function SessionFsmTimeline({ sessionId }: Props) {
+export function SessionFsmTimeline({ sessionId, isAdmin }: Props) {
+  if (!isAdmin) return null
   const [transitions, setTransitions] = useState<Transition[]>([])
   const [status, setStatus] = useState<'idle' | 'loading' | 'error' | 'done'>('idle')
 
