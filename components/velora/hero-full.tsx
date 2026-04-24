@@ -17,7 +17,7 @@ export default function HeroFull() {
         </h1>
 
         <p className="max-w-2xl text-2xl font-extrabold text-[#674db1]">
-          Turn every message into a confirmed booking — automatically.
+          Velora Ai replies instantly, books appointments...
         </p>
 
         <p className="max-w-lg text-xl leading-relaxed text-on-surface-variant">
@@ -89,8 +89,8 @@ export default function HeroFull() {
           >
             <div className="flex justify-start">
               <div className="relative max-w-[85%] rounded-lg rounded-tl-none border border-black/5 bg-white px-3 py-1.5 text-[13px] text-[#303030] shadow-sm">
-                Hi! I&apos;d like to book a teeth cleaning for this Thursday
-                afternoon if possible?
+                HI’d like to book a teeth cleaning tomorrow.
+                
                 <div className="mt-1 text-right text-[10px] text-black/40">
                   10:42 AM
                 </div>
@@ -99,11 +99,17 @@ export default function HeroFull() {
 
             <div className="flex justify-end">
               <div className="relative max-w-[85%] rounded-lg rounded-tr-none border border-black/5 bg-[#e1ffc7] px-3 py-1.5 text-[13px] text-[#303030] shadow-sm">
-                Hi Sarah! Let me check Dr. Aris&apos;s schedule for Thursday. 🦷
+                Sure — I found these available times for tomorrow: 🦷
                 <br />
                 <br />
-                We have two spots: 2:30 PM or 4:15 PM. Which one works best for
-                you?
+                1. 3:00 PM
+                <br />
+                2. 5:15 PM
+                <br />
+                  3. 7:00 PM
+                  <br />
+                  <br />
+                  Reply with the number that works best.
                 <div className="mt-1 flex items-center justify-end gap-1">
                   <span className="text-[10px] text-black/40">10:43 AM</span>
                   <span className="material-symbols-outlined text-[16px] text-[#4fc3f7]">
@@ -117,14 +123,17 @@ export default function HeroFull() {
               <div className="relative max-w-[85%] rounded-lg rounded-tl-none border border-black/5 bg-white px-3 py-1.5 text-[13px] text-[#303030] shadow-sm">
                 4:15 PM is perfect!
                 <div className="mt-1 text-right text-[10px] text-black/40">
-                  10:44 AM
+                  2
                 </div>
               </div>
             </div>
 
             <div className="flex justify-end">
               <div className="relative max-w-[85%] rounded-lg rounded-tr-none border border-black/5 bg-[#e1ffc7] px-3 py-1.5 text-[13px] text-[#303030] shadow-sm">
-                Done! You&apos;re booked for Thursday, Oct 24th at 4:15 PM. ✨
+                Booked. Your appointment is confirmed for tomorrow at 5:00 PM. ✨
+                <br />
+                <br />
+                We’ll send a reminder before your visit.
                 <div className="mt-1 flex items-center justify-end gap-1">
                   <span className="text-[10px] text-black/40">10:44 AM</span>
                   <span className="material-symbols-outlined text-[16px] text-[#4fc3f7]">
