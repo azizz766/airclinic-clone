@@ -43,10 +43,33 @@ async function main() {
 
   // ── RESET: wipe session and any existing test appointment ─────────────────
   step('Resetting session and test data for PHONE1...')
+
+  // Release orphaned slot holds from any previously deleted sessions for this clinic
+  const liveSessions = await prisma.conversationSession.findMany({
+    where: { clinicId: CLINIC_ID },
+    select: { id: true },
+  })
+  const liveIds = liveSessions.map(s => s.id)
+  await prisma.availableSlot.updateMany({
+    where: {
+      clinicId: CLINIC_ID,
+      isHeld: true,
+      isBooked: false,
+      ...(liveIds.length > 0 ? { NOT: { heldBySessionId: { in: liveIds } } } : {}),
+    },
+    data: { isHeld: false, heldBySessionId: null, heldAt: null },
+  })
+
   const existing = await prisma.conversationSession.findUnique({
     where: { phoneNumber_clinicId: { phoneNumber: PHONE, clinicId: CLINIC_ID } },
   })
   if (existing) {
+    if (existing.slotTimeId) {
+      await prisma.availableSlot.updateMany({
+        where: { id: existing.slotTimeId, isBooked: false },
+        data: { isHeld: false, heldBySessionId: null, heldAt: null },
+      })
+    }
     await prisma.stateTransitionLog.deleteMany({ where: { sessionId: existing.id } })
     await prisma.conversationMessage.deleteMany({ where: { sessionId: existing.id } })
     await prisma.conversationSession.delete({ where: { id: existing.id } })

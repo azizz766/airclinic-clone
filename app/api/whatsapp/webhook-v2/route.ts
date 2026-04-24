@@ -1086,7 +1086,7 @@ async function handleCancellationConfirm(
         startTime: appointment.scheduledAt,
         isBooked: true,
       },
-      data: { isBooked: false },
+      data: { isBooked: false, isHeld: false, heldBySessionId: null, heldAt: null },
     })
 
     await tx.reminder.updateMany({

@@ -15,6 +15,13 @@ export async function resolveSession(phoneNumber: string, clinicId: string) {
   }
 
   if (existing) {
+    if (existing.slotTimeId) {
+      await prisma.availableSlot.updateMany({
+        where: { id: existing.slotTimeId, isBooked: false },
+        data: { isHeld: false, heldBySessionId: null, heldAt: null },
+      })
+    }
+
     const updated = await prisma.conversationSession.update({
       where: { id: existing.id },
       data: {
