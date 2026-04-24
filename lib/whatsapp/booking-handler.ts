@@ -98,16 +98,6 @@ export async function processBooking(sessionId: string) {
           data: { bookingId: appointment.id },
         })
 
-        await tx.stateTransitionLog.create({
-          data: {
-            sessionId,
-            clinicId: session.clinicId,
-            fromState: 'BOOKING_PROCESSING',
-            toState: 'BOOKING_CONFIRMED',
-            triggerType: 'BOOKING_SUCCESS',
-          },
-        })
-
         // Fetch clinic and service for reminder job
         const clinic = await tx.clinic.findUniqueOrThrow({
           where: { id: session.clinicId },
