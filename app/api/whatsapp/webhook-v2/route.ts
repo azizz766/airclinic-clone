@@ -41,6 +41,7 @@ import {
   isEscalationRequest,
   parseDateInput,
   parseDeterministicArabicDate,
+  normalizeArabicInput,
 } from '@/lib/whatsapp/input-parsers'
 import { saveLead } from '@/lib/whatsapp/lead-handler'
 import { generateReply } from '@/lib/whatsapp/response-generator'
@@ -1219,6 +1220,91 @@ async function handleDateOverride(ctx: HandlerContext): Promise<HandlerResult> {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
+// Reschedule — Date Resolution (local, reschedule-only)
+// ─────────────────────────────────────────────────────────────────────────────
+
+function resolveRescheduleTargetDate(input: string): Date | null {
+  // 1. Reuse shared deterministic parser for اليوم / بكرا / بعد بكره etc.
+  const det = parseDeterministicArabicDate(input)
+  if (det !== null) {
+    const now = new Date()
+    return new Date(Date.UTC(
+      now.getUTCFullYear(),
+      now.getUTCMonth(),
+      now.getUTCDate() + det.offsetDays,
+    ))
+  }
+
+  const t = normalizeArabicInput(input)
+  // Normalize Arabic-Indic digits (٠-٩ → 0-9) for numeric patterns
+  const td = t.replace(/[٠-٩]/g, (d: string) => String(d.charCodeAt(0) - 0x0660))
+
+  // 2. Arabic weekday names (keys already in normalizeArabicInput normal form)
+  const WEEKDAYS: Record<string, number> = {
+    'السبت': 6, 'الاحد': 0, 'الاثنين': 1, 'الثلاثاء': 2,
+    'الاربعاء': 3, 'الخميس': 4, 'الجمعه': 5,
+  }
+  for (const [word, targetDay] of Object.entries(WEEKDAYS)) {
+    if (
+      t === word ||
+      t.startsWith(word + ' ') ||
+      t.endsWith(' ' + word) ||
+      t.includes(' ' + word + ' ')
+    ) {
+      const now = new Date()
+      const diff = (targetDay - now.getUTCDay() + 7) % 7
+      return new Date(Date.UTC(
+        now.getUTCFullYear(),
+        now.getUTCMonth(),
+        // If today matches the weekday, advance to next week to avoid past-slot confusion
+        now.getUTCDate() + (diff === 0 ? 7 : diff),
+      ))
+    }
+  }
+
+  // 3. Day + Arabic month: "27 ابريل", "٢٧ اغسطس"
+  const MONTHS: Record<string, number> = {
+    'يناير': 1, 'فبراير': 2, 'مارس': 3, 'ابريل': 4, 'مايو': 5,
+    'يونيو': 6, 'يوليو': 7, 'اغسطس': 8, 'سبتمبر': 9,
+    'اكتوبر': 10, 'نوفمبر': 11, 'ديسمبر': 12,
+  }
+  const dayMonthMatch = td.match(/^(\d{1,2})\s+(\S+)$/)
+  if (dayMonthMatch) {
+    const day = parseInt(dayMonthMatch[1]!, 10)
+    const month = MONTHS[dayMonthMatch[2]!]
+    if (month !== undefined && day >= 1 && day <= 31) {
+      const now = new Date()
+      const today = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()))
+      let target = new Date(Date.UTC(now.getUTCFullYear(), month - 1, day))
+      if (target < today) target = new Date(Date.UTC(now.getUTCFullYear() + 1, month - 1, day))
+      return target
+    }
+  }
+
+  // 4. Numeric day only: "27", "٢٧"
+  const dayOnlyMatch = td.match(/^(\d{1,2})$/)
+  if (dayOnlyMatch) {
+    const day = parseInt(dayOnlyMatch[1]!, 10)
+    if (day >= 1 && day <= 31) {
+      const now = new Date()
+      const today = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()))
+      let target = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), day))
+      if (target < today) {
+        const nm = now.getUTCMonth() + 1
+        target = new Date(Date.UTC(
+          nm > 11 ? now.getUTCFullYear() + 1 : now.getUTCFullYear(),
+          nm % 12,
+          day,
+        ))
+      }
+      return target
+    }
+  }
+
+  return null
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
 // Reschedule — Intercept
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -1297,7 +1383,7 @@ async function handleRescheduleIntercept(ctx: HandlerContext): Promise<HandlerRe
 }
 
 async function handleRescheduleDate(ctx: HandlerContext): Promise<HandlerResult> {
-  const { session, clinicId, interpretation } = ctx
+  const { session, clinicId, body } = ctx
 
   const stored = session.ambiguousIntents as RescheduleCtx | null
 
@@ -1305,19 +1391,14 @@ async function handleRescheduleDate(ctx: HandlerContext): Promise<HandlerResult>
     return escalate(ctx, 'CORRUPTED_RESCHEDULE')
   }
 
-  const offsetDays = interpretation.preferredDateOffsetDays
-  if (offsetDays === null) {
+  const targetDate = resolveRescheduleTargetDate(body)
+  if (targetDate === null) {
     const limit = await checkRetryLimit(session, clinicId)
     if (limit) return limit
     return { reply: 'المدخل غير واضح. اختر تاريخاً للموعد الجديد.' }
   }
 
   const now = new Date()
-  const targetDate = new Date(Date.UTC(
-    now.getUTCFullYear(),
-    now.getUTCMonth(),
-    now.getUTCDate() + offsetDays,
-  ))
   const today = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()))
 
   if (targetDate < today) {
