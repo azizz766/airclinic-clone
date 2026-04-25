@@ -31,6 +31,7 @@ import {
   SlotConflictError,
   BookingValidationError,
 } from '@/lib/whatsapp/booking-handler'
+import { regenerateAppointmentReminderJobs } from '@/lib/notifications/reminder-jobs'
 import twilio from 'twilio'
 import { sendWhatsAppReply } from '@/lib/whatsapp/twilio-sender'
 import {
@@ -1218,6 +1219,307 @@ async function handleDateOverride(ctx: HandlerContext): Promise<HandlerResult> {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
+// Reschedule — Intercept
+// ─────────────────────────────────────────────────────────────────────────────
+
+const RESCHEDULE_STATES = new Set([
+  'RESCHEDULE_PENDING',
+  'RESCHEDULE_DATE',
+  'RESCHEDULE_TIME',
+])
+
+type RescheduleCtx = {
+  type: 'reschedule_ctx'
+  appointmentId: string
+  serviceId: string
+}
+
+async function handleRescheduleIntercept(ctx: HandlerContext): Promise<HandlerResult> {
+  const { session, clinicId, from } = ctx
+
+  const patient = await prisma.patient.findFirst({
+    where: { clinicId, phone: from },
+    select: { id: true },
+  })
+
+  if (!patient) {
+    return { reply: 'ما لقيت موعد قائم على هذا الرقم.' }
+  }
+
+  const appointment = await prisma.appointment.findFirst({
+    where: {
+      clinicId,
+      patientId: patient.id,
+      status: { in: ['scheduled', 'confirmed', 'confirmation_pending'] },
+      scheduledAt: { gt: new Date() },
+    },
+    orderBy: { scheduledAt: 'asc' },
+    select: {
+      id: true,
+      serviceId: true,
+      scheduledAt: true,
+      service: { select: { name: true } },
+    },
+  })
+
+  if (!appointment) {
+    return { reply: 'ما لقيت موعد قائم على هذا الرقم.' }
+  }
+
+  const rescheduleCtx: RescheduleCtx = {
+    type: 'reschedule_ctx',
+    appointmentId: appointment.id,
+    serviceId: appointment.serviceId,
+  }
+
+  await prisma.conversationSession.update({
+    where: { id: session.id },
+    data: {
+      ambiguousIntents: rescheduleCtx as unknown as Prisma.InputJsonValue,
+      retryCount: 0,
+    },
+  })
+
+  await transitionSession(session.id, clinicId, 'RESCHEDULE_PENDING', 'INTENT_RESCHEDULE')
+
+  const dateLabel = appointment.scheduledAt.toLocaleDateString('ar-SA', {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  })
+
+  return {
+    reply: `لقيت موعدك الحالي: ${appointment.service.name} – ${dateLabel}\n\nمتى يناسبك الموعد الجديد؟`,
+  }
+}
+
+async function handleRescheduleDate(ctx: HandlerContext): Promise<HandlerResult> {
+  const { session, clinicId, interpretation } = ctx
+
+  const stored = session.ambiguousIntents as RescheduleCtx | null
+
+  if (!stored || stored.type !== 'reschedule_ctx' || !stored.appointmentId || !stored.serviceId) {
+    return escalate(ctx, 'CORRUPTED_RESCHEDULE')
+  }
+
+  const offsetDays = interpretation.preferredDateOffsetDays
+  if (offsetDays === null) {
+    const limit = await checkRetryLimit(session, clinicId)
+    if (limit) return limit
+    return { reply: 'المدخل غير واضح. اختر تاريخاً للموعد الجديد.' }
+  }
+
+  const now = new Date()
+  const targetDate = new Date(Date.UTC(
+    now.getUTCFullYear(),
+    now.getUTCMonth(),
+    now.getUTCDate() + offsetDays,
+  ))
+  const today = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()))
+
+  if (targetDate < today) {
+    const limit = await checkRetryLimit(session, clinicId)
+    if (limit) return limit
+    return { reply: 'لا يمكن الحجز في تاريخ ماضٍ. اختر تاريخاً آخر.' }
+  }
+
+  const dayEnd = new Date(targetDate)
+  dayEnd.setUTCDate(dayEnd.getUTCDate() + 1)
+
+  const slots = await prisma.availableSlot.findMany({
+    where: {
+      clinicId,
+      serviceId: stored.serviceId,
+      isBooked: false,
+      OR: [{ isHeld: false }, { heldBySessionId: session.id }],
+      startTime: { gte: targetDate, lt: dayEnd },
+    },
+    select: { id: true, startTime: true },
+    orderBy: { startTime: 'asc' },
+    take: 5,
+  })
+
+  if (slots.length === 0) {
+    await transitionSession(session.id, clinicId, 'RESCHEDULE_DATE', 'NO_AVAILABILITY')
+    return { reply: 'ما فيه مواعيد متاحة في هذا اليوم.\nاختر يوم ثاني.' }
+  }
+
+  await prisma.conversationSession.update({
+    where: { id: session.id },
+    data: {
+      ambiguousIntents: {
+        type: 'reschedule_slots',
+        appointmentId: stored.appointmentId,
+        serviceId: stored.serviceId,
+        slots: slots.map((s) => ({ id: s.id, startTime: s.startTime.toISOString() })),
+      } as unknown as Prisma.InputJsonValue,
+      retryCount: 0,
+      slotOfferedAt: new Date(),
+    },
+  })
+
+  await transitionSession(session.id, clinicId, 'RESCHEDULE_TIME', 'SLOT_VALID')
+
+  const list = slots
+    .map((s, i) => {
+      const label = new Date(s.startTime).toLocaleDateString('ar-SA', {
+        weekday: 'long',
+        month: 'short',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+      })
+      return `${i + 1}. ${label}`
+    })
+    .join('\n')
+
+  return { reply: `هذه المواعيد المتاحة:\n\n${list}\n\nاختر رقم الموعد.` }
+}
+
+async function handleRescheduleTime(ctx: HandlerContext): Promise<HandlerResult> {
+  const { session, clinicId, body } = ctx
+
+  const stored = session.ambiguousIntents as {
+    type: string
+    appointmentId: string
+    serviceId: string
+    slots: Array<{ id: string; startTime: string }>
+  } | null
+
+  if (
+    !stored ||
+    stored.type !== 'reschedule_slots' ||
+    !stored.appointmentId ||
+    !Array.isArray(stored.slots) ||
+    stored.slots.length === 0
+  ) {
+    return escalate(ctx, 'CORRUPTED_RESCHEDULE')
+  }
+
+  const selection = parseSelection(body)
+  if (selection === null || selection < 1 || selection > stored.slots.length) {
+    const list = stored.slots
+      .map((s, i) => {
+        const label = new Date(s.startTime).toLocaleDateString('ar-SA', {
+          weekday: 'long',
+          month: 'short',
+          day: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit',
+        })
+        return `${i + 1}. ${label}`
+      })
+      .join('\n')
+    return { reply: `هذه المواعيد المتاحة:\n\n${list}\n\nاختر رقم الموعد.` }
+  }
+
+  const selectedSlot = stored.slots[selection - 1]!
+  const newSlotTime = new Date(selectedSlot.startTime)
+
+  try {
+    await prisma.$transaction(async (tx) => {
+      await tx.$queryRaw`SELECT id FROM "available_slots" WHERE id = ${selectedSlot.id} FOR UPDATE`
+
+      const newSlot = await tx.availableSlot.findUnique({
+        where: { id: selectedSlot.id },
+        select: { id: true, isBooked: true, isHeld: true, heldBySessionId: true, startTime: true },
+      })
+
+      if (
+        !newSlot ||
+        newSlot.isBooked ||
+        (newSlot.isHeld && newSlot.heldBySessionId !== session.id)
+      ) {
+        throw new SlotConflictError()
+      }
+
+      const appointment = await tx.appointment.findUniqueOrThrow({
+        where: { id: stored.appointmentId },
+        select: { scheduledAt: true, serviceId: true, patientId: true },
+      })
+
+      await tx.availableSlot.updateMany({
+        where: {
+          clinicId,
+          serviceId: appointment.serviceId,
+          startTime: appointment.scheduledAt,
+          isBooked: true,
+        },
+        data: { isBooked: false, isHeld: false, heldBySessionId: null, heldAt: null },
+      })
+
+      await tx.availableSlot.update({
+        where: { id: selectedSlot.id },
+        data: { isBooked: true, isHeld: false, heldBySessionId: null, heldAt: null },
+      })
+
+      await tx.appointment.update({
+        where: { id: stored.appointmentId },
+        data: { scheduledAt: newSlot.startTime },
+      })
+
+      await tx.reminder.updateMany({
+        where: { appointmentId: stored.appointmentId, status: 'pending' },
+        data: { status: 'cancelled' },
+      })
+
+      await tx.notificationJob.updateMany({
+        where: {
+          appointmentId: stored.appointmentId,
+          status: { in: ['pending', 'queued'] },
+        },
+        data: { status: 'failed' },
+      })
+
+      const [clinic, service, patient] = await Promise.all([
+        tx.clinic.findUniqueOrThrow({ where: { id: clinicId }, select: { name: true } }),
+        tx.service.findUniqueOrThrow({ where: { id: stored.serviceId }, select: { name: true } }),
+        tx.patient.findUniqueOrThrow({
+          where: { id: appointment.patientId },
+          select: { id: true, firstName: true, lastName: true, phone: true, email: true },
+        }),
+      ])
+
+      await regenerateAppointmentReminderJobs(tx, {
+        clinicId,
+        clinic: { name: clinic.name },
+        appointmentId: stored.appointmentId,
+        appointmentScheduledAt: newSlot.startTime,
+        patient,
+        doctor: { firstName: '', lastName: '' },
+        service: { name: service.name },
+        includeImmediateConfirmation: false,
+      })
+    })
+  } catch (err) {
+    if (err instanceof SlotConflictError) {
+      return { reply: 'هذا الموعد لم يعد متاحًا.\nاختر موعدًا آخر من القائمة.' }
+    }
+    throw err
+  }
+
+  await prisma.conversationSession.update({
+    where: { id: session.id },
+    data: { ambiguousIntents: Prisma.JsonNull, retryCount: 0 },
+  })
+
+  await transitionSession(session.id, clinicId, 'RESCHEDULE_CONFIRMED', 'RESCHEDULE_SUCCESS')
+
+  const dateLabel = newSlotTime.toLocaleDateString('ar-SA', {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  })
+  const timeLabel = newSlotTime.toLocaleTimeString('ar-SA', { hour: '2-digit', minute: '2-digit' })
+
+  return { reply: `تم تعديل الموعد.\n\nالموعد الجديد: ${dateLabel} – ${timeLabel}` }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
 // Main Dispatch — State-Driven
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -1237,6 +1539,10 @@ async function dispatch(ctx: HandlerContext): Promise<HandlerResult> {
   }
 
   const { currentState } = ctx.session
+
+  if (ctx.interpretation.intent === 'reschedule' && !RESCHEDULE_STATES.has(currentState)) {
+    return handleRescheduleIntercept(ctx)
+  }
 
   if (ctx.interpretation.intent === 'cancel' && BOOKING_SLOT_STATES.has(currentState)) {
     await transitionSession(ctx.session.id, ctx.clinicId, 'CANCELLATION_PENDING', 'INTENT_CANCEL')
@@ -1301,6 +1607,16 @@ async function dispatch(ctx: HandlerContext): Promise<HandlerResult> {
       return {
         reply: 'بيتواصلون معك قريبًا.',
       }
+
+    case 'RESCHEDULE_PENDING':
+    case 'RESCHEDULE_DATE':
+      return handleRescheduleDate(ctx)
+
+    case 'RESCHEDULE_TIME':
+      return handleRescheduleTime(ctx)
+
+    case 'RESCHEDULE_CONFIRMED':
+      return handleEntryState(ctx)
 
     default: {
       const _exhaustive: never = currentState
