@@ -1,44 +1,87 @@
 const plans = [
   {
     name: "Starter",
-    desc: "For small clinics getting started with automation",
-    price: "$900",
-    note: "/mo",
-    highlight: "Recover 10–20 missed patients / month",
-    features: [
-      "Capture missed WhatsApp bookings",
-      "Never miss a patient inquiry again",
-      "Keep your clinic responsive 24/7",
-      "1 clinic location",
+    label: null,
+    headline: "Never miss a WhatsApp booking again",
+    desc: "Velora replies instantly, captures every inquiry, and turns interest into confirmed bookings.",
+    price: "1,500 SAR",
+    note: "/ month",
+    whatImproves: [
+      "No missed WhatsApp messages after hours",
+      "More patients converted from inquiries",
+      "Less pressure on your front desk",
     ],
+    features: [
+      "24/7 WhatsApp replies",
+      "Appointment booking",
+      "Cancel / reschedule",
+      "Lead capture",
+      "Booking confirmations",
+      "Staff inbox",
+      "Basic human handoff",
+    ],
+    limits: ["1 location", "2 users", "50 conversations / month"],
+    cta: "Start Free Trial",
     featured: false,
   },
   {
     name: "Growth",
-    desc: "For clinics ready to scale bookings and reduce staff workload",
-    price: "$2000",
-    note: "/mo",
-    highlight: "Recover 30–80 patients automatically",
-    features: [
-      "Capture missed WhatsApp bookings",
-      "Reduce no-shows with automated reminders",
-      "Reduce front-desk workload",
-      "Keep your clinic responsive 24/7",
+    label: "Most Popular",
+    headline: "Turn WhatsApp into a consistent revenue channel",
+    desc: "Go beyond replying — actively drive bookings, reduce no-shows, and recover lost patients.",
+    price: "3,500 SAR",
+    note: "/ month",
+    whatImproves: [
+      "More confirmed bookings every week",
+      "Fewer missed appointments",
+      "Higher patient return rate",
+      "Less manual follow-up from staff",
     ],
+    features: [
+      "Everything in Starter",
+      "150 conversations / month",
+      "Up to 2 locations",
+      "Up to 4 users",
+      "Automated appointment reminders",
+      "No-show reduction",
+      "Patient follow-ups",
+      "Abandoned chat recovery",
+      "Rebooking prompts",
+      "Smart nudging to book",
+      "Slot optimization",
+      "Booking & performance analytics",
+      "Priority support (4–12h)",
+    ],
+    limits: [],
+    cta: "Start Growing Bookings",
     featured: true,
   },
   {
     name: "Enterprise",
-    desc: "Custom solutions for high volume clinics and multi-location groups",
-    price: "Custom",
-    note: "",
-    highlight: "Scale operations across all locations",
-    features: [
-      "Never miss a patient inquiry again",
-      "Reduce front-desk workload at scale",
-      "Multi-location support",
-      "Custom workflows & dedicated support",
+    label: null,
+    headline: "Built for multi-location clinics and groups",
+    desc: "Full control, custom workflows, and complete visibility across your operations.",
+    price: "12,000+ SAR",
+    note: "/ month",
+    whatImproves: [
+      "Centralized booking across all locations",
+      "Clear revenue visibility from WhatsApp",
+      "Fully tailored workflows to match your operations",
     ],
+    features: [
+      "Everything in Growth",
+      "Custom / fair-use conversations",
+      "Custom locations & users",
+      "Advanced analytics",
+      "Revenue tracking",
+      "Custom workflows",
+      "API access & system integrations",
+      "SLA support",
+      "Dedicated onboarding",
+      "Account manager",
+    ],
+    limits: [],
+    cta: "Talk to Sales",
     featured: false,
   },
 ]
@@ -46,19 +89,14 @@ const plans = [
 export default function PricingSection() {
   return (
     <section id="pricing" className="mx-auto max-w-6xl px-6 py-20">
-      
+
       {/* HEADER */}
       <div className="mx-auto mb-12 max-w-2xl text-center">
-        <p className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-gray-400">
-          
-        </p>
-
         <h2 className="mb-3 text-3xl font-extrabold text-[#1c1c1c] md:text-4xl">
-          Simple pricing for clinics
+          Turn WhatsApp into a daily booking engine — not just a chat
         </h2>
-
         <p className="text-base text-[#635f53]">
-          Choose the plan that fits your clinic stage and booking volume.
+          Capture every patient, increase bookings, and reduce no-shows — without adding more front-desk work.
         </p>
       </div>
 
@@ -74,14 +112,27 @@ export default function PricingSection() {
             }
           >
             {/* LABEL */}
-            {plan.featured && (
+            {plan.featured && plan.label && (
               <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-[#674db1] px-4 py-1 text-[10px] font-semibold uppercase tracking-widest text-white">
+                {plan.label}
               </div>
             )}
 
             {/* TOP */}
-            <div className="mb-6">
-              <h3 className="mb-1 text-xl font-bold">{plan.name}</h3>
+            <div className="mb-5">
+              <p
+                className={
+                  plan.featured
+                    ? "mb-0.5 text-xs font-semibold uppercase tracking-widest text-white/50"
+                    : "mb-0.5 text-xs font-semibold uppercase tracking-widest text-[#9b9690]"
+                }
+              >
+                {plan.name}
+              </p>
+
+              <h3 className="mb-2 text-lg font-bold leading-snug">
+                {plan.headline}
+              </h3>
 
               <p
                 className={
@@ -94,53 +145,80 @@ export default function PricingSection() {
               </p>
 
               <div className="flex items-baseline gap-1">
-                <span className="text-3xl font-extrabold">
-                  {plan.price}
-                </span>
+                <span className="text-3xl font-extrabold">{plan.price}</span>
                 {plan.note && (
                   <span
                     className={
-                      plan.featured
-                        ? "text-white/60 text-sm"
-                        : "text-[#635f53] text-sm"
+                      plan.featured ? "text-sm text-white/60" : "text-sm text-[#635f53]"
                     }
                   >
                     {plan.note}
                   </span>
                 )}
               </div>
+            </div>
 
+            {/* WHAT IMPROVES */}
+            <div className="mb-4">
               <p
                 className={
                   plan.featured
-                    ? "mt-3 text-xs font-semibold text-[#b095ff]"
-                    : "mt-3 text-xs font-semibold text-[#674db1]"
+                    ? "mb-2 text-[10px] font-semibold uppercase tracking-widest text-[#b095ff]"
+                    : "mb-2 text-[10px] font-semibold uppercase tracking-widest text-[#674db1]"
                 }
               >
-                {plan.highlight}
+                What improves
               </p>
+              <ul className="space-y-1.5">
+                {plan.whatImproves.map((item) => (
+                  <li key={item} className="flex items-start gap-2 text-sm">
+                    <span className={plan.featured ? "text-[#b095ff]" : "text-[#674db1]"}>
+                      ✓
+                    </span>
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
             </div>
 
-            {/* FEATURES */}
-            <ul className="mb-6 flex-1 space-y-3">
-              {plan.features.map((feature) => (
-                <li
-                  key={feature}
-                  className="flex items-start gap-2 text-sm"
-                >
-                  <span
-                    className={
-                      plan.featured
-                        ? "text-[#b095ff]"
-                        : "text-[#674db1]"
-                    }
-                  >
-                    •
-                  </span>
-                  <span>{feature}</span>
-                </li>
-              ))}
-            </ul>
+            {/* INCLUDES */}
+            <div className="mb-4 flex-1">
+              <p
+                className={
+                  plan.featured
+                    ? "mb-2 text-[10px] font-semibold uppercase tracking-widest text-white/50"
+                    : "mb-2 text-[10px] font-semibold uppercase tracking-widest text-[#9b9690]"
+                }
+              >
+                Includes
+              </p>
+              <ul className="space-y-1.5">
+                {plan.features.map((feature) => (
+                  <li key={feature} className="flex items-start gap-2 text-sm">
+                    <span className={plan.featured ? "text-white/40" : "text-black/30"}>
+                      •
+                    </span>
+                    <span>{feature}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* LIMITS */}
+            {plan.limits.length > 0 && (
+              <div className="mb-4">
+                <p className="mb-2 text-[10px] font-semibold uppercase tracking-widest text-[#9b9690]">
+                  Limits
+                </p>
+                <ul className="space-y-1">
+                  {plan.limits.map((limit) => (
+                    <li key={limit} className="text-xs text-[#9b9690]">
+                      {limit}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
 
             {/* BUTTON */}
             <button
@@ -150,15 +228,16 @@ export default function PricingSection() {
                   : "w-full rounded-full border border-[#1c1c1c] py-3 text-sm font-semibold text-[#1c1c1c] hover:bg-[#1c1c1c] hover:text-white"
               }
             >
-              {plan.featured
-                ? "See it book patients live"
-                : plan.name === "Enterprise"
-                ? "Contact Sales"
-                : "Get Started"}
+              {plan.cta}
             </button>
           </div>
         ))}
       </div>
+
+      {/* SETUP FEE NOTE */}
+      <p className="mt-8 text-center text-xs text-[#9b9690]">
+        One-time setup: 1,500 – 3,000 SAR &nbsp;·&nbsp; Covers full clinic setup, WhatsApp configuration, services, scheduling, and team onboarding.
+      </p>
     </section>
   )
 }
