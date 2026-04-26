@@ -1825,6 +1825,7 @@ export async function POST(req: NextRequest) {
       from,
       messageSid,
       originalRepliedSid,
+      currentState: session.currentState,
     })
     interpretation = decision.finalInterpretation
   } catch (pipelineErr) {

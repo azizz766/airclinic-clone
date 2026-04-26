@@ -49,14 +49,17 @@ export function parseSelection(text: string): number | null {
   return ordinals[t] ?? null
 }
 
+// All entries are pre-normalized via normalizeArabicInput (أ/إ/آ→ا, ى→ي, ة→ه, no diacritics).
+const AFFIRMATIVE_NORMALIZED = new Set([
+  'نعم', 'اي', 'ايه', 'ايوا', 'ايوه',
+  'تمام', 'صح', 'صحيح', 'اكيد', 'بالتاكيد',
+  'موافق', 'موافقه', 'احجز', 'تاكيد', 'تاكيد الحجز',
+  'اوكي', 'اكد', 'اكد الحجز',
+  'yes', 'y', 'ok', 'okay', 'yep', 'confirm', 'confirmed', 'sure', '1',
+])
+
 export function isAffirmative(text: string): boolean {
-  const t = text.trim()
-  return [
-    'نعم', 'اي', 'آي', 'أي', 'ايوا', 'ايوه', 'ايه', 'أيه',
-    'تمام', 'صح', 'صحيح', 'اكيد', 'أكيد', 'بالتأكيد',
-    'موافق', 'موافقة', 'احجز', 'أحجز', 'تأكيد', 'تاكيد',
-    'yes', 'y', 'ok', 'okay', 'yep', '1',
-  ].some((a) => t === a || t.toLowerCase().includes(a))
+  return AFFIRMATIVE_NORMALIZED.has(normalizeArabicInput(text))
 }
 
 export function isNegative(text: string): boolean {

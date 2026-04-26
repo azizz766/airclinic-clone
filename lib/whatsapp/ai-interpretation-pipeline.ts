@@ -140,7 +140,22 @@ function extractDoctorHint(text: string) {
   return value || null
 }
 
-function interpretIncomingMessage(bodyRaw: string): AiInterpretation {
+// Pure affirmative phrases (normalizeForNlu-normalized). Used for state-aware confirm
+// detection that must run before the booking keyword hard-stop.
+const PURE_AFFIRMATIVES = new Set([
+  'نعم', 'اي', 'ايه', 'ايوه', 'تمام', 'اوكي', 'موافق',
+  'اكد', 'اكد الحجز', 'تاكيد', 'تاكيد الحجز', 'صح', 'صحيح',
+  'yes', 'y', 'ok', 'okay', 'confirm', 'confirmed', 'sure',
+])
+
+// FSM states where an affirmative reply should resolve to intent=confirm.
+// In all other states it resolves to unknown (blocks LLM from guessing new_booking).
+const CONFIRMATION_EXPECTING_STATES = new Set([
+  'CONFIRMATION_PENDING',
+  'CANCELLATION_PENDING',
+])
+
+function interpretIncomingMessage(bodyRaw: string, currentState?: string): AiInterpretation {
   const normalized = normalizeForNlu(bodyRaw)
 
   // Hard stop for cancellation — must precede booking check because "ألغي الحجز"
@@ -182,6 +197,24 @@ function interpretIncomingMessage(bodyRaw: string): AiInterpretation {
         doctorHint: null,
         canonicalText: normalized,
       }
+    }
+  }
+
+  // Deterministic affirmative detection — runs before the booking keyword hard-stop so that
+  // "اكد الحجز" / "تاكيد الحجز" (which contain "حجز") are not misclassified as new_booking.
+  // Returns 'confirm' only in states that expect it; otherwise 'unknown' with high confidence
+  // to suppress LLM from guessing new_booking for a bare "نعم".
+  if (PURE_AFFIRMATIVES.has(normalized)) {
+    const isConfirmState = currentState !== undefined && CONFIRMATION_EXPECTING_STATES.has(currentState)
+    return {
+      intent: isConfirmState ? 'confirm' : 'unknown',
+      confidence: 'high',
+      preferredDateOffsetDays: null,
+      preferredWeekOffsetDays: 0,
+      preferredDayOfWeek: null,
+      preferredPeriod: null,
+      doctorHint: null,
+      canonicalText: normalized,
     }
   }
 
@@ -681,9 +714,10 @@ export async function runAiInterpretationPipeline(params: {
   from: string
   messageSid: string
   originalRepliedSid: string
+  currentState?: string
 }) {
   const normalizedReply = normalizeReplyValue(params.bodyRaw)
-  const ruleInterpretation = interpretIncomingMessage(params.bodyRaw)
+  const ruleInterpretation = interpretIncomingMessage(params.bodyRaw, params.currentState)
   let aiInterpretation = ruleInterpretation
   let llmFallbackUsed = false
   let llmFallbackNotes: string | null = null
