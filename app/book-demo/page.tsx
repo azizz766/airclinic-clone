@@ -13,11 +13,8 @@ export default function BookDemoPage() {
   const [contactName, setContactName] = useState('')
   const [phone, setPhone] = useState('')
   const [email, setEmail] = useState('')
-  const [city, setCity] = useState('')
   const [locations, setLocations] = useState('')
   const [whatsappVolume, setWhatsappVolume] = useState('')
-  const [bookingMethod, setBookingMethod] = useState('')
-  const [mainGoal, setMainGoal] = useState('')
 
   const [submitState, setSubmitState] = useState<SubmitState>('idle')
   const [message, setMessage] = useState('')
@@ -36,11 +33,8 @@ export default function BookDemoPage() {
           contactName,
           phone,
           email,
-          city,
           locations,
           whatsappVolume,
-          bookingMethod,
-          mainGoal,
         }),
       })
 
@@ -153,7 +147,7 @@ export default function BookDemoPage() {
                           </label>
                           <input
                             type="text"
-                            placeholder="Dr. Sarah Chen"
+                            placeholder="Dr. Nouf Abdulaziz"
                             value={contactName}
                             onChange={(e) => setContactName(e.target.value)}
                             className="w-full rounded-full bg-[#e8e0d1] px-6 py-4 text-[#363228] placeholder:text-[#a39b8c] focus:outline-none"
@@ -169,7 +163,7 @@ export default function BookDemoPage() {
                           </label>
                           <input
                             type="tel"
-                            placeholder="+971 50 000 0000"
+                            placeholder="+966 50 000 0000"
                             value={phone}
                             onChange={(e) => setPhone(e.target.value)}
                             className="w-full rounded-full bg-[#e8e0d1] px-6 py-4 text-[#363228] placeholder:text-[#a39b8c] focus:outline-none"
@@ -183,7 +177,7 @@ export default function BookDemoPage() {
                           </label>
                           <input
                             type="email"
-                            placeholder="sarah@wellnesscollective.com"
+                            placeholder="nouf@wellnesscollective.com"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             className="w-full rounded-full bg-[#e8e0d1] px-6 py-4 text-[#363228] placeholder:text-[#a39b8c] focus:outline-none"
@@ -192,38 +186,22 @@ export default function BookDemoPage() {
                         </div>
                       </div>
 
-                      <div className="grid gap-6 md:grid-cols-2">
-                        <div className="space-y-2">
-                          <label className="ml-3 block text-[11px] font-bold uppercase tracking-[0.18em] text-[#7c766b]">
-                            City
-                          </label>
-                          <input
-                            type="text"
-                            placeholder="Dubai"
-                            value={city}
-                            onChange={(e) => setCity(e.target.value)}
-                            className="w-full rounded-full bg-[#e8e0d1] px-6 py-4 text-[#363228] placeholder:text-[#a39b8c] focus:outline-none"
-                            required
-                          />
-                        </div>
-
-                        <div className="space-y-2">
-                          <label className="ml-3 block text-[11px] font-bold uppercase tracking-[0.18em] text-[#7c766b]">
-                            Number of Locations
-                          </label>
-                          <select
-                            value={locations}
-                            onChange={(e) => setLocations(e.target.value)}
-                            className="w-full appearance-none rounded-full bg-[#e8e0d1] px-6 py-4 text-[#363228] focus:outline-none"
-                            required
-                          >
-                            <option value="">Select</option>
-                            <option value="1">1 location</option>
-                            <option value="2">2 locations</option>
-                            <option value="3">3 locations</option>
-                            <option value="4+">4+ locations</option>
-                          </select>
-                        </div>
+                      <div className="space-y-2">
+                        <label className="ml-3 block text-[11px] font-bold uppercase tracking-[0.18em] text-[#7c766b]">
+                          Number of Locations
+                        </label>
+                        <select
+                          value={locations}
+                          onChange={(e) => setLocations(e.target.value)}
+                          className="w-full appearance-none rounded-full bg-[#e8e0d1] px-6 py-4 text-[#363228] focus:outline-none"
+                          required
+                        >
+                          <option value="">Select</option>
+                          <option value="1">1 location</option>
+                          <option value="2">2 locations</option>
+                          <option value="3">3 locations</option>
+                          <option value="4+">4+ locations</option>
+                        </select>
                       </div>
 
                       <div className="space-y-2">
@@ -241,45 +219,6 @@ export default function BookDemoPage() {
                           <option value="50-150">50–150</option>
                           <option value="150-300">150–300</option>
                           <option value="300+">300+</option>
-                        </select>
-                      </div>
-
-                      <div className="space-y-2">
-                        <label className="ml-3 block text-[11px] font-bold uppercase tracking-[0.18em] text-[#7c766b]">
-                          Current Booking Method
-                        </label>
-                        <select
-                          value={bookingMethod}
-                          onChange={(e) => setBookingMethod(e.target.value)}
-                          className="w-full appearance-none rounded-full bg-[#e8e0d1] px-6 py-4 text-[#363228] focus:outline-none"
-                          required
-                        >
-                          <option value="">Select method</option>
-                          <option value="whatsapp-only">WhatsApp only</option>
-                          <option value="phone-calls">Phone calls</option>
-                          <option value="receptionist-manual">Receptionist manually books</option>
-                          <option value="website-booking">Website booking</option>
-                          <option value="clinic-system">Clinic system / PMS</option>
-                          <option value="other">Other</option>
-                        </select>
-                      </div>
-
-                      <div className="space-y-2">
-                        <label className="ml-3 block text-[11px] font-bold uppercase tracking-[0.18em] text-[#7c766b]">
-                          Main Goal
-                        </label>
-                        <select
-                          value={mainGoal}
-                          onChange={(e) => setMainGoal(e.target.value)}
-                          className="w-full appearance-none rounded-full bg-[#e8e0d1] px-6 py-4 text-[#363228] focus:outline-none"
-                          required
-                        >
-                          <option value="">Select goal</option>
-                          <option value="capture-bookings">Capture more bookings</option>
-                          <option value="reduce-no-shows">Reduce no-shows</option>
-                          <option value="reply-after-hours">Reply after hours</option>
-                          <option value="reduce-front-desk">Reduce front-desk workload</option>
-                          <option value="automate-whatsapp">Automate WhatsApp</option>
                         </select>
                       </div>
 

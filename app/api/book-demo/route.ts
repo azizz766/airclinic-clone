@@ -12,11 +12,8 @@ const trialSchema = z.object({
   contactName: z.string().min(1, 'contactName is required'),
   phone: z.string().min(1, 'phone is required'),
   email: z.string().email('email must be a valid email address'),
-  city: z.string().min(1, 'city is required'),
   locations: z.string().min(1, 'locations is required'),
   whatsappVolume: z.string().min(1, 'whatsappVolume is required'),
-  bookingMethod: z.string().min(1, 'bookingMethod is required'),
-  mainGoal: z.string().min(1, 'mainGoal is required'),
 })
 
 type Submission = z.infer<typeof trialSchema>
@@ -77,7 +74,7 @@ export async function POST(req: Request) {
     )
   }
 
-  const { clinicName, contactName, phone, email, city, locations, whatsappVolume, bookingMethod, mainGoal } = parsed.data
+  const { clinicName, contactName, phone, email, locations, whatsappVolume } = parsed.data
   const submission = parsed.data
   const warnings: string[] = []
 
@@ -88,7 +85,7 @@ export async function POST(req: Request) {
       contact_name: contactName,
       work_email: email,
       monthly_patient_volume: whatsappVolume,
-      metadata: { phone, city, locations, booking_method: bookingMethod, main_goal: mainGoal },
+      metadata: { phone, locations, whatsappVolume },
     },
   ])
   if (dbError) {
@@ -126,11 +123,8 @@ export async function POST(req: Request) {
           <p><strong>Contact:</strong> ${contactName}</p>
           <p><strong>Phone:</strong> ${phone}</p>
           <p><strong>Email:</strong> ${email}</p>
-          <p><strong>City:</strong> ${city}</p>
           <p><strong>Locations:</strong> ${locations}</p>
           <p><strong>Monthly WhatsApp Inquiries:</strong> ${whatsappVolume}</p>
-          <p><strong>Current Booking Method:</strong> ${bookingMethod}</p>
-          <p><strong>Main Goal:</strong> ${mainGoal}</p>
         `,
       })
 
