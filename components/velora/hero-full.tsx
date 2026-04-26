@@ -9,20 +9,17 @@ export default function HeroFull() {
         </div>
 
         <h1 className="max-w-3xl text-5xl font-extrabold leading-[1.05] tracking-tight text-[#1f1c18] md:text-6xl">
-          <>
-  You’re losing bookings on WhatsApp.
-  <br />
-  And you don’t even see it.
-</>
+          Your clinic is losing bookings on WhatsApp.
+          <br />
+          Even after hours.
         </h1>
 
         <p className="max-w-2xl text-2xl font-extrabold text-[#674db1]">
-          Velora Ai replies instantly, books appointments...
+          Velora is a 24/7 WhatsApp receptionist that replies instantly, books appointments, reduces no-shows, and follows up with patients automatically.
         </p>
 
         <p className="max-w-lg text-xl leading-relaxed text-on-surface-variant">
-          Most clinics miss bookings on WhatsApp every day.
-          Velora replies instantly, books automatically, and turns every message into a confirmed appointment.        
+          Most clinics miss bookings when staff are busy, offline, or closed. Velora keeps your WhatsApp active 24/7 — so every message gets handled before it becomes a lost patient.
         </p>
 
         <div className="flex flex-wrap gap-4">

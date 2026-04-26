@@ -10,9 +10,9 @@ export default function FeaturesSection() {
         <div className="mb-5 flex h-10 w-10 items-center justify-center rounded-full bg-[#ede7ff] text-[#674db1]">
   <span className="material-symbols-outlined text-[20px]">calendar_add_on</span>
 </div>
-          <h3 className="mb-3 text-xl font-bold text-[#674db1]">Smart Booking Automation</h3>
+          <h3 className="mb-3 text-xl font-bold text-[#674db1]">24/7 Instant Replies</h3>
           <p className="text-sm text-[#635f53]">
-            Advanced logic to handle multi-step scheduling across different treatments automatically.
+            Every WhatsApp message gets an immediate response — even outside clinic hours.
           </p>
         </div>
 
@@ -20,10 +20,9 @@ export default function FeaturesSection() {
           <div className="mb-5 flex h-10 w-10 items-center justify-center rounded-full bg-[#ede7ff] text-[#674db1]">
             <span className="material-symbols-outlined text-[20px]">calendar_today</span>
           </div>
-          <h3 className="mb-3 text-xl font-bold text-[#674db1]">Calendar-Aware Scheduling</h3>
-          
+          <h3 className="mb-3 text-xl font-bold text-[#674db1]">Smart Appointment Booking</h3>
           <p className="text-sm text-[#635f53]">
-            Real-time sync with your PMS (Dentrix, Cliniko, Jane, etc.) for live availability checking.
+            Patients can book, confirm, or change appointments in seconds.
           </p>
         </div>
 
@@ -33,7 +32,7 @@ export default function FeaturesSection() {
           </div>
           <h3 className="mb-3 text-xl font-bold text-[#674db1]">Automated Reminders</h3>
           <p className="text-sm text-[#635f53]">
-            Proactive WhatsApp notifications to reduce no-shows and keep chairs filled.
+            Reduce no-shows with timely WhatsApp reminders and follow-ups.
           </p>
         </div>
 
@@ -41,9 +40,9 @@ export default function FeaturesSection() {
           <div className="mb-5 flex h-10 w-10 items-center justify-center rounded-full bg-[#ede7ff] text-[#674db1]">
             <span className="material-symbols-outlined text-[20px]">autorenew</span>
           </div>
-          <h3 className="mb-3 text-xl font-bold text-[#674db1]">Recovery Flows</h3>
+          <h3 className="mb-3 text-xl font-bold text-[#674db1]">Cancellation & Rescheduling</h3>
           <p className="text-sm text-[#635f53]">
-            Re-engage patients who didn’t complete booking.Automatically re-engage patients who dropped off during the booking process.
+            Handle changes automatically without staff involvement.
           </p>
         </div>
 
@@ -53,7 +52,7 @@ export default function FeaturesSection() {
           </div>
           <h3 className="mb-3 text-xl font-bold text-[#674db1]">Human Handoff</h3>
           <p className="text-sm text-[#635f53]">
-            Seamlessly escalate complex medical inquiries to your team with full context.
+            Escalate complex cases to your staff instantly.
           </p>
         </div>
 
@@ -61,9 +60,9 @@ export default function FeaturesSection() {
           <div className="mb-5 flex h-10 w-10 items-center justify-center rounded-full bg-[#ede7ff] text-[#674db1]">
             <span className="material-symbols-outlined text-[20px]">lightbulb</span>
           </div>
-          <h3 className="mb-3 text-xl font-bold text-[#674db1]">Instant Activation</h3>
+          <h3 className="mb-3 text-xl font-bold text-[#674db1]">No-Show Reduction</h3>
           <p className="text-sm text-[#635f53]">
-            Go live on your existing number in under 24 hours. No complex coding required.
+            Patients are nudged and confirmed before their visit.
           </p>
         </div>
       </div>

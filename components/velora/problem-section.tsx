@@ -1,10 +1,10 @@
 export default function ProblemSection() {
   const tags = [
-    "Slow replies",
-    "Missed inquiries",
-    "Manual follow-ups",
-    "Lost bookings",
-    "Front desk overload",
+    "After-hours messages ignored",
+    "Staff reply too late",
+    "WhatsApp inquiries missed",
+    "Weak reminders cause no-shows",
+    "Lost bookings every week",
   ]
 
   return (
@@ -15,8 +15,7 @@ export default function ProblemSection() {
         </h2>
 
         <p className="text-lg leading-relaxed text-[#635f53] md:text-xl">
-          Patients don’t wait. They message multiple clinics — and go with whoever replies first.
-          You’re not losing leads because of demand. You’re losing them because of response time.
+          Patients message after hours and get no reply. Staff reply the next morning — but the patient already booked elsewhere. WhatsApp inquiries fall through the cracks. No-shows pile up because reminders never went out. You’re not losing patients because of demand. You’re losing them because nothing is running when your team isn’t.
         </p>
 
         <div className="flex flex-wrap justify-center gap-3 pt-4">
