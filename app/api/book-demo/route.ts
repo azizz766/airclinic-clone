@@ -3,21 +3,25 @@ import { Resend } from 'resend'
 import { z } from 'zod'
 import { sendStaffBookingNotification } from '@/lib/notifications/staff-whatsapp'
 import { checkRateLimit } from '@/lib/rate-limit'
+import { createClient } from '@/lib/supabase/server'
 
 const resend = new Resend(process.env.RESEND_API_KEY)
 
-const bookDemoSchema = z.object({
+const trialSchema = z.object({
   clinicName: z.string().min(1, 'clinicName is required'),
   contactName: z.string().min(1, 'contactName is required'),
+  phone: z.string().min(1, 'phone is required'),
   email: z.string().email('email must be a valid email address'),
-  volume: z.string().min(1, 'volume is required'),
+  city: z.string().min(1, 'city is required'),
+  locations: z.string().min(1, 'locations is required'),
+  whatsappVolume: z.string().min(1, 'whatsappVolume is required'),
+  bookingMethod: z.string().min(1, 'bookingMethod is required'),
+  mainGoal: z.string().min(1, 'mainGoal is required'),
 })
 
-function logFailure(
-  channel: 'whatsapp' | 'email',
-  submission: { clinicName: string; contactName: string; email: string; volume: string },
-  error: unknown,
-) {
+type Submission = z.infer<typeof trialSchema>
+
+function logFailure(channel: 'whatsapp' | 'email', submission: Submission, error: unknown) {
   let serializedError: unknown
   if (error instanceof Error) {
     serializedError = { message: error.message, name: error.name, stack: error.stack }
@@ -36,7 +40,7 @@ function logFailure(
 
   console.error(
     JSON.stringify({
-      event: 'book-demo-notification-failure',
+      event: 'free-trial-notification-failure',
       channel,
       submission,
       error: serializedError,
@@ -62,30 +66,42 @@ export async function POST(req: Request) {
   try {
     body = await req.json()
   } catch {
-    return NextResponse.json(
-      { success: false, errors: ['Invalid JSON body'] },
-      { status: 400 }
-    )
+    return NextResponse.json({ success: false, errors: ['Invalid JSON body'] }, { status: 400 })
   }
 
-  const parsed = bookDemoSchema.safeParse(body)
+  const parsed = trialSchema.safeParse(body)
   if (!parsed.success) {
     return NextResponse.json(
       { success: false, errors: parsed.error.issues.map((e: z.ZodIssue) => e.message) },
-      { status: 400 }
+      { status: 400 },
     )
   }
 
-  const { clinicName, contactName, email, volume } = parsed.data
-  const submission = { clinicName, contactName, email, volume }
+  const { clinicName, contactName, phone, email, city, locations, whatsappVolume, bookingMethod, mainGoal } = parsed.data
+  const submission = parsed.data
   const warnings: string[] = []
+
+  const supabase = await createClient()
+  const { error: dbError } = await supabase.from('demo_requests').insert([
+    {
+      clinic_name: clinicName,
+      contact_name: contactName,
+      work_email: email,
+      monthly_patient_volume: whatsappVolume,
+      metadata: { phone, city, locations, booking_method: bookingMethod, main_goal: mainGoal },
+    },
+  ])
+  if (dbError) {
+    console.error(JSON.stringify({ event: 'free-trial-db-insert-failure', error: dbError, timestamp: new Date().toISOString() }))
+    return NextResponse.json({ success: false, errors: ['Failed to save your request. Please try again.'] }, { status: 500 })
+  }
 
   try {
     await sendStaffBookingNotification({
       patientName: contactName,
-      serviceName: `Demo - ${clinicName}`,
+      serviceName: `Free Trial - ${clinicName}`,
       scheduledAt: new Date(),
-      phone: email,
+      phone,
     })
   } catch (err) {
     logFailure('whatsapp', submission, err)
@@ -103,13 +119,18 @@ export async function POST(req: Request) {
       const emailResult = await resend.emails.send({
         from: emailFrom,
         to: staffEmail,
-        subject: '🚀 New Demo Request',
+        subject: '🚀 New Free Trial Request',
         html: `
-          <h2>New Demo Request</h2>
+          <h2>New Free Trial Request</h2>
           <p><strong>Clinic:</strong> ${clinicName}</p>
-          <p><strong>Name:</strong> ${contactName}</p>
+          <p><strong>Contact:</strong> ${contactName}</p>
+          <p><strong>Phone:</strong> ${phone}</p>
           <p><strong>Email:</strong> ${email}</p>
-          <p><strong>Volume:</strong> ${volume}</p>
+          <p><strong>City:</strong> ${city}</p>
+          <p><strong>Locations:</strong> ${locations}</p>
+          <p><strong>Monthly WhatsApp Inquiries:</strong> ${whatsappVolume}</p>
+          <p><strong>Current Booking Method:</strong> ${bookingMethod}</p>
+          <p><strong>Main Goal:</strong> ${mainGoal}</p>
         `,
       })
 
