@@ -2,6 +2,7 @@
 import { sendStaffBookingNotification } from '@/lib/notifications/staff-whatsapp'
 import { prisma } from '@/lib/prisma'
 import { regenerateAppointmentReminderJobs } from '@/lib/notifications/reminder-jobs'
+import { syncCreateEventForAppointment } from '@/lib/google/sync'
 
 export class SlotConflictError extends Error {
   constructor() {
@@ -22,6 +23,14 @@ export async function processBooking(sessionId: string) {
     where: { id: sessionId },
   })
 
+  // Idempotency guard: if this session already has a confirmed booking, return it.
+  if (session.bookingId) {
+    const existing = await prisma.appointment.findUnique({
+      where: { id: session.bookingId },
+    })
+    if (existing) return existing
+  }
+
   if (
     !session.slotTimeId ||
     !session.slotServiceId ||
@@ -38,7 +47,7 @@ export async function processBooking(sessionId: string) {
   while (attempt < MAX_ATTEMPTS) {
     attempt++
     try {
-      const appointment = await prisma.$transaction(async (tx) => {
+      const { appointment, syncAppointment } = await prisma.$transaction(async (tx) => {
         const slot = await tx.availableSlot.findUniqueOrThrow({
           where: { id: session.slotTimeId! },
         })
@@ -101,7 +110,7 @@ export async function processBooking(sessionId: string) {
         // Fetch clinic and service for reminder job
         const clinic = await tx.clinic.findUniqueOrThrow({
           where: { id: session.clinicId },
-          select: { name: true },
+          select: { name: true, timezone: true },
         })
         const service = await tx.service.findUniqueOrThrow({
           where: { id: session.slotServiceId! },
@@ -139,8 +148,26 @@ export async function processBooking(sessionId: string) {
         } catch (err) {
           console.error('[booking-handler] staff notification failed', { err })
         }
-        return appointment
+
+        return {
+          appointment,
+          syncAppointment: {
+            id: appointment.id,
+            scheduledAt: slot.startTime,
+            durationMinutes: appointment.durationMinutes,
+            patient: { firstName: patient.firstName, lastName: patient.lastName },
+            doctor: null as { firstName: string; lastName: string } | null,
+            service: { name: service.name },
+            clinic: { name: clinic.name, timezone: clinic.timezone },
+          },
+        }
       })
+
+      console.info('[booking-handler] before google sync', {
+        clinicId: session.clinicId,
+        appointmentId: appointment.id,
+      })
+      await syncCreateEventForAppointment(session.clinicId, syncAppointment)
 
       return appointment
 

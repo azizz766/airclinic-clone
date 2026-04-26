@@ -31,7 +31,6 @@ import {
   SlotConflictError,
   BookingValidationError,
 } from '@/lib/whatsapp/booking-handler'
-import { syncCreateEvent } from '@/lib/google/sync'
 import { regenerateAppointmentReminderJobs } from '@/lib/notifications/reminder-jobs'
 import twilio from 'twilio'
 import { sendWhatsAppReply } from '@/lib/whatsapp/twilio-sender'
@@ -785,6 +784,11 @@ async function handleConfirmation(
     return { reply: 'المدخل غير واضح. حاول مرة ثانية.' }
   }
 
+  // Guard: session already confirmed — return idempotent response without re-processing.
+  if (session.bookingId) {
+    return { reply: 'تم تأكيد حجزك مسبقاً.' }
+  }
+
   if (session.slotOfferedAt) {
     const elapsed = Date.now() - new Date(session.slotOfferedAt).getTime()
     if (elapsed > SLOT_TTL_MS) {
@@ -862,7 +866,6 @@ async function handleConfirmation(
 
   try {
     const appointment = await processBooking(session.id)
-    syncCreateEvent(clinicId, appointment.id).catch(console.warn)
 
     await prisma.conversationSession.update({
       where: { id: session.id },
