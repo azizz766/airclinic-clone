@@ -32,6 +32,7 @@ export async function sendStaffBookingNotification(
     day: 'numeric',
     hour: '2-digit',
     minute: '2-digit',
+    timeZone: 'Asia/Riyadh',
   })
 
   const message = `حجز جديد

@@ -72,15 +72,18 @@ export function buildBilingualReminderMessage(input: ReminderMessageTemplateInpu
     day: 'numeric',
     month: 'long',
     year: 'numeric',
+    timeZone: 'Asia/Riyadh',
   })
   const appointmentDateEn = input.appointmentDate.toLocaleDateString('en-US', {
     month: 'long',
     day: 'numeric',
     year: 'numeric',
+    timeZone: 'Asia/Riyadh',
   })
   const appointmentTime = input.appointmentDate.toLocaleTimeString('en-US', {
     hour: '2-digit',
     minute: '2-digit',
+    timeZone: 'Asia/Riyadh',
   })
 
   return [

@@ -14,6 +14,7 @@ function formatAppointmentDate(date: Date) {
     day: 'numeric',
     month: 'long',
     year: 'numeric',
+    timeZone: 'Asia/Riyadh',
   })
 }
 
@@ -21,6 +22,7 @@ function formatAppointmentTime(date: Date) {
   return date.toLocaleTimeString('en-US', {
     hour: '2-digit',
     minute: '2-digit',
+    timeZone: 'Asia/Riyadh',
   })
 }
 
