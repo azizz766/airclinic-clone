@@ -31,6 +31,7 @@ import {
   SlotConflictError,
   BookingValidationError,
 } from '@/lib/whatsapp/booking-handler'
+import { syncCreateEvent } from '@/lib/google/sync'
 import { regenerateAppointmentReminderJobs } from '@/lib/notifications/reminder-jobs'
 import twilio from 'twilio'
 import { sendWhatsAppReply } from '@/lib/whatsapp/twilio-sender'
@@ -861,6 +862,7 @@ async function handleConfirmation(
 
   try {
     const appointment = await processBooking(session.id)
+    syncCreateEvent(clinicId, appointment.id).catch(console.warn)
 
     await prisma.conversationSession.update({
       where: { id: session.id },
