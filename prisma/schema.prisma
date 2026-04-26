@@ -189,6 +189,7 @@ model Clinic {
   availableSlots       AvailableSlot[]
   conversationSessions ConversationSession[]
   leads                Lead[]
+  googleCalendarConnection GoogleCalendarConnection?
 
   @@map("clinics")
 }
@@ -206,14 +207,15 @@ model User {
   updatedAt       DateTime  @updatedAt
 
   // Relations
-  invitedMemberships    Membership[]    @relation("MembershipInviter")
-  assignedConversations Conversation[]
-  sentMessages          Message[]
-  memberships           Membership[]
-  doctors               Doctor[]
-  appointments          Appointment[]
-  campaigns             Campaign[]
-  escalationLogs        EscalationLog[]
+  invitedMemberships       Membership[]               @relation("MembershipInviter")
+  assignedConversations    Conversation[]
+  sentMessages             Message[]
+  memberships              Membership[]
+  doctors                  Doctor[]
+  appointments             Appointment[]
+  campaigns                Campaign[]
+  escalationLogs           EscalationLog[]
+  googleCalendarConnections GoogleCalendarConnection[]
 
   @@map("users")
 }
@@ -626,6 +628,23 @@ model Lead {
   @@index([clinicId, createdAt])
   @@index([patientPhone])
   @@map("leads")
+}
+
+model GoogleCalendarConnection {
+  id                String   @id @default(cuid())
+  clinicId          String   @unique
+  calendarId        String   @default("primary")
+  accessToken       String
+  refreshToken      String
+  tokenExpiresAt    DateTime
+  connectedByUserId String
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  clinic      Clinic @relation(fields: [clinicId], references: [id], onDelete: Cascade)
+  connectedBy User   @relation(fields: [connectedByUserId], references: [id])
+
+  @@map("google_calendar_connections")
 }
 
 model EscalationLog {

@@ -269,6 +269,7 @@ export type ClinicWhereInput = {
   availableSlots?: Prisma.AvailableSlotListRelationFilter
   conversationSessions?: Prisma.ConversationSessionListRelationFilter
   leads?: Prisma.LeadListRelationFilter
+  googleCalendarConnection?: Prisma.XOR<Prisma.GoogleCalendarConnectionNullableScalarRelationFilter, Prisma.GoogleCalendarConnectionWhereInput> | null
 }
 
 export type ClinicOrderByWithRelationInput = {
@@ -301,6 +302,7 @@ export type ClinicOrderByWithRelationInput = {
   availableSlots?: Prisma.AvailableSlotOrderByRelationAggregateInput
   conversationSessions?: Prisma.ConversationSessionOrderByRelationAggregateInput
   leads?: Prisma.LeadOrderByRelationAggregateInput
+  googleCalendarConnection?: Prisma.GoogleCalendarConnectionOrderByWithRelationInput
 }
 
 export type ClinicWhereUniqueInput = Prisma.AtLeast<{
@@ -336,6 +338,7 @@ export type ClinicWhereUniqueInput = Prisma.AtLeast<{
   availableSlots?: Prisma.AvailableSlotListRelationFilter
   conversationSessions?: Prisma.ConversationSessionListRelationFilter
   leads?: Prisma.LeadListRelationFilter
+  googleCalendarConnection?: Prisma.XOR<Prisma.GoogleCalendarConnectionNullableScalarRelationFilter, Prisma.GoogleCalendarConnectionWhereInput> | null
 }, "id" | "slug" | "email">
 
 export type ClinicOrderByWithAggregationInput = {
@@ -408,6 +411,7 @@ export type ClinicCreateInput = {
   availableSlots?: Prisma.AvailableSlotCreateNestedManyWithoutClinicInput
   conversationSessions?: Prisma.ConversationSessionCreateNestedManyWithoutClinicInput
   leads?: Prisma.LeadCreateNestedManyWithoutClinicInput
+  googleCalendarConnection?: Prisma.GoogleCalendarConnectionCreateNestedOneWithoutClinicInput
 }
 
 export type ClinicUncheckedCreateInput = {
@@ -440,6 +444,7 @@ export type ClinicUncheckedCreateInput = {
   availableSlots?: Prisma.AvailableSlotUncheckedCreateNestedManyWithoutClinicInput
   conversationSessions?: Prisma.ConversationSessionUncheckedCreateNestedManyWithoutClinicInput
   leads?: Prisma.LeadUncheckedCreateNestedManyWithoutClinicInput
+  googleCalendarConnection?: Prisma.GoogleCalendarConnectionUncheckedCreateNestedOneWithoutClinicInput
 }
 
 export type ClinicUpdateInput = {
@@ -472,6 +477,7 @@ export type ClinicUpdateInput = {
   availableSlots?: Prisma.AvailableSlotUpdateManyWithoutClinicNestedInput
   conversationSessions?: Prisma.ConversationSessionUpdateManyWithoutClinicNestedInput
   leads?: Prisma.LeadUpdateManyWithoutClinicNestedInput
+  googleCalendarConnection?: Prisma.GoogleCalendarConnectionUpdateOneWithoutClinicNestedInput
 }
 
 export type ClinicUncheckedUpdateInput = {
@@ -504,6 +510,7 @@ export type ClinicUncheckedUpdateInput = {
   availableSlots?: Prisma.AvailableSlotUncheckedUpdateManyWithoutClinicNestedInput
   conversationSessions?: Prisma.ConversationSessionUncheckedUpdateManyWithoutClinicNestedInput
   leads?: Prisma.LeadUncheckedUpdateManyWithoutClinicNestedInput
+  googleCalendarConnection?: Prisma.GoogleCalendarConnectionUncheckedUpdateOneWithoutClinicNestedInput
 }
 
 export type ClinicCreateManyInput = {
@@ -833,6 +840,20 @@ export type ClinicUpdateOneRequiredWithoutLeadsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.ClinicUpdateToOneWithWhereWithoutLeadsInput, Prisma.ClinicUpdateWithoutLeadsInput>, Prisma.ClinicUncheckedUpdateWithoutLeadsInput>
 }
 
+export type ClinicCreateNestedOneWithoutGoogleCalendarConnectionInput = {
+  create?: Prisma.XOR<Prisma.ClinicCreateWithoutGoogleCalendarConnectionInput, Prisma.ClinicUncheckedCreateWithoutGoogleCalendarConnectionInput>
+  connectOrCreate?: Prisma.ClinicCreateOrConnectWithoutGoogleCalendarConnectionInput
+  connect?: Prisma.ClinicWhereUniqueInput
+}
+
+export type ClinicUpdateOneRequiredWithoutGoogleCalendarConnectionNestedInput = {
+  create?: Prisma.XOR<Prisma.ClinicCreateWithoutGoogleCalendarConnectionInput, Prisma.ClinicUncheckedCreateWithoutGoogleCalendarConnectionInput>
+  connectOrCreate?: Prisma.ClinicCreateOrConnectWithoutGoogleCalendarConnectionInput
+  upsert?: Prisma.ClinicUpsertWithoutGoogleCalendarConnectionInput
+  connect?: Prisma.ClinicWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ClinicUpdateToOneWithWhereWithoutGoogleCalendarConnectionInput, Prisma.ClinicUpdateWithoutGoogleCalendarConnectionInput>, Prisma.ClinicUncheckedUpdateWithoutGoogleCalendarConnectionInput>
+}
+
 export type ClinicCreateNestedOneWithoutEscalationLogsInput = {
   create?: Prisma.XOR<Prisma.ClinicCreateWithoutEscalationLogsInput, Prisma.ClinicUncheckedCreateWithoutEscalationLogsInput>
   connectOrCreate?: Prisma.ClinicCreateOrConnectWithoutEscalationLogsInput
@@ -876,6 +897,7 @@ export type ClinicCreateWithoutMembershipsInput = {
   availableSlots?: Prisma.AvailableSlotCreateNestedManyWithoutClinicInput
   conversationSessions?: Prisma.ConversationSessionCreateNestedManyWithoutClinicInput
   leads?: Prisma.LeadCreateNestedManyWithoutClinicInput
+  googleCalendarConnection?: Prisma.GoogleCalendarConnectionCreateNestedOneWithoutClinicInput
 }
 
 export type ClinicUncheckedCreateWithoutMembershipsInput = {
@@ -907,6 +929,7 @@ export type ClinicUncheckedCreateWithoutMembershipsInput = {
   availableSlots?: Prisma.AvailableSlotUncheckedCreateNestedManyWithoutClinicInput
   conversationSessions?: Prisma.ConversationSessionUncheckedCreateNestedManyWithoutClinicInput
   leads?: Prisma.LeadUncheckedCreateNestedManyWithoutClinicInput
+  googleCalendarConnection?: Prisma.GoogleCalendarConnectionUncheckedCreateNestedOneWithoutClinicInput
 }
 
 export type ClinicCreateOrConnectWithoutMembershipsInput = {
@@ -954,6 +977,7 @@ export type ClinicUpdateWithoutMembershipsInput = {
   availableSlots?: Prisma.AvailableSlotUpdateManyWithoutClinicNestedInput
   conversationSessions?: Prisma.ConversationSessionUpdateManyWithoutClinicNestedInput
   leads?: Prisma.LeadUpdateManyWithoutClinicNestedInput
+  googleCalendarConnection?: Prisma.GoogleCalendarConnectionUpdateOneWithoutClinicNestedInput
 }
 
 export type ClinicUncheckedUpdateWithoutMembershipsInput = {
@@ -985,6 +1009,7 @@ export type ClinicUncheckedUpdateWithoutMembershipsInput = {
   availableSlots?: Prisma.AvailableSlotUncheckedUpdateManyWithoutClinicNestedInput
   conversationSessions?: Prisma.ConversationSessionUncheckedUpdateManyWithoutClinicNestedInput
   leads?: Prisma.LeadUncheckedUpdateManyWithoutClinicNestedInput
+  googleCalendarConnection?: Prisma.GoogleCalendarConnectionUncheckedUpdateOneWithoutClinicNestedInput
 }
 
 export type ClinicCreateWithoutDoctorsInput = {
@@ -1016,6 +1041,7 @@ export type ClinicCreateWithoutDoctorsInput = {
   availableSlots?: Prisma.AvailableSlotCreateNestedManyWithoutClinicInput
   conversationSessions?: Prisma.ConversationSessionCreateNestedManyWithoutClinicInput
   leads?: Prisma.LeadCreateNestedManyWithoutClinicInput
+  googleCalendarConnection?: Prisma.GoogleCalendarConnectionCreateNestedOneWithoutClinicInput
 }
 
 export type ClinicUncheckedCreateWithoutDoctorsInput = {
@@ -1047,6 +1073,7 @@ export type ClinicUncheckedCreateWithoutDoctorsInput = {
   availableSlots?: Prisma.AvailableSlotUncheckedCreateNestedManyWithoutClinicInput
   conversationSessions?: Prisma.ConversationSessionUncheckedCreateNestedManyWithoutClinicInput
   leads?: Prisma.LeadUncheckedCreateNestedManyWithoutClinicInput
+  googleCalendarConnection?: Prisma.GoogleCalendarConnectionUncheckedCreateNestedOneWithoutClinicInput
 }
 
 export type ClinicCreateOrConnectWithoutDoctorsInput = {
@@ -1094,6 +1121,7 @@ export type ClinicUpdateWithoutDoctorsInput = {
   availableSlots?: Prisma.AvailableSlotUpdateManyWithoutClinicNestedInput
   conversationSessions?: Prisma.ConversationSessionUpdateManyWithoutClinicNestedInput
   leads?: Prisma.LeadUpdateManyWithoutClinicNestedInput
+  googleCalendarConnection?: Prisma.GoogleCalendarConnectionUpdateOneWithoutClinicNestedInput
 }
 
 export type ClinicUncheckedUpdateWithoutDoctorsInput = {
@@ -1125,6 +1153,7 @@ export type ClinicUncheckedUpdateWithoutDoctorsInput = {
   availableSlots?: Prisma.AvailableSlotUncheckedUpdateManyWithoutClinicNestedInput
   conversationSessions?: Prisma.ConversationSessionUncheckedUpdateManyWithoutClinicNestedInput
   leads?: Prisma.LeadUncheckedUpdateManyWithoutClinicNestedInput
+  googleCalendarConnection?: Prisma.GoogleCalendarConnectionUncheckedUpdateOneWithoutClinicNestedInput
 }
 
 export type ClinicCreateWithoutServicesInput = {
@@ -1156,6 +1185,7 @@ export type ClinicCreateWithoutServicesInput = {
   availableSlots?: Prisma.AvailableSlotCreateNestedManyWithoutClinicInput
   conversationSessions?: Prisma.ConversationSessionCreateNestedManyWithoutClinicInput
   leads?: Prisma.LeadCreateNestedManyWithoutClinicInput
+  googleCalendarConnection?: Prisma.GoogleCalendarConnectionCreateNestedOneWithoutClinicInput
 }
 
 export type ClinicUncheckedCreateWithoutServicesInput = {
@@ -1187,6 +1217,7 @@ export type ClinicUncheckedCreateWithoutServicesInput = {
   availableSlots?: Prisma.AvailableSlotUncheckedCreateNestedManyWithoutClinicInput
   conversationSessions?: Prisma.ConversationSessionUncheckedCreateNestedManyWithoutClinicInput
   leads?: Prisma.LeadUncheckedCreateNestedManyWithoutClinicInput
+  googleCalendarConnection?: Prisma.GoogleCalendarConnectionUncheckedCreateNestedOneWithoutClinicInput
 }
 
 export type ClinicCreateOrConnectWithoutServicesInput = {
@@ -1234,6 +1265,7 @@ export type ClinicUpdateWithoutServicesInput = {
   availableSlots?: Prisma.AvailableSlotUpdateManyWithoutClinicNestedInput
   conversationSessions?: Prisma.ConversationSessionUpdateManyWithoutClinicNestedInput
   leads?: Prisma.LeadUpdateManyWithoutClinicNestedInput
+  googleCalendarConnection?: Prisma.GoogleCalendarConnectionUpdateOneWithoutClinicNestedInput
 }
 
 export type ClinicUncheckedUpdateWithoutServicesInput = {
@@ -1265,6 +1297,7 @@ export type ClinicUncheckedUpdateWithoutServicesInput = {
   availableSlots?: Prisma.AvailableSlotUncheckedUpdateManyWithoutClinicNestedInput
   conversationSessions?: Prisma.ConversationSessionUncheckedUpdateManyWithoutClinicNestedInput
   leads?: Prisma.LeadUncheckedUpdateManyWithoutClinicNestedInput
+  googleCalendarConnection?: Prisma.GoogleCalendarConnectionUncheckedUpdateOneWithoutClinicNestedInput
 }
 
 export type ClinicCreateWithoutAvailableSlotsInput = {
@@ -1296,6 +1329,7 @@ export type ClinicCreateWithoutAvailableSlotsInput = {
   escalationLogs?: Prisma.EscalationLogCreateNestedManyWithoutClinicInput
   conversationSessions?: Prisma.ConversationSessionCreateNestedManyWithoutClinicInput
   leads?: Prisma.LeadCreateNestedManyWithoutClinicInput
+  googleCalendarConnection?: Prisma.GoogleCalendarConnectionCreateNestedOneWithoutClinicInput
 }
 
 export type ClinicUncheckedCreateWithoutAvailableSlotsInput = {
@@ -1327,6 +1361,7 @@ export type ClinicUncheckedCreateWithoutAvailableSlotsInput = {
   escalationLogs?: Prisma.EscalationLogUncheckedCreateNestedManyWithoutClinicInput
   conversationSessions?: Prisma.ConversationSessionUncheckedCreateNestedManyWithoutClinicInput
   leads?: Prisma.LeadUncheckedCreateNestedManyWithoutClinicInput
+  googleCalendarConnection?: Prisma.GoogleCalendarConnectionUncheckedCreateNestedOneWithoutClinicInput
 }
 
 export type ClinicCreateOrConnectWithoutAvailableSlotsInput = {
@@ -1374,6 +1409,7 @@ export type ClinicUpdateWithoutAvailableSlotsInput = {
   escalationLogs?: Prisma.EscalationLogUpdateManyWithoutClinicNestedInput
   conversationSessions?: Prisma.ConversationSessionUpdateManyWithoutClinicNestedInput
   leads?: Prisma.LeadUpdateManyWithoutClinicNestedInput
+  googleCalendarConnection?: Prisma.GoogleCalendarConnectionUpdateOneWithoutClinicNestedInput
 }
 
 export type ClinicUncheckedUpdateWithoutAvailableSlotsInput = {
@@ -1405,6 +1441,7 @@ export type ClinicUncheckedUpdateWithoutAvailableSlotsInput = {
   escalationLogs?: Prisma.EscalationLogUncheckedUpdateManyWithoutClinicNestedInput
   conversationSessions?: Prisma.ConversationSessionUncheckedUpdateManyWithoutClinicNestedInput
   leads?: Prisma.LeadUncheckedUpdateManyWithoutClinicNestedInput
+  googleCalendarConnection?: Prisma.GoogleCalendarConnectionUncheckedUpdateOneWithoutClinicNestedInput
 }
 
 export type ClinicCreateWithoutConversationSessionsInput = {
@@ -1436,6 +1473,7 @@ export type ClinicCreateWithoutConversationSessionsInput = {
   escalationLogs?: Prisma.EscalationLogCreateNestedManyWithoutClinicInput
   availableSlots?: Prisma.AvailableSlotCreateNestedManyWithoutClinicInput
   leads?: Prisma.LeadCreateNestedManyWithoutClinicInput
+  googleCalendarConnection?: Prisma.GoogleCalendarConnectionCreateNestedOneWithoutClinicInput
 }
 
 export type ClinicUncheckedCreateWithoutConversationSessionsInput = {
@@ -1467,6 +1505,7 @@ export type ClinicUncheckedCreateWithoutConversationSessionsInput = {
   escalationLogs?: Prisma.EscalationLogUncheckedCreateNestedManyWithoutClinicInput
   availableSlots?: Prisma.AvailableSlotUncheckedCreateNestedManyWithoutClinicInput
   leads?: Prisma.LeadUncheckedCreateNestedManyWithoutClinicInput
+  googleCalendarConnection?: Prisma.GoogleCalendarConnectionUncheckedCreateNestedOneWithoutClinicInput
 }
 
 export type ClinicCreateOrConnectWithoutConversationSessionsInput = {
@@ -1514,6 +1553,7 @@ export type ClinicUpdateWithoutConversationSessionsInput = {
   escalationLogs?: Prisma.EscalationLogUpdateManyWithoutClinicNestedInput
   availableSlots?: Prisma.AvailableSlotUpdateManyWithoutClinicNestedInput
   leads?: Prisma.LeadUpdateManyWithoutClinicNestedInput
+  googleCalendarConnection?: Prisma.GoogleCalendarConnectionUpdateOneWithoutClinicNestedInput
 }
 
 export type ClinicUncheckedUpdateWithoutConversationSessionsInput = {
@@ -1545,6 +1585,7 @@ export type ClinicUncheckedUpdateWithoutConversationSessionsInput = {
   escalationLogs?: Prisma.EscalationLogUncheckedUpdateManyWithoutClinicNestedInput
   availableSlots?: Prisma.AvailableSlotUncheckedUpdateManyWithoutClinicNestedInput
   leads?: Prisma.LeadUncheckedUpdateManyWithoutClinicNestedInput
+  googleCalendarConnection?: Prisma.GoogleCalendarConnectionUncheckedUpdateOneWithoutClinicNestedInput
 }
 
 export type ClinicCreateWithoutPatientsInput = {
@@ -1576,6 +1617,7 @@ export type ClinicCreateWithoutPatientsInput = {
   availableSlots?: Prisma.AvailableSlotCreateNestedManyWithoutClinicInput
   conversationSessions?: Prisma.ConversationSessionCreateNestedManyWithoutClinicInput
   leads?: Prisma.LeadCreateNestedManyWithoutClinicInput
+  googleCalendarConnection?: Prisma.GoogleCalendarConnectionCreateNestedOneWithoutClinicInput
 }
 
 export type ClinicUncheckedCreateWithoutPatientsInput = {
@@ -1607,6 +1649,7 @@ export type ClinicUncheckedCreateWithoutPatientsInput = {
   availableSlots?: Prisma.AvailableSlotUncheckedCreateNestedManyWithoutClinicInput
   conversationSessions?: Prisma.ConversationSessionUncheckedCreateNestedManyWithoutClinicInput
   leads?: Prisma.LeadUncheckedCreateNestedManyWithoutClinicInput
+  googleCalendarConnection?: Prisma.GoogleCalendarConnectionUncheckedCreateNestedOneWithoutClinicInput
 }
 
 export type ClinicCreateOrConnectWithoutPatientsInput = {
@@ -1654,6 +1697,7 @@ export type ClinicUpdateWithoutPatientsInput = {
   availableSlots?: Prisma.AvailableSlotUpdateManyWithoutClinicNestedInput
   conversationSessions?: Prisma.ConversationSessionUpdateManyWithoutClinicNestedInput
   leads?: Prisma.LeadUpdateManyWithoutClinicNestedInput
+  googleCalendarConnection?: Prisma.GoogleCalendarConnectionUpdateOneWithoutClinicNestedInput
 }
 
 export type ClinicUncheckedUpdateWithoutPatientsInput = {
@@ -1685,6 +1729,7 @@ export type ClinicUncheckedUpdateWithoutPatientsInput = {
   availableSlots?: Prisma.AvailableSlotUncheckedUpdateManyWithoutClinicNestedInput
   conversationSessions?: Prisma.ConversationSessionUncheckedUpdateManyWithoutClinicNestedInput
   leads?: Prisma.LeadUncheckedUpdateManyWithoutClinicNestedInput
+  googleCalendarConnection?: Prisma.GoogleCalendarConnectionUncheckedUpdateOneWithoutClinicNestedInput
 }
 
 export type ClinicCreateWithoutAppointmentsInput = {
@@ -1716,6 +1761,7 @@ export type ClinicCreateWithoutAppointmentsInput = {
   availableSlots?: Prisma.AvailableSlotCreateNestedManyWithoutClinicInput
   conversationSessions?: Prisma.ConversationSessionCreateNestedManyWithoutClinicInput
   leads?: Prisma.LeadCreateNestedManyWithoutClinicInput
+  googleCalendarConnection?: Prisma.GoogleCalendarConnectionCreateNestedOneWithoutClinicInput
 }
 
 export type ClinicUncheckedCreateWithoutAppointmentsInput = {
@@ -1747,6 +1793,7 @@ export type ClinicUncheckedCreateWithoutAppointmentsInput = {
   availableSlots?: Prisma.AvailableSlotUncheckedCreateNestedManyWithoutClinicInput
   conversationSessions?: Prisma.ConversationSessionUncheckedCreateNestedManyWithoutClinicInput
   leads?: Prisma.LeadUncheckedCreateNestedManyWithoutClinicInput
+  googleCalendarConnection?: Prisma.GoogleCalendarConnectionUncheckedCreateNestedOneWithoutClinicInput
 }
 
 export type ClinicCreateOrConnectWithoutAppointmentsInput = {
@@ -1794,6 +1841,7 @@ export type ClinicUpdateWithoutAppointmentsInput = {
   availableSlots?: Prisma.AvailableSlotUpdateManyWithoutClinicNestedInput
   conversationSessions?: Prisma.ConversationSessionUpdateManyWithoutClinicNestedInput
   leads?: Prisma.LeadUpdateManyWithoutClinicNestedInput
+  googleCalendarConnection?: Prisma.GoogleCalendarConnectionUpdateOneWithoutClinicNestedInput
 }
 
 export type ClinicUncheckedUpdateWithoutAppointmentsInput = {
@@ -1825,6 +1873,7 @@ export type ClinicUncheckedUpdateWithoutAppointmentsInput = {
   availableSlots?: Prisma.AvailableSlotUncheckedUpdateManyWithoutClinicNestedInput
   conversationSessions?: Prisma.ConversationSessionUncheckedUpdateManyWithoutClinicNestedInput
   leads?: Prisma.LeadUncheckedUpdateManyWithoutClinicNestedInput
+  googleCalendarConnection?: Prisma.GoogleCalendarConnectionUncheckedUpdateOneWithoutClinicNestedInput
 }
 
 export type ClinicCreateWithoutConversationsInput = {
@@ -1856,6 +1905,7 @@ export type ClinicCreateWithoutConversationsInput = {
   availableSlots?: Prisma.AvailableSlotCreateNestedManyWithoutClinicInput
   conversationSessions?: Prisma.ConversationSessionCreateNestedManyWithoutClinicInput
   leads?: Prisma.LeadCreateNestedManyWithoutClinicInput
+  googleCalendarConnection?: Prisma.GoogleCalendarConnectionCreateNestedOneWithoutClinicInput
 }
 
 export type ClinicUncheckedCreateWithoutConversationsInput = {
@@ -1887,6 +1937,7 @@ export type ClinicUncheckedCreateWithoutConversationsInput = {
   availableSlots?: Prisma.AvailableSlotUncheckedCreateNestedManyWithoutClinicInput
   conversationSessions?: Prisma.ConversationSessionUncheckedCreateNestedManyWithoutClinicInput
   leads?: Prisma.LeadUncheckedCreateNestedManyWithoutClinicInput
+  googleCalendarConnection?: Prisma.GoogleCalendarConnectionUncheckedCreateNestedOneWithoutClinicInput
 }
 
 export type ClinicCreateOrConnectWithoutConversationsInput = {
@@ -1934,6 +1985,7 @@ export type ClinicUpdateWithoutConversationsInput = {
   availableSlots?: Prisma.AvailableSlotUpdateManyWithoutClinicNestedInput
   conversationSessions?: Prisma.ConversationSessionUpdateManyWithoutClinicNestedInput
   leads?: Prisma.LeadUpdateManyWithoutClinicNestedInput
+  googleCalendarConnection?: Prisma.GoogleCalendarConnectionUpdateOneWithoutClinicNestedInput
 }
 
 export type ClinicUncheckedUpdateWithoutConversationsInput = {
@@ -1965,6 +2017,7 @@ export type ClinicUncheckedUpdateWithoutConversationsInput = {
   availableSlots?: Prisma.AvailableSlotUncheckedUpdateManyWithoutClinicNestedInput
   conversationSessions?: Prisma.ConversationSessionUncheckedUpdateManyWithoutClinicNestedInput
   leads?: Prisma.LeadUncheckedUpdateManyWithoutClinicNestedInput
+  googleCalendarConnection?: Prisma.GoogleCalendarConnectionUncheckedUpdateOneWithoutClinicNestedInput
 }
 
 export type ClinicCreateWithoutRemindersInput = {
@@ -1996,6 +2049,7 @@ export type ClinicCreateWithoutRemindersInput = {
   availableSlots?: Prisma.AvailableSlotCreateNestedManyWithoutClinicInput
   conversationSessions?: Prisma.ConversationSessionCreateNestedManyWithoutClinicInput
   leads?: Prisma.LeadCreateNestedManyWithoutClinicInput
+  googleCalendarConnection?: Prisma.GoogleCalendarConnectionCreateNestedOneWithoutClinicInput
 }
 
 export type ClinicUncheckedCreateWithoutRemindersInput = {
@@ -2027,6 +2081,7 @@ export type ClinicUncheckedCreateWithoutRemindersInput = {
   availableSlots?: Prisma.AvailableSlotUncheckedCreateNestedManyWithoutClinicInput
   conversationSessions?: Prisma.ConversationSessionUncheckedCreateNestedManyWithoutClinicInput
   leads?: Prisma.LeadUncheckedCreateNestedManyWithoutClinicInput
+  googleCalendarConnection?: Prisma.GoogleCalendarConnectionUncheckedCreateNestedOneWithoutClinicInput
 }
 
 export type ClinicCreateOrConnectWithoutRemindersInput = {
@@ -2074,6 +2129,7 @@ export type ClinicUpdateWithoutRemindersInput = {
   availableSlots?: Prisma.AvailableSlotUpdateManyWithoutClinicNestedInput
   conversationSessions?: Prisma.ConversationSessionUpdateManyWithoutClinicNestedInput
   leads?: Prisma.LeadUpdateManyWithoutClinicNestedInput
+  googleCalendarConnection?: Prisma.GoogleCalendarConnectionUpdateOneWithoutClinicNestedInput
 }
 
 export type ClinicUncheckedUpdateWithoutRemindersInput = {
@@ -2105,6 +2161,7 @@ export type ClinicUncheckedUpdateWithoutRemindersInput = {
   availableSlots?: Prisma.AvailableSlotUncheckedUpdateManyWithoutClinicNestedInput
   conversationSessions?: Prisma.ConversationSessionUncheckedUpdateManyWithoutClinicNestedInput
   leads?: Prisma.LeadUncheckedUpdateManyWithoutClinicNestedInput
+  googleCalendarConnection?: Prisma.GoogleCalendarConnectionUncheckedUpdateOneWithoutClinicNestedInput
 }
 
 export type ClinicCreateWithoutNotificationJobsInput = {
@@ -2136,6 +2193,7 @@ export type ClinicCreateWithoutNotificationJobsInput = {
   availableSlots?: Prisma.AvailableSlotCreateNestedManyWithoutClinicInput
   conversationSessions?: Prisma.ConversationSessionCreateNestedManyWithoutClinicInput
   leads?: Prisma.LeadCreateNestedManyWithoutClinicInput
+  googleCalendarConnection?: Prisma.GoogleCalendarConnectionCreateNestedOneWithoutClinicInput
 }
 
 export type ClinicUncheckedCreateWithoutNotificationJobsInput = {
@@ -2167,6 +2225,7 @@ export type ClinicUncheckedCreateWithoutNotificationJobsInput = {
   availableSlots?: Prisma.AvailableSlotUncheckedCreateNestedManyWithoutClinicInput
   conversationSessions?: Prisma.ConversationSessionUncheckedCreateNestedManyWithoutClinicInput
   leads?: Prisma.LeadUncheckedCreateNestedManyWithoutClinicInput
+  googleCalendarConnection?: Prisma.GoogleCalendarConnectionUncheckedCreateNestedOneWithoutClinicInput
 }
 
 export type ClinicCreateOrConnectWithoutNotificationJobsInput = {
@@ -2214,6 +2273,7 @@ export type ClinicUpdateWithoutNotificationJobsInput = {
   availableSlots?: Prisma.AvailableSlotUpdateManyWithoutClinicNestedInput
   conversationSessions?: Prisma.ConversationSessionUpdateManyWithoutClinicNestedInput
   leads?: Prisma.LeadUpdateManyWithoutClinicNestedInput
+  googleCalendarConnection?: Prisma.GoogleCalendarConnectionUpdateOneWithoutClinicNestedInput
 }
 
 export type ClinicUncheckedUpdateWithoutNotificationJobsInput = {
@@ -2245,6 +2305,7 @@ export type ClinicUncheckedUpdateWithoutNotificationJobsInput = {
   availableSlots?: Prisma.AvailableSlotUncheckedUpdateManyWithoutClinicNestedInput
   conversationSessions?: Prisma.ConversationSessionUncheckedUpdateManyWithoutClinicNestedInput
   leads?: Prisma.LeadUncheckedUpdateManyWithoutClinicNestedInput
+  googleCalendarConnection?: Prisma.GoogleCalendarConnectionUncheckedUpdateOneWithoutClinicNestedInput
 }
 
 export type ClinicCreateWithoutCampaignsInput = {
@@ -2276,6 +2337,7 @@ export type ClinicCreateWithoutCampaignsInput = {
   availableSlots?: Prisma.AvailableSlotCreateNestedManyWithoutClinicInput
   conversationSessions?: Prisma.ConversationSessionCreateNestedManyWithoutClinicInput
   leads?: Prisma.LeadCreateNestedManyWithoutClinicInput
+  googleCalendarConnection?: Prisma.GoogleCalendarConnectionCreateNestedOneWithoutClinicInput
 }
 
 export type ClinicUncheckedCreateWithoutCampaignsInput = {
@@ -2307,6 +2369,7 @@ export type ClinicUncheckedCreateWithoutCampaignsInput = {
   availableSlots?: Prisma.AvailableSlotUncheckedCreateNestedManyWithoutClinicInput
   conversationSessions?: Prisma.ConversationSessionUncheckedCreateNestedManyWithoutClinicInput
   leads?: Prisma.LeadUncheckedCreateNestedManyWithoutClinicInput
+  googleCalendarConnection?: Prisma.GoogleCalendarConnectionUncheckedCreateNestedOneWithoutClinicInput
 }
 
 export type ClinicCreateOrConnectWithoutCampaignsInput = {
@@ -2354,6 +2417,7 @@ export type ClinicUpdateWithoutCampaignsInput = {
   availableSlots?: Prisma.AvailableSlotUpdateManyWithoutClinicNestedInput
   conversationSessions?: Prisma.ConversationSessionUpdateManyWithoutClinicNestedInput
   leads?: Prisma.LeadUpdateManyWithoutClinicNestedInput
+  googleCalendarConnection?: Prisma.GoogleCalendarConnectionUpdateOneWithoutClinicNestedInput
 }
 
 export type ClinicUncheckedUpdateWithoutCampaignsInput = {
@@ -2385,6 +2449,7 @@ export type ClinicUncheckedUpdateWithoutCampaignsInput = {
   availableSlots?: Prisma.AvailableSlotUncheckedUpdateManyWithoutClinicNestedInput
   conversationSessions?: Prisma.ConversationSessionUncheckedUpdateManyWithoutClinicNestedInput
   leads?: Prisma.LeadUncheckedUpdateManyWithoutClinicNestedInput
+  googleCalendarConnection?: Prisma.GoogleCalendarConnectionUncheckedUpdateOneWithoutClinicNestedInput
 }
 
 export type ClinicCreateWithoutClinicSettingsInput = {
@@ -2416,6 +2481,7 @@ export type ClinicCreateWithoutClinicSettingsInput = {
   availableSlots?: Prisma.AvailableSlotCreateNestedManyWithoutClinicInput
   conversationSessions?: Prisma.ConversationSessionCreateNestedManyWithoutClinicInput
   leads?: Prisma.LeadCreateNestedManyWithoutClinicInput
+  googleCalendarConnection?: Prisma.GoogleCalendarConnectionCreateNestedOneWithoutClinicInput
 }
 
 export type ClinicUncheckedCreateWithoutClinicSettingsInput = {
@@ -2447,6 +2513,7 @@ export type ClinicUncheckedCreateWithoutClinicSettingsInput = {
   availableSlots?: Prisma.AvailableSlotUncheckedCreateNestedManyWithoutClinicInput
   conversationSessions?: Prisma.ConversationSessionUncheckedCreateNestedManyWithoutClinicInput
   leads?: Prisma.LeadUncheckedCreateNestedManyWithoutClinicInput
+  googleCalendarConnection?: Prisma.GoogleCalendarConnectionUncheckedCreateNestedOneWithoutClinicInput
 }
 
 export type ClinicCreateOrConnectWithoutClinicSettingsInput = {
@@ -2494,6 +2561,7 @@ export type ClinicUpdateWithoutClinicSettingsInput = {
   availableSlots?: Prisma.AvailableSlotUpdateManyWithoutClinicNestedInput
   conversationSessions?: Prisma.ConversationSessionUpdateManyWithoutClinicNestedInput
   leads?: Prisma.LeadUpdateManyWithoutClinicNestedInput
+  googleCalendarConnection?: Prisma.GoogleCalendarConnectionUpdateOneWithoutClinicNestedInput
 }
 
 export type ClinicUncheckedUpdateWithoutClinicSettingsInput = {
@@ -2525,6 +2593,7 @@ export type ClinicUncheckedUpdateWithoutClinicSettingsInput = {
   availableSlots?: Prisma.AvailableSlotUncheckedUpdateManyWithoutClinicNestedInput
   conversationSessions?: Prisma.ConversationSessionUncheckedUpdateManyWithoutClinicNestedInput
   leads?: Prisma.LeadUncheckedUpdateManyWithoutClinicNestedInput
+  googleCalendarConnection?: Prisma.GoogleCalendarConnectionUncheckedUpdateOneWithoutClinicNestedInput
 }
 
 export type ClinicCreateWithoutBusinessHoursInput = {
@@ -2556,6 +2625,7 @@ export type ClinicCreateWithoutBusinessHoursInput = {
   availableSlots?: Prisma.AvailableSlotCreateNestedManyWithoutClinicInput
   conversationSessions?: Prisma.ConversationSessionCreateNestedManyWithoutClinicInput
   leads?: Prisma.LeadCreateNestedManyWithoutClinicInput
+  googleCalendarConnection?: Prisma.GoogleCalendarConnectionCreateNestedOneWithoutClinicInput
 }
 
 export type ClinicUncheckedCreateWithoutBusinessHoursInput = {
@@ -2587,6 +2657,7 @@ export type ClinicUncheckedCreateWithoutBusinessHoursInput = {
   availableSlots?: Prisma.AvailableSlotUncheckedCreateNestedManyWithoutClinicInput
   conversationSessions?: Prisma.ConversationSessionUncheckedCreateNestedManyWithoutClinicInput
   leads?: Prisma.LeadUncheckedCreateNestedManyWithoutClinicInput
+  googleCalendarConnection?: Prisma.GoogleCalendarConnectionUncheckedCreateNestedOneWithoutClinicInput
 }
 
 export type ClinicCreateOrConnectWithoutBusinessHoursInput = {
@@ -2634,6 +2705,7 @@ export type ClinicUpdateWithoutBusinessHoursInput = {
   availableSlots?: Prisma.AvailableSlotUpdateManyWithoutClinicNestedInput
   conversationSessions?: Prisma.ConversationSessionUpdateManyWithoutClinicNestedInput
   leads?: Prisma.LeadUpdateManyWithoutClinicNestedInput
+  googleCalendarConnection?: Prisma.GoogleCalendarConnectionUpdateOneWithoutClinicNestedInput
 }
 
 export type ClinicUncheckedUpdateWithoutBusinessHoursInput = {
@@ -2665,6 +2737,7 @@ export type ClinicUncheckedUpdateWithoutBusinessHoursInput = {
   availableSlots?: Prisma.AvailableSlotUncheckedUpdateManyWithoutClinicNestedInput
   conversationSessions?: Prisma.ConversationSessionUncheckedUpdateManyWithoutClinicNestedInput
   leads?: Prisma.LeadUncheckedUpdateManyWithoutClinicNestedInput
+  googleCalendarConnection?: Prisma.GoogleCalendarConnectionUncheckedUpdateOneWithoutClinicNestedInput
 }
 
 export type ClinicCreateWithoutLeadsInput = {
@@ -2696,6 +2769,7 @@ export type ClinicCreateWithoutLeadsInput = {
   escalationLogs?: Prisma.EscalationLogCreateNestedManyWithoutClinicInput
   availableSlots?: Prisma.AvailableSlotCreateNestedManyWithoutClinicInput
   conversationSessions?: Prisma.ConversationSessionCreateNestedManyWithoutClinicInput
+  googleCalendarConnection?: Prisma.GoogleCalendarConnectionCreateNestedOneWithoutClinicInput
 }
 
 export type ClinicUncheckedCreateWithoutLeadsInput = {
@@ -2727,6 +2801,7 @@ export type ClinicUncheckedCreateWithoutLeadsInput = {
   escalationLogs?: Prisma.EscalationLogUncheckedCreateNestedManyWithoutClinicInput
   availableSlots?: Prisma.AvailableSlotUncheckedCreateNestedManyWithoutClinicInput
   conversationSessions?: Prisma.ConversationSessionUncheckedCreateNestedManyWithoutClinicInput
+  googleCalendarConnection?: Prisma.GoogleCalendarConnectionUncheckedCreateNestedOneWithoutClinicInput
 }
 
 export type ClinicCreateOrConnectWithoutLeadsInput = {
@@ -2774,6 +2849,7 @@ export type ClinicUpdateWithoutLeadsInput = {
   escalationLogs?: Prisma.EscalationLogUpdateManyWithoutClinicNestedInput
   availableSlots?: Prisma.AvailableSlotUpdateManyWithoutClinicNestedInput
   conversationSessions?: Prisma.ConversationSessionUpdateManyWithoutClinicNestedInput
+  googleCalendarConnection?: Prisma.GoogleCalendarConnectionUpdateOneWithoutClinicNestedInput
 }
 
 export type ClinicUncheckedUpdateWithoutLeadsInput = {
@@ -2805,6 +2881,151 @@ export type ClinicUncheckedUpdateWithoutLeadsInput = {
   escalationLogs?: Prisma.EscalationLogUncheckedUpdateManyWithoutClinicNestedInput
   availableSlots?: Prisma.AvailableSlotUncheckedUpdateManyWithoutClinicNestedInput
   conversationSessions?: Prisma.ConversationSessionUncheckedUpdateManyWithoutClinicNestedInput
+  googleCalendarConnection?: Prisma.GoogleCalendarConnectionUncheckedUpdateOneWithoutClinicNestedInput
+}
+
+export type ClinicCreateWithoutGoogleCalendarConnectionInput = {
+  id?: string
+  name: string
+  slug: string
+  address?: string | null
+  phone?: string | null
+  email?: string | null
+  website?: string | null
+  timezone?: string
+  twilioPhoneNumber?: string | null
+  isActive?: boolean
+  subscriptionPlan?: $Enums.SubscriptionPlan
+  subscriptionExpiresAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  memberships?: Prisma.MembershipCreateNestedManyWithoutClinicInput
+  doctors?: Prisma.DoctorCreateNestedManyWithoutClinicInput
+  services?: Prisma.ServiceCreateNestedManyWithoutClinicInput
+  patients?: Prisma.PatientCreateNestedManyWithoutClinicInput
+  appointments?: Prisma.AppointmentCreateNestedManyWithoutClinicInput
+  conversations?: Prisma.ConversationCreateNestedManyWithoutClinicInput
+  reminders?: Prisma.ReminderCreateNestedManyWithoutClinicInput
+  notificationJobs?: Prisma.NotificationJobCreateNestedManyWithoutClinicInput
+  campaigns?: Prisma.CampaignCreateNestedManyWithoutClinicInput
+  clinicSettings?: Prisma.ClinicSettingsCreateNestedOneWithoutClinicInput
+  businessHours?: Prisma.BusinessHoursCreateNestedManyWithoutClinicInput
+  escalationLogs?: Prisma.EscalationLogCreateNestedManyWithoutClinicInput
+  availableSlots?: Prisma.AvailableSlotCreateNestedManyWithoutClinicInput
+  conversationSessions?: Prisma.ConversationSessionCreateNestedManyWithoutClinicInput
+  leads?: Prisma.LeadCreateNestedManyWithoutClinicInput
+}
+
+export type ClinicUncheckedCreateWithoutGoogleCalendarConnectionInput = {
+  id?: string
+  name: string
+  slug: string
+  address?: string | null
+  phone?: string | null
+  email?: string | null
+  website?: string | null
+  timezone?: string
+  twilioPhoneNumber?: string | null
+  isActive?: boolean
+  subscriptionPlan?: $Enums.SubscriptionPlan
+  subscriptionExpiresAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  memberships?: Prisma.MembershipUncheckedCreateNestedManyWithoutClinicInput
+  doctors?: Prisma.DoctorUncheckedCreateNestedManyWithoutClinicInput
+  services?: Prisma.ServiceUncheckedCreateNestedManyWithoutClinicInput
+  patients?: Prisma.PatientUncheckedCreateNestedManyWithoutClinicInput
+  appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutClinicInput
+  conversations?: Prisma.ConversationUncheckedCreateNestedManyWithoutClinicInput
+  reminders?: Prisma.ReminderUncheckedCreateNestedManyWithoutClinicInput
+  notificationJobs?: Prisma.NotificationJobUncheckedCreateNestedManyWithoutClinicInput
+  campaigns?: Prisma.CampaignUncheckedCreateNestedManyWithoutClinicInput
+  clinicSettings?: Prisma.ClinicSettingsUncheckedCreateNestedOneWithoutClinicInput
+  businessHours?: Prisma.BusinessHoursUncheckedCreateNestedManyWithoutClinicInput
+  escalationLogs?: Prisma.EscalationLogUncheckedCreateNestedManyWithoutClinicInput
+  availableSlots?: Prisma.AvailableSlotUncheckedCreateNestedManyWithoutClinicInput
+  conversationSessions?: Prisma.ConversationSessionUncheckedCreateNestedManyWithoutClinicInput
+  leads?: Prisma.LeadUncheckedCreateNestedManyWithoutClinicInput
+}
+
+export type ClinicCreateOrConnectWithoutGoogleCalendarConnectionInput = {
+  where: Prisma.ClinicWhereUniqueInput
+  create: Prisma.XOR<Prisma.ClinicCreateWithoutGoogleCalendarConnectionInput, Prisma.ClinicUncheckedCreateWithoutGoogleCalendarConnectionInput>
+}
+
+export type ClinicUpsertWithoutGoogleCalendarConnectionInput = {
+  update: Prisma.XOR<Prisma.ClinicUpdateWithoutGoogleCalendarConnectionInput, Prisma.ClinicUncheckedUpdateWithoutGoogleCalendarConnectionInput>
+  create: Prisma.XOR<Prisma.ClinicCreateWithoutGoogleCalendarConnectionInput, Prisma.ClinicUncheckedCreateWithoutGoogleCalendarConnectionInput>
+  where?: Prisma.ClinicWhereInput
+}
+
+export type ClinicUpdateToOneWithWhereWithoutGoogleCalendarConnectionInput = {
+  where?: Prisma.ClinicWhereInput
+  data: Prisma.XOR<Prisma.ClinicUpdateWithoutGoogleCalendarConnectionInput, Prisma.ClinicUncheckedUpdateWithoutGoogleCalendarConnectionInput>
+}
+
+export type ClinicUpdateWithoutGoogleCalendarConnectionInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  timezone?: Prisma.StringFieldUpdateOperationsInput | string
+  twilioPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  subscriptionPlan?: Prisma.EnumSubscriptionPlanFieldUpdateOperationsInput | $Enums.SubscriptionPlan
+  subscriptionExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  memberships?: Prisma.MembershipUpdateManyWithoutClinicNestedInput
+  doctors?: Prisma.DoctorUpdateManyWithoutClinicNestedInput
+  services?: Prisma.ServiceUpdateManyWithoutClinicNestedInput
+  patients?: Prisma.PatientUpdateManyWithoutClinicNestedInput
+  appointments?: Prisma.AppointmentUpdateManyWithoutClinicNestedInput
+  conversations?: Prisma.ConversationUpdateManyWithoutClinicNestedInput
+  reminders?: Prisma.ReminderUpdateManyWithoutClinicNestedInput
+  notificationJobs?: Prisma.NotificationJobUpdateManyWithoutClinicNestedInput
+  campaigns?: Prisma.CampaignUpdateManyWithoutClinicNestedInput
+  clinicSettings?: Prisma.ClinicSettingsUpdateOneWithoutClinicNestedInput
+  businessHours?: Prisma.BusinessHoursUpdateManyWithoutClinicNestedInput
+  escalationLogs?: Prisma.EscalationLogUpdateManyWithoutClinicNestedInput
+  availableSlots?: Prisma.AvailableSlotUpdateManyWithoutClinicNestedInput
+  conversationSessions?: Prisma.ConversationSessionUpdateManyWithoutClinicNestedInput
+  leads?: Prisma.LeadUpdateManyWithoutClinicNestedInput
+}
+
+export type ClinicUncheckedUpdateWithoutGoogleCalendarConnectionInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  timezone?: Prisma.StringFieldUpdateOperationsInput | string
+  twilioPhoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  subscriptionPlan?: Prisma.EnumSubscriptionPlanFieldUpdateOperationsInput | $Enums.SubscriptionPlan
+  subscriptionExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  memberships?: Prisma.MembershipUncheckedUpdateManyWithoutClinicNestedInput
+  doctors?: Prisma.DoctorUncheckedUpdateManyWithoutClinicNestedInput
+  services?: Prisma.ServiceUncheckedUpdateManyWithoutClinicNestedInput
+  patients?: Prisma.PatientUncheckedUpdateManyWithoutClinicNestedInput
+  appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutClinicNestedInput
+  conversations?: Prisma.ConversationUncheckedUpdateManyWithoutClinicNestedInput
+  reminders?: Prisma.ReminderUncheckedUpdateManyWithoutClinicNestedInput
+  notificationJobs?: Prisma.NotificationJobUncheckedUpdateManyWithoutClinicNestedInput
+  campaigns?: Prisma.CampaignUncheckedUpdateManyWithoutClinicNestedInput
+  clinicSettings?: Prisma.ClinicSettingsUncheckedUpdateOneWithoutClinicNestedInput
+  businessHours?: Prisma.BusinessHoursUncheckedUpdateManyWithoutClinicNestedInput
+  escalationLogs?: Prisma.EscalationLogUncheckedUpdateManyWithoutClinicNestedInput
+  availableSlots?: Prisma.AvailableSlotUncheckedUpdateManyWithoutClinicNestedInput
+  conversationSessions?: Prisma.ConversationSessionUncheckedUpdateManyWithoutClinicNestedInput
+  leads?: Prisma.LeadUncheckedUpdateManyWithoutClinicNestedInput
 }
 
 export type ClinicCreateWithoutEscalationLogsInput = {
@@ -2836,6 +3057,7 @@ export type ClinicCreateWithoutEscalationLogsInput = {
   availableSlots?: Prisma.AvailableSlotCreateNestedManyWithoutClinicInput
   conversationSessions?: Prisma.ConversationSessionCreateNestedManyWithoutClinicInput
   leads?: Prisma.LeadCreateNestedManyWithoutClinicInput
+  googleCalendarConnection?: Prisma.GoogleCalendarConnectionCreateNestedOneWithoutClinicInput
 }
 
 export type ClinicUncheckedCreateWithoutEscalationLogsInput = {
@@ -2867,6 +3089,7 @@ export type ClinicUncheckedCreateWithoutEscalationLogsInput = {
   availableSlots?: Prisma.AvailableSlotUncheckedCreateNestedManyWithoutClinicInput
   conversationSessions?: Prisma.ConversationSessionUncheckedCreateNestedManyWithoutClinicInput
   leads?: Prisma.LeadUncheckedCreateNestedManyWithoutClinicInput
+  googleCalendarConnection?: Prisma.GoogleCalendarConnectionUncheckedCreateNestedOneWithoutClinicInput
 }
 
 export type ClinicCreateOrConnectWithoutEscalationLogsInput = {
@@ -2914,6 +3137,7 @@ export type ClinicUpdateWithoutEscalationLogsInput = {
   availableSlots?: Prisma.AvailableSlotUpdateManyWithoutClinicNestedInput
   conversationSessions?: Prisma.ConversationSessionUpdateManyWithoutClinicNestedInput
   leads?: Prisma.LeadUpdateManyWithoutClinicNestedInput
+  googleCalendarConnection?: Prisma.GoogleCalendarConnectionUpdateOneWithoutClinicNestedInput
 }
 
 export type ClinicUncheckedUpdateWithoutEscalationLogsInput = {
@@ -2945,6 +3169,7 @@ export type ClinicUncheckedUpdateWithoutEscalationLogsInput = {
   availableSlots?: Prisma.AvailableSlotUncheckedUpdateManyWithoutClinicNestedInput
   conversationSessions?: Prisma.ConversationSessionUncheckedUpdateManyWithoutClinicNestedInput
   leads?: Prisma.LeadUncheckedUpdateManyWithoutClinicNestedInput
+  googleCalendarConnection?: Prisma.GoogleCalendarConnectionUncheckedUpdateOneWithoutClinicNestedInput
 }
 
 
@@ -3125,6 +3350,7 @@ export type ClinicSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   availableSlots?: boolean | Prisma.Clinic$availableSlotsArgs<ExtArgs>
   conversationSessions?: boolean | Prisma.Clinic$conversationSessionsArgs<ExtArgs>
   leads?: boolean | Prisma.Clinic$leadsArgs<ExtArgs>
+  googleCalendarConnection?: boolean | Prisma.Clinic$googleCalendarConnectionArgs<ExtArgs>
   _count?: boolean | Prisma.ClinicCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["clinic"]>
 
@@ -3196,6 +3422,7 @@ export type ClinicInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   availableSlots?: boolean | Prisma.Clinic$availableSlotsArgs<ExtArgs>
   conversationSessions?: boolean | Prisma.Clinic$conversationSessionsArgs<ExtArgs>
   leads?: boolean | Prisma.Clinic$leadsArgs<ExtArgs>
+  googleCalendarConnection?: boolean | Prisma.Clinic$googleCalendarConnectionArgs<ExtArgs>
   _count?: boolean | Prisma.ClinicCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ClinicIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -3219,6 +3446,7 @@ export type $ClinicPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     availableSlots: Prisma.$AvailableSlotPayload<ExtArgs>[]
     conversationSessions: Prisma.$ConversationSessionPayload<ExtArgs>[]
     leads: Prisma.$LeadPayload<ExtArgs>[]
+    googleCalendarConnection: Prisma.$GoogleCalendarConnectionPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -3644,6 +3872,7 @@ export interface Prisma__ClinicClient<T, Null = never, ExtArgs extends runtime.T
   availableSlots<T extends Prisma.Clinic$availableSlotsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Clinic$availableSlotsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AvailableSlotPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   conversationSessions<T extends Prisma.Clinic$conversationSessionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Clinic$conversationSessionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ConversationSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   leads<T extends Prisma.Clinic$leadsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Clinic$leadsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LeadPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  googleCalendarConnection<T extends Prisma.Clinic$googleCalendarConnectionArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Clinic$googleCalendarConnectionArgs<ExtArgs>>): Prisma.Prisma__GoogleCalendarConnectionClient<runtime.Types.Result.GetResult<Prisma.$GoogleCalendarConnectionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -4432,6 +4661,25 @@ export type Clinic$leadsArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
   take?: number
   skip?: number
   distinct?: Prisma.LeadScalarFieldEnum | Prisma.LeadScalarFieldEnum[]
+}
+
+/**
+ * Clinic.googleCalendarConnection
+ */
+export type Clinic$googleCalendarConnectionArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the GoogleCalendarConnection
+   */
+  select?: Prisma.GoogleCalendarConnectionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the GoogleCalendarConnection
+   */
+  omit?: Prisma.GoogleCalendarConnectionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.GoogleCalendarConnectionInclude<ExtArgs> | null
+  where?: Prisma.GoogleCalendarConnectionWhereInput
 }
 
 /**

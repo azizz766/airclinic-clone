@@ -230,6 +230,7 @@ export type UserWhereInput = {
   appointments?: Prisma.AppointmentListRelationFilter
   campaigns?: Prisma.CampaignListRelationFilter
   escalationLogs?: Prisma.EscalationLogListRelationFilter
+  googleCalendarConnections?: Prisma.GoogleCalendarConnectionListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -251,6 +252,7 @@ export type UserOrderByWithRelationInput = {
   appointments?: Prisma.AppointmentOrderByRelationAggregateInput
   campaigns?: Prisma.CampaignOrderByRelationAggregateInput
   escalationLogs?: Prisma.EscalationLogOrderByRelationAggregateInput
+  googleCalendarConnections?: Prisma.GoogleCalendarConnectionOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -275,6 +277,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   appointments?: Prisma.AppointmentListRelationFilter
   campaigns?: Prisma.CampaignListRelationFilter
   escalationLogs?: Prisma.EscalationLogListRelationFilter
+  googleCalendarConnections?: Prisma.GoogleCalendarConnectionListRelationFilter
 }, "id" | "email">
 
 export type UserOrderByWithAggregationInput = {
@@ -328,6 +331,7 @@ export type UserCreateInput = {
   appointments?: Prisma.AppointmentCreateNestedManyWithoutCreatorInput
   campaigns?: Prisma.CampaignCreateNestedManyWithoutCreatorInput
   escalationLogs?: Prisma.EscalationLogCreateNestedManyWithoutUserInput
+  googleCalendarConnections?: Prisma.GoogleCalendarConnectionCreateNestedManyWithoutConnectedByInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -349,6 +353,7 @@ export type UserUncheckedCreateInput = {
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutCreatorInput
   campaigns?: Prisma.CampaignUncheckedCreateNestedManyWithoutCreatorInput
   escalationLogs?: Prisma.EscalationLogUncheckedCreateNestedManyWithoutUserInput
+  googleCalendarConnections?: Prisma.GoogleCalendarConnectionUncheckedCreateNestedManyWithoutConnectedByInput
 }
 
 export type UserUpdateInput = {
@@ -370,6 +375,7 @@ export type UserUpdateInput = {
   appointments?: Prisma.AppointmentUpdateManyWithoutCreatorNestedInput
   campaigns?: Prisma.CampaignUpdateManyWithoutCreatorNestedInput
   escalationLogs?: Prisma.EscalationLogUpdateManyWithoutUserNestedInput
+  googleCalendarConnections?: Prisma.GoogleCalendarConnectionUpdateManyWithoutConnectedByNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -391,6 +397,7 @@ export type UserUncheckedUpdateInput = {
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutCreatorNestedInput
   campaigns?: Prisma.CampaignUncheckedUpdateManyWithoutCreatorNestedInput
   escalationLogs?: Prisma.EscalationLogUncheckedUpdateManyWithoutUserNestedInput
+  googleCalendarConnections?: Prisma.GoogleCalendarConnectionUncheckedUpdateManyWithoutConnectedByNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -589,6 +596,20 @@ export type UserUpdateOneRequiredWithoutCampaignsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutCampaignsInput, Prisma.UserUpdateWithoutCampaignsInput>, Prisma.UserUncheckedUpdateWithoutCampaignsInput>
 }
 
+export type UserCreateNestedOneWithoutGoogleCalendarConnectionsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutGoogleCalendarConnectionsInput, Prisma.UserUncheckedCreateWithoutGoogleCalendarConnectionsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutGoogleCalendarConnectionsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutGoogleCalendarConnectionsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutGoogleCalendarConnectionsInput, Prisma.UserUncheckedCreateWithoutGoogleCalendarConnectionsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutGoogleCalendarConnectionsInput
+  upsert?: Prisma.UserUpsertWithoutGoogleCalendarConnectionsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutGoogleCalendarConnectionsInput, Prisma.UserUpdateWithoutGoogleCalendarConnectionsInput>, Prisma.UserUncheckedUpdateWithoutGoogleCalendarConnectionsInput>
+}
+
 export type UserCreateNestedOneWithoutEscalationLogsInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutEscalationLogsInput, Prisma.UserUncheckedCreateWithoutEscalationLogsInput>
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutEscalationLogsInput
@@ -623,6 +644,7 @@ export type UserCreateWithoutMembershipsInput = {
   appointments?: Prisma.AppointmentCreateNestedManyWithoutCreatorInput
   campaigns?: Prisma.CampaignCreateNestedManyWithoutCreatorInput
   escalationLogs?: Prisma.EscalationLogCreateNestedManyWithoutUserInput
+  googleCalendarConnections?: Prisma.GoogleCalendarConnectionCreateNestedManyWithoutConnectedByInput
 }
 
 export type UserUncheckedCreateWithoutMembershipsInput = {
@@ -643,6 +665,7 @@ export type UserUncheckedCreateWithoutMembershipsInput = {
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutCreatorInput
   campaigns?: Prisma.CampaignUncheckedCreateNestedManyWithoutCreatorInput
   escalationLogs?: Prisma.EscalationLogUncheckedCreateNestedManyWithoutUserInput
+  googleCalendarConnections?: Prisma.GoogleCalendarConnectionUncheckedCreateNestedManyWithoutConnectedByInput
 }
 
 export type UserCreateOrConnectWithoutMembershipsInput = {
@@ -668,6 +691,7 @@ export type UserCreateWithoutInvitedMembershipsInput = {
   appointments?: Prisma.AppointmentCreateNestedManyWithoutCreatorInput
   campaigns?: Prisma.CampaignCreateNestedManyWithoutCreatorInput
   escalationLogs?: Prisma.EscalationLogCreateNestedManyWithoutUserInput
+  googleCalendarConnections?: Prisma.GoogleCalendarConnectionCreateNestedManyWithoutConnectedByInput
 }
 
 export type UserUncheckedCreateWithoutInvitedMembershipsInput = {
@@ -688,6 +712,7 @@ export type UserUncheckedCreateWithoutInvitedMembershipsInput = {
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutCreatorInput
   campaigns?: Prisma.CampaignUncheckedCreateNestedManyWithoutCreatorInput
   escalationLogs?: Prisma.EscalationLogUncheckedCreateNestedManyWithoutUserInput
+  googleCalendarConnections?: Prisma.GoogleCalendarConnectionUncheckedCreateNestedManyWithoutConnectedByInput
 }
 
 export type UserCreateOrConnectWithoutInvitedMembershipsInput = {
@@ -724,6 +749,7 @@ export type UserUpdateWithoutMembershipsInput = {
   appointments?: Prisma.AppointmentUpdateManyWithoutCreatorNestedInput
   campaigns?: Prisma.CampaignUpdateManyWithoutCreatorNestedInput
   escalationLogs?: Prisma.EscalationLogUpdateManyWithoutUserNestedInput
+  googleCalendarConnections?: Prisma.GoogleCalendarConnectionUpdateManyWithoutConnectedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutMembershipsInput = {
@@ -744,6 +770,7 @@ export type UserUncheckedUpdateWithoutMembershipsInput = {
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutCreatorNestedInput
   campaigns?: Prisma.CampaignUncheckedUpdateManyWithoutCreatorNestedInput
   escalationLogs?: Prisma.EscalationLogUncheckedUpdateManyWithoutUserNestedInput
+  googleCalendarConnections?: Prisma.GoogleCalendarConnectionUncheckedUpdateManyWithoutConnectedByNestedInput
 }
 
 export type UserUpsertWithoutInvitedMembershipsInput = {
@@ -775,6 +802,7 @@ export type UserUpdateWithoutInvitedMembershipsInput = {
   appointments?: Prisma.AppointmentUpdateManyWithoutCreatorNestedInput
   campaigns?: Prisma.CampaignUpdateManyWithoutCreatorNestedInput
   escalationLogs?: Prisma.EscalationLogUpdateManyWithoutUserNestedInput
+  googleCalendarConnections?: Prisma.GoogleCalendarConnectionUpdateManyWithoutConnectedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutInvitedMembershipsInput = {
@@ -795,6 +823,7 @@ export type UserUncheckedUpdateWithoutInvitedMembershipsInput = {
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutCreatorNestedInput
   campaigns?: Prisma.CampaignUncheckedUpdateManyWithoutCreatorNestedInput
   escalationLogs?: Prisma.EscalationLogUncheckedUpdateManyWithoutUserNestedInput
+  googleCalendarConnections?: Prisma.GoogleCalendarConnectionUncheckedUpdateManyWithoutConnectedByNestedInput
 }
 
 export type UserCreateWithoutDoctorsInput = {
@@ -815,6 +844,7 @@ export type UserCreateWithoutDoctorsInput = {
   appointments?: Prisma.AppointmentCreateNestedManyWithoutCreatorInput
   campaigns?: Prisma.CampaignCreateNestedManyWithoutCreatorInput
   escalationLogs?: Prisma.EscalationLogCreateNestedManyWithoutUserInput
+  googleCalendarConnections?: Prisma.GoogleCalendarConnectionCreateNestedManyWithoutConnectedByInput
 }
 
 export type UserUncheckedCreateWithoutDoctorsInput = {
@@ -835,6 +865,7 @@ export type UserUncheckedCreateWithoutDoctorsInput = {
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutCreatorInput
   campaigns?: Prisma.CampaignUncheckedCreateNestedManyWithoutCreatorInput
   escalationLogs?: Prisma.EscalationLogUncheckedCreateNestedManyWithoutUserInput
+  googleCalendarConnections?: Prisma.GoogleCalendarConnectionUncheckedCreateNestedManyWithoutConnectedByInput
 }
 
 export type UserCreateOrConnectWithoutDoctorsInput = {
@@ -871,6 +902,7 @@ export type UserUpdateWithoutDoctorsInput = {
   appointments?: Prisma.AppointmentUpdateManyWithoutCreatorNestedInput
   campaigns?: Prisma.CampaignUpdateManyWithoutCreatorNestedInput
   escalationLogs?: Prisma.EscalationLogUpdateManyWithoutUserNestedInput
+  googleCalendarConnections?: Prisma.GoogleCalendarConnectionUpdateManyWithoutConnectedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutDoctorsInput = {
@@ -891,6 +923,7 @@ export type UserUncheckedUpdateWithoutDoctorsInput = {
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutCreatorNestedInput
   campaigns?: Prisma.CampaignUncheckedUpdateManyWithoutCreatorNestedInput
   escalationLogs?: Prisma.EscalationLogUncheckedUpdateManyWithoutUserNestedInput
+  googleCalendarConnections?: Prisma.GoogleCalendarConnectionUncheckedUpdateManyWithoutConnectedByNestedInput
 }
 
 export type UserCreateWithoutAppointmentsInput = {
@@ -911,6 +944,7 @@ export type UserCreateWithoutAppointmentsInput = {
   doctors?: Prisma.DoctorCreateNestedManyWithoutUserInput
   campaigns?: Prisma.CampaignCreateNestedManyWithoutCreatorInput
   escalationLogs?: Prisma.EscalationLogCreateNestedManyWithoutUserInput
+  googleCalendarConnections?: Prisma.GoogleCalendarConnectionCreateNestedManyWithoutConnectedByInput
 }
 
 export type UserUncheckedCreateWithoutAppointmentsInput = {
@@ -931,6 +965,7 @@ export type UserUncheckedCreateWithoutAppointmentsInput = {
   doctors?: Prisma.DoctorUncheckedCreateNestedManyWithoutUserInput
   campaigns?: Prisma.CampaignUncheckedCreateNestedManyWithoutCreatorInput
   escalationLogs?: Prisma.EscalationLogUncheckedCreateNestedManyWithoutUserInput
+  googleCalendarConnections?: Prisma.GoogleCalendarConnectionUncheckedCreateNestedManyWithoutConnectedByInput
 }
 
 export type UserCreateOrConnectWithoutAppointmentsInput = {
@@ -967,6 +1002,7 @@ export type UserUpdateWithoutAppointmentsInput = {
   doctors?: Prisma.DoctorUpdateManyWithoutUserNestedInput
   campaigns?: Prisma.CampaignUpdateManyWithoutCreatorNestedInput
   escalationLogs?: Prisma.EscalationLogUpdateManyWithoutUserNestedInput
+  googleCalendarConnections?: Prisma.GoogleCalendarConnectionUpdateManyWithoutConnectedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAppointmentsInput = {
@@ -987,6 +1023,7 @@ export type UserUncheckedUpdateWithoutAppointmentsInput = {
   doctors?: Prisma.DoctorUncheckedUpdateManyWithoutUserNestedInput
   campaigns?: Prisma.CampaignUncheckedUpdateManyWithoutCreatorNestedInput
   escalationLogs?: Prisma.EscalationLogUncheckedUpdateManyWithoutUserNestedInput
+  googleCalendarConnections?: Prisma.GoogleCalendarConnectionUncheckedUpdateManyWithoutConnectedByNestedInput
 }
 
 export type UserCreateWithoutAssignedConversationsInput = {
@@ -1007,6 +1044,7 @@ export type UserCreateWithoutAssignedConversationsInput = {
   appointments?: Prisma.AppointmentCreateNestedManyWithoutCreatorInput
   campaigns?: Prisma.CampaignCreateNestedManyWithoutCreatorInput
   escalationLogs?: Prisma.EscalationLogCreateNestedManyWithoutUserInput
+  googleCalendarConnections?: Prisma.GoogleCalendarConnectionCreateNestedManyWithoutConnectedByInput
 }
 
 export type UserUncheckedCreateWithoutAssignedConversationsInput = {
@@ -1027,6 +1065,7 @@ export type UserUncheckedCreateWithoutAssignedConversationsInput = {
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutCreatorInput
   campaigns?: Prisma.CampaignUncheckedCreateNestedManyWithoutCreatorInput
   escalationLogs?: Prisma.EscalationLogUncheckedCreateNestedManyWithoutUserInput
+  googleCalendarConnections?: Prisma.GoogleCalendarConnectionUncheckedCreateNestedManyWithoutConnectedByInput
 }
 
 export type UserCreateOrConnectWithoutAssignedConversationsInput = {
@@ -1063,6 +1102,7 @@ export type UserUpdateWithoutAssignedConversationsInput = {
   appointments?: Prisma.AppointmentUpdateManyWithoutCreatorNestedInput
   campaigns?: Prisma.CampaignUpdateManyWithoutCreatorNestedInput
   escalationLogs?: Prisma.EscalationLogUpdateManyWithoutUserNestedInput
+  googleCalendarConnections?: Prisma.GoogleCalendarConnectionUpdateManyWithoutConnectedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAssignedConversationsInput = {
@@ -1083,6 +1123,7 @@ export type UserUncheckedUpdateWithoutAssignedConversationsInput = {
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutCreatorNestedInput
   campaigns?: Prisma.CampaignUncheckedUpdateManyWithoutCreatorNestedInput
   escalationLogs?: Prisma.EscalationLogUncheckedUpdateManyWithoutUserNestedInput
+  googleCalendarConnections?: Prisma.GoogleCalendarConnectionUncheckedUpdateManyWithoutConnectedByNestedInput
 }
 
 export type UserCreateWithoutSentMessagesInput = {
@@ -1103,6 +1144,7 @@ export type UserCreateWithoutSentMessagesInput = {
   appointments?: Prisma.AppointmentCreateNestedManyWithoutCreatorInput
   campaigns?: Prisma.CampaignCreateNestedManyWithoutCreatorInput
   escalationLogs?: Prisma.EscalationLogCreateNestedManyWithoutUserInput
+  googleCalendarConnections?: Prisma.GoogleCalendarConnectionCreateNestedManyWithoutConnectedByInput
 }
 
 export type UserUncheckedCreateWithoutSentMessagesInput = {
@@ -1123,6 +1165,7 @@ export type UserUncheckedCreateWithoutSentMessagesInput = {
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutCreatorInput
   campaigns?: Prisma.CampaignUncheckedCreateNestedManyWithoutCreatorInput
   escalationLogs?: Prisma.EscalationLogUncheckedCreateNestedManyWithoutUserInput
+  googleCalendarConnections?: Prisma.GoogleCalendarConnectionUncheckedCreateNestedManyWithoutConnectedByInput
 }
 
 export type UserCreateOrConnectWithoutSentMessagesInput = {
@@ -1159,6 +1202,7 @@ export type UserUpdateWithoutSentMessagesInput = {
   appointments?: Prisma.AppointmentUpdateManyWithoutCreatorNestedInput
   campaigns?: Prisma.CampaignUpdateManyWithoutCreatorNestedInput
   escalationLogs?: Prisma.EscalationLogUpdateManyWithoutUserNestedInput
+  googleCalendarConnections?: Prisma.GoogleCalendarConnectionUpdateManyWithoutConnectedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSentMessagesInput = {
@@ -1179,6 +1223,7 @@ export type UserUncheckedUpdateWithoutSentMessagesInput = {
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutCreatorNestedInput
   campaigns?: Prisma.CampaignUncheckedUpdateManyWithoutCreatorNestedInput
   escalationLogs?: Prisma.EscalationLogUncheckedUpdateManyWithoutUserNestedInput
+  googleCalendarConnections?: Prisma.GoogleCalendarConnectionUncheckedUpdateManyWithoutConnectedByNestedInput
 }
 
 export type UserCreateWithoutCampaignsInput = {
@@ -1199,6 +1244,7 @@ export type UserCreateWithoutCampaignsInput = {
   doctors?: Prisma.DoctorCreateNestedManyWithoutUserInput
   appointments?: Prisma.AppointmentCreateNestedManyWithoutCreatorInput
   escalationLogs?: Prisma.EscalationLogCreateNestedManyWithoutUserInput
+  googleCalendarConnections?: Prisma.GoogleCalendarConnectionCreateNestedManyWithoutConnectedByInput
 }
 
 export type UserUncheckedCreateWithoutCampaignsInput = {
@@ -1219,6 +1265,7 @@ export type UserUncheckedCreateWithoutCampaignsInput = {
   doctors?: Prisma.DoctorUncheckedCreateNestedManyWithoutUserInput
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutCreatorInput
   escalationLogs?: Prisma.EscalationLogUncheckedCreateNestedManyWithoutUserInput
+  googleCalendarConnections?: Prisma.GoogleCalendarConnectionUncheckedCreateNestedManyWithoutConnectedByInput
 }
 
 export type UserCreateOrConnectWithoutCampaignsInput = {
@@ -1255,6 +1302,7 @@ export type UserUpdateWithoutCampaignsInput = {
   doctors?: Prisma.DoctorUpdateManyWithoutUserNestedInput
   appointments?: Prisma.AppointmentUpdateManyWithoutCreatorNestedInput
   escalationLogs?: Prisma.EscalationLogUpdateManyWithoutUserNestedInput
+  googleCalendarConnections?: Prisma.GoogleCalendarConnectionUpdateManyWithoutConnectedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCampaignsInput = {
@@ -1274,6 +1322,107 @@ export type UserUncheckedUpdateWithoutCampaignsInput = {
   memberships?: Prisma.MembershipUncheckedUpdateManyWithoutUserNestedInput
   doctors?: Prisma.DoctorUncheckedUpdateManyWithoutUserNestedInput
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutCreatorNestedInput
+  escalationLogs?: Prisma.EscalationLogUncheckedUpdateManyWithoutUserNestedInput
+  googleCalendarConnections?: Prisma.GoogleCalendarConnectionUncheckedUpdateManyWithoutConnectedByNestedInput
+}
+
+export type UserCreateWithoutGoogleCalendarConnectionsInput = {
+  id?: string
+  email: string
+  passwordHash: string
+  firstName?: string | null
+  lastName?: string | null
+  phone?: string | null
+  isEmailVerified?: boolean
+  lastLoginAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  invitedMemberships?: Prisma.MembershipCreateNestedManyWithoutInviterInput
+  assignedConversations?: Prisma.ConversationCreateNestedManyWithoutAssigneeInput
+  sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
+  memberships?: Prisma.MembershipCreateNestedManyWithoutUserInput
+  doctors?: Prisma.DoctorCreateNestedManyWithoutUserInput
+  appointments?: Prisma.AppointmentCreateNestedManyWithoutCreatorInput
+  campaigns?: Prisma.CampaignCreateNestedManyWithoutCreatorInput
+  escalationLogs?: Prisma.EscalationLogCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutGoogleCalendarConnectionsInput = {
+  id?: string
+  email: string
+  passwordHash: string
+  firstName?: string | null
+  lastName?: string | null
+  phone?: string | null
+  isEmailVerified?: boolean
+  lastLoginAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  invitedMemberships?: Prisma.MembershipUncheckedCreateNestedManyWithoutInviterInput
+  assignedConversations?: Prisma.ConversationUncheckedCreateNestedManyWithoutAssigneeInput
+  sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
+  memberships?: Prisma.MembershipUncheckedCreateNestedManyWithoutUserInput
+  doctors?: Prisma.DoctorUncheckedCreateNestedManyWithoutUserInput
+  appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutCreatorInput
+  campaigns?: Prisma.CampaignUncheckedCreateNestedManyWithoutCreatorInput
+  escalationLogs?: Prisma.EscalationLogUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutGoogleCalendarConnectionsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutGoogleCalendarConnectionsInput, Prisma.UserUncheckedCreateWithoutGoogleCalendarConnectionsInput>
+}
+
+export type UserUpsertWithoutGoogleCalendarConnectionsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutGoogleCalendarConnectionsInput, Prisma.UserUncheckedUpdateWithoutGoogleCalendarConnectionsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutGoogleCalendarConnectionsInput, Prisma.UserUncheckedCreateWithoutGoogleCalendarConnectionsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutGoogleCalendarConnectionsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutGoogleCalendarConnectionsInput, Prisma.UserUncheckedUpdateWithoutGoogleCalendarConnectionsInput>
+}
+
+export type UserUpdateWithoutGoogleCalendarConnectionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isEmailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  invitedMemberships?: Prisma.MembershipUpdateManyWithoutInviterNestedInput
+  assignedConversations?: Prisma.ConversationUpdateManyWithoutAssigneeNestedInput
+  sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
+  memberships?: Prisma.MembershipUpdateManyWithoutUserNestedInput
+  doctors?: Prisma.DoctorUpdateManyWithoutUserNestedInput
+  appointments?: Prisma.AppointmentUpdateManyWithoutCreatorNestedInput
+  campaigns?: Prisma.CampaignUpdateManyWithoutCreatorNestedInput
+  escalationLogs?: Prisma.EscalationLogUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutGoogleCalendarConnectionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  firstName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isEmailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  invitedMemberships?: Prisma.MembershipUncheckedUpdateManyWithoutInviterNestedInput
+  assignedConversations?: Prisma.ConversationUncheckedUpdateManyWithoutAssigneeNestedInput
+  sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
+  memberships?: Prisma.MembershipUncheckedUpdateManyWithoutUserNestedInput
+  doctors?: Prisma.DoctorUncheckedUpdateManyWithoutUserNestedInput
+  appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutCreatorNestedInput
+  campaigns?: Prisma.CampaignUncheckedUpdateManyWithoutCreatorNestedInput
   escalationLogs?: Prisma.EscalationLogUncheckedUpdateManyWithoutUserNestedInput
 }
 
@@ -1295,6 +1444,7 @@ export type UserCreateWithoutEscalationLogsInput = {
   doctors?: Prisma.DoctorCreateNestedManyWithoutUserInput
   appointments?: Prisma.AppointmentCreateNestedManyWithoutCreatorInput
   campaigns?: Prisma.CampaignCreateNestedManyWithoutCreatorInput
+  googleCalendarConnections?: Prisma.GoogleCalendarConnectionCreateNestedManyWithoutConnectedByInput
 }
 
 export type UserUncheckedCreateWithoutEscalationLogsInput = {
@@ -1315,6 +1465,7 @@ export type UserUncheckedCreateWithoutEscalationLogsInput = {
   doctors?: Prisma.DoctorUncheckedCreateNestedManyWithoutUserInput
   appointments?: Prisma.AppointmentUncheckedCreateNestedManyWithoutCreatorInput
   campaigns?: Prisma.CampaignUncheckedCreateNestedManyWithoutCreatorInput
+  googleCalendarConnections?: Prisma.GoogleCalendarConnectionUncheckedCreateNestedManyWithoutConnectedByInput
 }
 
 export type UserCreateOrConnectWithoutEscalationLogsInput = {
@@ -1351,6 +1502,7 @@ export type UserUpdateWithoutEscalationLogsInput = {
   doctors?: Prisma.DoctorUpdateManyWithoutUserNestedInput
   appointments?: Prisma.AppointmentUpdateManyWithoutCreatorNestedInput
   campaigns?: Prisma.CampaignUpdateManyWithoutCreatorNestedInput
+  googleCalendarConnections?: Prisma.GoogleCalendarConnectionUpdateManyWithoutConnectedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutEscalationLogsInput = {
@@ -1371,6 +1523,7 @@ export type UserUncheckedUpdateWithoutEscalationLogsInput = {
   doctors?: Prisma.DoctorUncheckedUpdateManyWithoutUserNestedInput
   appointments?: Prisma.AppointmentUncheckedUpdateManyWithoutCreatorNestedInput
   campaigns?: Prisma.CampaignUncheckedUpdateManyWithoutCreatorNestedInput
+  googleCalendarConnections?: Prisma.GoogleCalendarConnectionUncheckedUpdateManyWithoutConnectedByNestedInput
 }
 
 
@@ -1387,6 +1540,7 @@ export type UserCountOutputType = {
   appointments: number
   campaigns: number
   escalationLogs: number
+  googleCalendarConnections: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1398,6 +1552,7 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   appointments?: boolean | UserCountOutputTypeCountAppointmentsArgs
   campaigns?: boolean | UserCountOutputTypeCountCampaignsArgs
   escalationLogs?: boolean | UserCountOutputTypeCountEscalationLogsArgs
+  googleCalendarConnections?: boolean | UserCountOutputTypeCountGoogleCalendarConnectionsArgs
 }
 
 /**
@@ -1466,6 +1621,13 @@ export type UserCountOutputTypeCountEscalationLogsArgs<ExtArgs extends runtime.T
   where?: Prisma.EscalationLogWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountGoogleCalendarConnectionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.GoogleCalendarConnectionWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1486,6 +1648,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   appointments?: boolean | Prisma.User$appointmentsArgs<ExtArgs>
   campaigns?: boolean | Prisma.User$campaignsArgs<ExtArgs>
   escalationLogs?: boolean | Prisma.User$escalationLogsArgs<ExtArgs>
+  googleCalendarConnections?: boolean | Prisma.User$googleCalendarConnectionsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -1538,6 +1701,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   appointments?: boolean | Prisma.User$appointmentsArgs<ExtArgs>
   campaigns?: boolean | Prisma.User$campaignsArgs<ExtArgs>
   escalationLogs?: boolean | Prisma.User$escalationLogsArgs<ExtArgs>
+  googleCalendarConnections?: boolean | Prisma.User$googleCalendarConnectionsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -1554,6 +1718,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     appointments: Prisma.$AppointmentPayload<ExtArgs>[]
     campaigns: Prisma.$CampaignPayload<ExtArgs>[]
     escalationLogs: Prisma.$EscalationLogPayload<ExtArgs>[]
+    googleCalendarConnections: Prisma.$GoogleCalendarConnectionPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1968,6 +2133,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   appointments<T extends Prisma.User$appointmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$appointmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AppointmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   campaigns<T extends Prisma.User$campaignsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$campaignsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CampaignPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   escalationLogs<T extends Prisma.User$escalationLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$escalationLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EscalationLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  googleCalendarConnections<T extends Prisma.User$googleCalendarConnectionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$googleCalendarConnectionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$GoogleCalendarConnectionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2589,6 +2755,30 @@ export type User$escalationLogsArgs<ExtArgs extends runtime.Types.Extensions.Int
   take?: number
   skip?: number
   distinct?: Prisma.EscalationLogScalarFieldEnum | Prisma.EscalationLogScalarFieldEnum[]
+}
+
+/**
+ * User.googleCalendarConnections
+ */
+export type User$googleCalendarConnectionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the GoogleCalendarConnection
+   */
+  select?: Prisma.GoogleCalendarConnectionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the GoogleCalendarConnection
+   */
+  omit?: Prisma.GoogleCalendarConnectionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.GoogleCalendarConnectionInclude<ExtArgs> | null
+  where?: Prisma.GoogleCalendarConnectionWhereInput
+  orderBy?: Prisma.GoogleCalendarConnectionOrderByWithRelationInput | Prisma.GoogleCalendarConnectionOrderByWithRelationInput[]
+  cursor?: Prisma.GoogleCalendarConnectionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.GoogleCalendarConnectionScalarFieldEnum | Prisma.GoogleCalendarConnectionScalarFieldEnum[]
 }
 
 /**

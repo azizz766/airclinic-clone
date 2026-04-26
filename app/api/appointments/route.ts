@@ -6,6 +6,7 @@ import { prepareReminderNotificationJob } from '@/lib/notifications/reminder-job
 import { sendWhatsAppNotificationJob } from '@/lib/notifications/send-whatsapp-job'
 import { canManageAppointments, normalizeClinicRole } from '@/lib/auth/permissions'
 import { isDateWithinDoctorAvailability } from '@/lib/doctor-availability'
+import { syncCreateEvent } from '@/lib/google/sync'
 
 const REMINDER_OFFSETS_HOURS = [24, 3] as const
 
@@ -310,6 +311,8 @@ export async function POST(request: NextRequest) {
         // Appointment still committed to DB; the job will be retried by cron
       }
     }
+
+    syncCreateEvent(clinicId, appointment.id).catch(console.warn)
 
     return NextResponse.json(appointment)
   } catch (error) {

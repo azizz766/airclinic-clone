@@ -70,6 +70,7 @@ export const ModelName = {
   ClinicSettings: 'ClinicSettings',
   BusinessHours: 'BusinessHours',
   Lead: 'Lead',
+  GoogleCalendarConnection: 'GoogleCalendarConnection',
   EscalationLog: 'EscalationLog'
 } as const
 
@@ -452,6 +453,21 @@ export const LeadScalarFieldEnum = {
 } as const
 
 export type LeadScalarFieldEnum = (typeof LeadScalarFieldEnum)[keyof typeof LeadScalarFieldEnum]
+
+
+export const GoogleCalendarConnectionScalarFieldEnum = {
+  id: 'id',
+  clinicId: 'clinicId',
+  calendarId: 'calendarId',
+  accessToken: 'accessToken',
+  refreshToken: 'refreshToken',
+  tokenExpiresAt: 'tokenExpiresAt',
+  connectedByUserId: 'connectedByUserId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type GoogleCalendarConnectionScalarFieldEnum = (typeof GoogleCalendarConnectionScalarFieldEnum)[keyof typeof GoogleCalendarConnectionScalarFieldEnum]
 
 
 export const EscalationLogScalarFieldEnum = {

@@ -137,6 +137,11 @@ export type BusinessHours = Prisma.BusinessHoursModel
  */
 export type Lead = Prisma.LeadModel
 /**
+ * Model GoogleCalendarConnection
+ * 
+ */
+export type GoogleCalendarConnection = Prisma.GoogleCalendarConnectionModel
+/**
  * Model EscalationLog
  * 
  */
