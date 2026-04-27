@@ -1245,18 +1245,35 @@ function resolveRescheduleTargetDate(input: string): Date | null {
   // Normalize Arabic-Indic digits (٠-٩ → 0-9) for numeric patterns
   const td = t.replace(/[٠-٩]/g, (d: string) => String(d.charCodeAt(0) - 0x0660))
 
-  // 2. Arabic weekday names (keys already in normalizeArabicInput normal form)
-  const WEEKDAYS: Record<string, number> = {
-    'السبت': 6, 'الاحد': 0, 'الاثنين': 1, 'الثلاثاء': 2,
-    'الاربعاء': 3, 'الخميس': 4, 'الجمعه': 5,
+  // 2. Arabic weekday names.
+  // Keys are pre-normalized (أ→ا, ى→ي, ة→ه) but we also compare with standalone
+  // hamza ء stripped, since normalizeArabicInput does not normalize ء and some
+  // mobile keyboards omit or substitute it.
+  const WEEKDAYS: Array<[string, number]> = [
+    ['السبت', 6], ['الاحد', 0], ['الاثنين', 1], ['الثلاثاء', 2],
+    ['الاربعاء', 3], ['الخميس', 4], ['الجمعه', 5],
+  ]
+
+  // Strip "يوم " prefix so that "يوم الأربعاء" and "موعدي يوم الأربعاء" both reduce
+  // to a bare weekday name before boundary-matching.
+  const yawmIdx = t.lastIndexOf('يوم ')
+  const tBare = yawmIdx >= 0 ? t.slice(yawmIdx + 4).trim() : t
+
+  function weekdayBoundaryMatch(candidate: string, word: string): boolean {
+    // Check with and without trailing ء to survive encoding variation
+    const cs = [candidate, candidate.replace(/ء/g, '')]
+    const ws = [word, word.replace(/ء/g, '')]
+    for (let i = 0; i < 2; i++) {
+      const c = cs[i]!, w = ws[i]!
+      if (c === w || c.startsWith(w + ' ') || c.endsWith(' ' + w) || c.includes(' ' + w + ' ')) {
+        return true
+      }
+    }
+    return false
   }
-  for (const [word, targetDay] of Object.entries(WEEKDAYS)) {
-    if (
-      t === word ||
-      t.startsWith(word + ' ') ||
-      t.endsWith(' ' + word) ||
-      t.includes(' ' + word + ' ')
-    ) {
+
+  for (const [word, targetDay] of WEEKDAYS) {
+    if (weekdayBoundaryMatch(t, word) || weekdayBoundaryMatch(tBare, word)) {
       const now = new Date()
       const diff = (targetDay - now.getUTCDay() + 7) % 7
       return new Date(Date.UTC(
@@ -1338,21 +1355,48 @@ async function handleRescheduleIntercept(ctx: HandlerContext): Promise<HandlerRe
     return { reply: 'ما لقيت موعد قائم على هذا الرقم.' }
   }
 
-  const appointment = await prisma.appointment.findFirst({
-    where: {
-      clinicId,
-      patientId: patient.id,
-      status: { in: ['scheduled', 'confirmed', 'confirmation_pending'] },
-      scheduledAt: { gt: new Date() },
-    },
-    orderBy: { scheduledAt: 'asc' },
-    select: {
-      id: true,
-      serviceId: true,
-      scheduledAt: true,
-      service: { select: { name: true } },
-    },
-  })
+  const apptSelect = {
+    id: true,
+    serviceId: true,
+    scheduledAt: true,
+    service: { select: { name: true } },
+  } as const
+
+  // Priority 1: the appointment booked in this session — avoids selecting an older
+  // appointment when the patient has multiple upcoming ones.
+  let appointment: {
+    id: string
+    serviceId: string
+    scheduledAt: Date
+    service: { name: string }
+  } | null = null
+
+  if (session.bookingId) {
+    appointment = await prisma.appointment.findFirst({
+      where: {
+        id: session.bookingId,
+        clinicId,
+        patientId: patient.id,
+        status: { in: ['scheduled', 'confirmed', 'confirmation_pending'] },
+        scheduledAt: { gt: new Date() },
+      },
+      select: apptSelect,
+    })
+  }
+
+  // Priority 2: nearest upcoming active appointment (original behaviour).
+  if (!appointment) {
+    appointment = await prisma.appointment.findFirst({
+      where: {
+        clinicId,
+        patientId: patient.id,
+        status: { in: ['scheduled', 'confirmed', 'confirmation_pending'] },
+        scheduledAt: { gt: new Date() },
+      },
+      orderBy: { scheduledAt: 'asc' },
+      select: apptSelect,
+    })
+  }
 
   if (!appointment) {
     return { reply: 'ما لقيت موعد قائم على هذا الرقم.' }
@@ -1389,7 +1433,7 @@ async function handleRescheduleIntercept(ctx: HandlerContext): Promise<HandlerRe
 }
 
 async function handleRescheduleDate(ctx: HandlerContext): Promise<HandlerResult> {
-  const { session, clinicId, body } = ctx
+  const { session, clinicId, body, interpretation } = ctx
 
   const stored = session.ambiguousIntents as RescheduleCtx | null
 
@@ -1397,7 +1441,20 @@ async function handleRescheduleDate(ctx: HandlerContext): Promise<HandlerResult>
     return escalate(ctx, 'CORRUPTED_RESCHEDULE')
   }
 
-  const targetDate = resolveRescheduleTargetDate(body)
+  let targetDate = resolveRescheduleTargetDate(body)
+
+  // Fallback: if string parser couldn't extract a date but the AI pipeline parsed a
+  // weekday (e.g. from a free-form phrase the regex didn't cover), use that.
+  if (targetDate === null && interpretation.preferredDayOfWeek !== null) {
+    const now = new Date()
+    const diff = (interpretation.preferredDayOfWeek - now.getUTCDay() + 7) % 7
+    targetDate = new Date(Date.UTC(
+      now.getUTCFullYear(),
+      now.getUTCMonth(),
+      now.getUTCDate() + (diff === 0 ? 7 : diff),
+    ))
+  }
+
   if (targetDate === null) {
     const limit = await checkRetryLimit(session, clinicId)
     if (limit) return limit
