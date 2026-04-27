@@ -303,6 +303,7 @@ export const AppointmentScalarFieldEnum = {
   notes: 'notes',
   cancellationReason: 'cancellationReason',
   rescheduledFromId: 'rescheduledFromId',
+  calendarEventId: 'calendarEventId',
   createdBy: 'createdBy',
   source: 'source',
   createdAt: 'createdAt',

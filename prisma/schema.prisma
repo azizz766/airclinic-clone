@@ -438,6 +438,7 @@ model Appointment {
   notes              String?
   cancellationReason String?
   rescheduledFromId  String?
+  calendarEventId    String?
   createdBy          String?
   source             String            @default("dashboard")
   createdAt          DateTime          @default(now())
