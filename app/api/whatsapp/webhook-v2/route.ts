@@ -158,6 +158,70 @@ async function handleEntryState(ctx: HandlerContext): Promise<HandlerResult> {
   }
 
   if (intent === 'new_booking') {
+    const { from } = ctx
+    const guardPatient = await prisma.patient.findFirst({
+      where: { clinicId, phone: from },
+      select: { id: true },
+    })
+
+    if (guardPatient) {
+      const activeAppts = await prisma.appointment.findMany({
+        where: {
+          clinicId,
+          patientId: guardPatient.id,
+          status: { in: ['scheduled', 'confirmed', 'confirmation_pending'] },
+          scheduledAt: { gt: new Date() },
+        },
+        orderBy: { scheduledAt: 'asc' },
+        select: {
+          id: true,
+          serviceId: true,
+          scheduledAt: true,
+          service: { select: { name: true } },
+        },
+        take: 5,
+      })
+
+      if (activeAppts.length > 0) {
+        const candidates = activeAppts.map((a) => ({
+          id: a.id,
+          serviceId: a.serviceId,
+          serviceName: a.service.name,
+          scheduledAt: a.scheduledAt.toISOString(),
+        }))
+
+        await prisma.conversationSession.update({
+          where: { id: session.id },
+          data: {
+            ambiguousIntents: { type: 'booking_intent_clarification', candidates } as unknown as Prisma.InputJsonValue,
+            retryCount: 0,
+          },
+        })
+
+        await transitionSession(session.id, clinicId, 'INTENT_DISAMBIGUATION', 'INTENT_BOOKING')
+
+        if (activeAppts.length === 1) {
+          const a = activeAppts[0]!
+          const date = new Date(a.scheduledAt).toLocaleDateString('ar-SA', {
+            weekday: 'long', month: 'short', day: 'numeric',
+          })
+          const time = new Date(a.scheduledAt).toLocaleTimeString('ar-SA', {
+            hour: '2-digit', minute: '2-digit',
+          })
+          return {
+            reply:
+              `عندك موعد قائم:\n\n${a.service.name} — ${date}، ${time}\n\n` +
+              `هل تبغى:\n1. تعديل الموعد الحالي\n2. حجز موعد إضافي`,
+          }
+        } else {
+          return {
+            reply:
+              `عندك أكثر من موعد قائم.\n\nهل تبغى:\n1. تعديل موعد قائم\n2. حجز موعد إضافي`,
+          }
+        }
+      }
+    }
+
     const services = await prisma.service.findMany({
       where: { clinicId },
       select: { id: true, name: true },
@@ -222,6 +286,64 @@ async function handleEntryState(ctx: HandlerContext): Promise<HandlerResult> {
   return {
     reply: 'كيف أقدر أساعدك؟',
   }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+
+async function handleBookingIntentClarification(
+  ctx: HandlerContext,
+): Promise<HandlerResult> {
+  const { session, clinicId, body } = ctx
+
+  const stored = session.ambiguousIntents as {
+    type: string
+    candidates: Array<{ id: string; serviceId: string; serviceName: string; scheduledAt: string }>
+  } | null
+
+  if (!stored || stored.type !== 'booking_intent_clarification') {
+    return handleEntryState(ctx)
+  }
+
+  const selection = parseSelection(body)
+
+  if (selection === 1) {
+    return handleRescheduleIntercept(ctx)
+  }
+
+  if (selection === 2) {
+    const services = await prisma.service.findMany({
+      where: { clinicId },
+      select: { id: true, name: true },
+    })
+
+    if (services.length === 0) {
+      await transitionSession(
+        session.id,
+        clinicId,
+        'HUMAN_ESCALATION_PENDING',
+        'NO_SERVICES_AVAILABLE',
+      )
+      return { reply: 'عذراً، لا توجد خدمات متاحة حالياً. بيتواصل معك فريقنا.' }
+    }
+
+    await prisma.conversationSession.update({
+      where: { id: session.id },
+      data: { ambiguousIntents: services as unknown as Prisma.InputJsonValue },
+    })
+
+    await transitionSession(session.id, clinicId, 'SLOT_COLLECTION_SERVICE', 'INTENT_BOOKING')
+
+    const list = services.map((s, i) => `${i + 1}. ${s.name}`).join('\n')
+
+    return {
+      reply: await generateReply({
+        action: 'ask_for_service',
+        context: { customText: list },
+      }),
+    }
+  }
+
+  return { reply: 'اختر 1 لتعديل موعد قائم أو 2 لحجز موعد إضافي.' }
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -1809,13 +1931,15 @@ async function dispatch(ctx: HandlerContext): Promise<HandlerResult> {
   switch (currentState) {
     case 'IDLE':
     case 'LANGUAGE_DETECTION':
-    case 'INTENT_DISAMBIGUATION':
     case 'BOOKING_CONFIRMED':
     case 'BOOKING_FAILED':
     case 'CANCELLATION_CONFIRMED':
     case 'EXPIRED':
     case 'CORRUPTED':
       return handleEntryState(ctx)
+
+    case 'INTENT_DISAMBIGUATION':
+      return handleBookingIntentClarification(ctx)
 
     case 'SLOT_COLLECTION_SERVICE':
       return handleServiceSelection(ctx)
