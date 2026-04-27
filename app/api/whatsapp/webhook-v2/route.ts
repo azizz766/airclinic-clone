@@ -73,6 +73,32 @@ type HandlerResult = {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
+// Phone normalisation — booking guard only
+// ─────────────────────────────────────────────────────────────────────────────
+
+function normalizePhoneCandidates(phone: string): string[] {
+  const stripped = phone.replace(/^whatsapp:/i, '').trim()
+  const candidates = new Set<string>([stripped])
+
+  // +9665XXXXXXX → 9665XXXXXXX
+  if (stripped.startsWith('+')) {
+    candidates.add(stripped.slice(1))
+  }
+  // 9665XXXXXXX or +9665XXXXXXX → 05XXXXXXX (Saudi local)
+  const e164 = stripped.startsWith('+') ? stripped.slice(1) : stripped
+  if (e164.startsWith('966') && e164.length === 12) {
+    candidates.add('0' + e164.slice(3))
+  }
+  // 05XXXXXXX → +9665XXXXXXX and 9665XXXXXXX
+  if (stripped.startsWith('05') && stripped.length === 10) {
+    candidates.add('966' + stripped.slice(1))
+    candidates.add('+966' + stripped.slice(1))
+  }
+
+  return Array.from(candidates)
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
 // Shared Retry Logic
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -159,8 +185,9 @@ async function handleEntryState(ctx: HandlerContext): Promise<HandlerResult> {
 
   if (intent === 'new_booking') {
     const { from } = ctx
+    const phoneCandidates = normalizePhoneCandidates(from)
     const guardPatient = await prisma.patient.findFirst({
-      where: { clinicId, phone: from },
+      where: { clinicId, phone: { in: phoneCandidates } },
       select: { id: true },
     })
 
