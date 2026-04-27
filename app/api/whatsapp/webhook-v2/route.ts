@@ -1343,6 +1343,16 @@ type RescheduleCtx = {
   serviceId: string
 }
 
+type RescheduleApptSelect = {
+  type: 'reschedule_appt_select'
+  candidates: Array<{
+    id: string
+    serviceId: string
+    serviceName: string
+    scheduledAt: string
+  }>
+}
+
 async function handleRescheduleIntercept(ctx: HandlerContext): Promise<HandlerResult> {
   const { session, clinicId, from } = ctx
 
@@ -1384,9 +1394,9 @@ async function handleRescheduleIntercept(ctx: HandlerContext): Promise<HandlerRe
     })
   }
 
-  // Priority 2: nearest upcoming active appointment (original behaviour).
+  // Priority 2: fetch all active future appointments for disambiguation.
   if (!appointment) {
-    appointment = await prisma.appointment.findFirst({
+    const activeAppointments = await prisma.appointment.findMany({
       where: {
         clinicId,
         patientId: patient.id,
@@ -1395,13 +1405,53 @@ async function handleRescheduleIntercept(ctx: HandlerContext): Promise<HandlerRe
       },
       orderBy: { scheduledAt: 'asc' },
       select: apptSelect,
+      take: 5,
     })
+
+    if (activeAppointments.length === 0) {
+      return { reply: 'ما لقيت موعد قائم على هذا الرقم.' }
+    }
+
+    if (activeAppointments.length === 1) {
+      appointment = activeAppointments[0]!
+    } else {
+      const candidates = activeAppointments.map((a) => ({
+        id: a.id,
+        serviceId: a.serviceId,
+        serviceName: a.service.name,
+        scheduledAt: a.scheduledAt.toISOString(),
+      }))
+
+      await prisma.conversationSession.update({
+        where: { id: session.id },
+        data: {
+          ambiguousIntents: { type: 'reschedule_appt_select', candidates } as unknown as Prisma.InputJsonValue,
+          retryCount: 0,
+        },
+      })
+
+      await transitionSession(session.id, clinicId, 'RESCHEDULE_PENDING', 'INTENT_RESCHEDULE')
+
+      const list = candidates
+        .map((c, i) => {
+          const d = new Date(c.scheduledAt).toLocaleDateString('ar-SA', {
+            weekday: 'long',
+            month: 'short',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+          })
+          return `${i + 1}. ${c.serviceName} — ${d}`
+        })
+        .join('\n')
+
+      return {
+        reply: `لقيت لك أكثر من موعد، أي موعد تقصد؟\n\n${list}\n\nاختر رقم الموعد.`,
+      }
+    }
   }
 
-  if (!appointment) {
-    return { reply: 'ما لقيت موعد قائم على هذا الرقم.' }
-  }
-
+  // Single appointment resolved — proceed with normal reschedule flow.
   const rescheduleCtx: RescheduleCtx = {
     type: 'reschedule_ctx',
     appointmentId: appointment.id,
@@ -1435,7 +1485,30 @@ async function handleRescheduleIntercept(ctx: HandlerContext): Promise<HandlerRe
 async function handleRescheduleDate(ctx: HandlerContext): Promise<HandlerResult> {
   const { session, clinicId, body, interpretation } = ctx
 
-  const stored = session.ambiguousIntents as RescheduleCtx | null
+  const stored = session.ambiguousIntents as (RescheduleCtx | RescheduleApptSelect) | null
+
+  // Appointment disambiguation: user is selecting which appointment to reschedule.
+  if (stored?.type === 'reschedule_appt_select') {
+    const { candidates } = stored as RescheduleApptSelect
+    const selection = parseSelection(body)
+    if (selection === null || selection < 1 || selection > candidates.length) {
+      return { reply: 'اختر رقم الموعد من القائمة.' }
+    }
+    const chosen = candidates[selection - 1]!
+    const rescheduleCtx: RescheduleCtx = {
+      type: 'reschedule_ctx',
+      appointmentId: chosen.id,
+      serviceId: chosen.serviceId,
+    }
+    await prisma.conversationSession.update({
+      where: { id: session.id },
+      data: {
+        ambiguousIntents: rescheduleCtx as unknown as Prisma.InputJsonValue,
+        retryCount: 0,
+      },
+    })
+    return { reply: 'تمام، متى يناسبك الموعد الجديد؟' }
+  }
 
   if (!stored || stored.type !== 'reschedule_ctx' || !stored.appointmentId || !stored.serviceId) {
     return escalate(ctx, 'CORRUPTED_RESCHEDULE')
@@ -1642,6 +1715,7 @@ async function handleRescheduleTime(ctx: HandlerContext): Promise<HandlerResult>
     if (err instanceof SlotConflictError) {
       return { reply: 'هذا الموعد لم يعد متاحًا.\nاختر موعدًا آخر من القائمة.' }
     }
+    console.error('[RESCHEDULE_TIME_ERROR]', err)
     throw err
   }
 
