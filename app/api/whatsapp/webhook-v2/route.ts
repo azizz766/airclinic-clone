@@ -198,7 +198,7 @@ async function handleEntryState(ctx: HandlerContext): Promise<HandlerResult> {
           },
         })
 
-        await transitionSession(session.id, clinicId, 'INTENT_DISAMBIGUATION', 'INTENT_BOOKING')
+        await transitionSession(session.id, clinicId, 'INTENT_DISAMBIGUATION', 'INTENT_BOOKING_GUARD')
 
         if (activeAppts.length === 1) {
           const a = activeAppts[0]!
