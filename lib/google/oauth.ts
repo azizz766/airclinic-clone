@@ -2,22 +2,35 @@ import { google } from 'googleapis'
 
 const SCOPES = ['https://www.googleapis.com/auth/calendar.events']
 
+const appUrl = process.env.APP_URL ?? 'http://localhost:3000'
+const REDIRECT_URI = `${appUrl}/api/integrations/google-calendar/callback`
+
 export function buildOAuthClient() {
   return new google.auth.OAuth2(
     process.env.GOOGLE_CLIENT_ID,
     process.env.GOOGLE_CLIENT_SECRET,
-    `${process.env.APP_URL}/api/integrations/google-calendar/callback`,
+    REDIRECT_URI,
   )
 }
 
 export function getAuthUrl(state: string): string {
   const client = buildOAuthClient()
-  return client.generateAuthUrl({
+  const url = client.generateAuthUrl({
     access_type: 'offline',
     scope: SCOPES,
     prompt: 'consent',
     state,
   })
+
+  if (process.env.NODE_ENV === 'development') {
+    const parsed = new URL(url)
+    console.log('[google-oauth] redirect_uri:', REDIRECT_URI)
+    console.log('[google-oauth] scope:', parsed.searchParams.get('scope'))
+    console.log('[google-oauth] client_id:', parsed.searchParams.get('client_id')?.slice(0, 12) + '...')
+    console.log('[google-oauth] auth url:', url)
+  }
+
+  return url
 }
 
 export async function exchangeCode(code: string) {

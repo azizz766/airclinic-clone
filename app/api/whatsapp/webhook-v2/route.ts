@@ -44,6 +44,7 @@ import {
   normalizeArabicInput,
 } from '@/lib/whatsapp/input-parsers'
 import { saveLead } from '@/lib/whatsapp/lead-handler'
+import { syncUpdateEventForAppointment } from '@/lib/google/sync'
 import { generateReply } from '@/lib/whatsapp/response-generator'
 import { handleInquiryInterrupt } from '@/lib/inquiry-interrupt'
 
@@ -1585,6 +1586,34 @@ async function handleRescheduleTime(ctx: HandlerContext): Promise<HandlerResult>
       return { reply: 'هذا الموعد لم يعد متاحًا.\nاختر موعدًا آخر من القائمة.' }
     }
     throw err
+  }
+
+  // Google Calendar sync — runs after DB transaction succeeds.
+  // Calendar failure does not block the user-facing reply (DB is source of truth).
+  const syncAppt = await prisma.appointment.findUnique({
+    where: { id: stored.appointmentId },
+    select: {
+      id: true,
+      calendarEventId: true,
+      scheduledAt: true,
+      durationMinutes: true,
+      patient: { select: { firstName: true, lastName: true } },
+      service: { select: { name: true } },
+      clinic: { select: { name: true, timezone: true } },
+    },
+  })
+
+  if (syncAppt) {
+    await syncUpdateEventForAppointment(clinicId, {
+      id: syncAppt.id,
+      calendarEventId: syncAppt.calendarEventId,
+      scheduledAt: syncAppt.scheduledAt,
+      durationMinutes: syncAppt.durationMinutes,
+      patient: syncAppt.patient,
+      doctor: null,
+      service: syncAppt.service,
+      clinic: syncAppt.clinic,
+    })
   }
 
   await prisma.conversationSession.update({
