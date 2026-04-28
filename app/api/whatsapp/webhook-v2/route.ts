@@ -1921,6 +1921,31 @@ const BOOKING_SLOT_STATES = new Set([
   'CONFIRMATION_PENDING',
 ])
 
+// Returns true when the message is a clear request to book a NEW appointment.
+// Hard-stops on reschedule/cancel/human phrases to avoid false positives.
+function isBookingRequest(intent: string, body: string): boolean {
+  if (intent === 'reschedule' || intent === 'cancel' || intent === 'human_request') return false
+
+  const n = body
+    .replace(/[أإآٱ]/g, 'ا')
+    .replace(/ى/g, 'ي')
+    .replace(/ة/g, 'ه')
+    .replace(/[ًٌٍَُِّْ]/g, '')
+    .toLowerCase()
+    .trim()
+
+  // Explicit reschedule/cancel/human body patterns — never treat as booking
+  const EXCLUDE = ['تعديل', 'اغير', 'الغي', 'كنسل', 'موظف']
+  if (EXCLUDE.some((p) => n.includes(p))) return false
+
+  // Trust the AI pipeline when it's confident
+  if (intent === 'new_booking') return true
+
+  // Deterministic Arabic fallback for cases AI pipeline misses
+  const BOOKING_KEYWORDS = ['احجز', 'حجز', 'ابغى موعد', 'ابي موعد', 'ابغي موعد', 'اريد موعد']
+  return BOOKING_KEYWORDS.some((kw) => n.includes(kw))
+}
+
 async function dispatch(ctx: HandlerContext): Promise<HandlerResult> {
   if (isEscalationRequest(ctx.body)) {
     return escalate(ctx, 'USER_REQUESTED')
@@ -1930,6 +1955,56 @@ async function dispatch(ctx: HandlerContext): Promise<HandlerResult> {
 
   if (ctx.interpretation.intent === 'reschedule' && !RESCHEDULE_STATES.has(currentState)) {
     return handleRescheduleIntercept(ctx)
+  }
+
+  // Explicit new-booking intent while mid-booking: reset to IDLE so the booking
+  // guard in handleEntryState can check for existing appointments first.
+  if (isBookingRequest(ctx.interpretation.intent, ctx.body) && BOOKING_SLOT_STATES.has(currentState)) {
+    console.log('[webhook-v2] booking-restart-intercept', {
+      sessionId: ctx.session.id,
+      from: ctx.from,
+      currentState,
+      intent: ctx.interpretation.intent,
+    })
+
+    // Release any held slot before resetting
+    if (ctx.session.slotTimeId) {
+      await prisma.availableSlot.updateMany({
+        where: {
+          id: ctx.session.slotTimeId,
+          isBooked: false,
+          isHeld: true,
+          heldBySessionId: ctx.session.id,
+        },
+        data: { isHeld: false, heldBySessionId: null, heldAt: null },
+      })
+    }
+
+    await prisma.conversationSession.update({
+      where: { id: ctx.session.id },
+      data: {
+        currentState: 'IDLE',
+        slotServiceId: null,
+        slotDate: null,
+        slotTimeId: null,
+        slotPatientName: null,
+        slotPatientDob: null,
+        slotPhoneConfirmed: null,
+        retryCount: 0,
+        ambiguousIntents: Prisma.JsonNull,
+      },
+    })
+
+    ctx.session.currentState = 'IDLE'
+    ctx.session.slotServiceId = null
+    ctx.session.slotDate = null
+    ctx.session.slotTimeId = null
+    ctx.session.slotPatientName = null
+    ctx.session.slotPatientDob = null
+    ctx.session.slotPhoneConfirmed = null
+    ctx.session.retryCount = 0
+
+    return handleEntryState(ctx)
   }
 
   if (ctx.interpretation.intent === 'cancel' && BOOKING_SLOT_STATES.has(currentState)) {
