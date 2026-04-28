@@ -1,4 +1,5 @@
 import twilio from "twilio"
+import { normalizeDigitsToEnglish } from '@/lib/whatsapp/twilio-sender'
 
 const client = twilio(
   process.env.TWILIO_ACCOUNT_SID!,
@@ -46,7 +47,7 @@ export async function sendWhatsAppMessage(to: string, body: string) {
   return client.messages.create({
     from: process.env.TWILIO_WHATSAPP_NUMBER!,
     to: `whatsapp:${to}`,
-    body,
+    body: normalizeDigitsToEnglish(body),
     ...(statusCallbackUrl ? { statusCallback: statusCallbackUrl } : {}),
   })
 }

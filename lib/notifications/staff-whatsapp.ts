@@ -1,4 +1,5 @@
 import twilio from 'twilio'
+import { normalizeDigitsToEnglish } from '@/lib/whatsapp/twilio-sender'
 
 interface StaffNotificationParams {
   patientName: string
@@ -47,7 +48,7 @@ export async function sendStaffBookingNotification(
     const result = await client.messages.create({
       from: `whatsapp:${twilioFrom}`,
       to: `whatsapp:${staffNumber}`,
-      body: message,
+      body: normalizeDigitsToEnglish(message),
     })
 
     console.log(JSON.stringify({

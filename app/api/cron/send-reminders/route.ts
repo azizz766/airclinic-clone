@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import twilio from 'twilio'
+import { normalizeDigitsToEnglish } from '@/lib/whatsapp/twilio-sender'
 
 const twilioClient = twilio(
   process.env.TWILIO_ACCOUNT_SID!,
@@ -50,7 +51,7 @@ export async function GET(request: NextRequest) {
       const msg = await twilioClient.messages.create({
         from: `whatsapp:${clinic.twilioPhoneNumber}`,
         to: `whatsapp:${job.destination}`,
-        body: job.messageBody,
+        body: normalizeDigitsToEnglish(job.messageBody),
       })
 
       await prisma.notificationJob.update({
