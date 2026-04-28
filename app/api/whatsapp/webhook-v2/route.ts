@@ -186,30 +186,24 @@ async function handleEntryState(ctx: HandlerContext): Promise<HandlerResult> {
   if (intent === 'new_booking') {
     const { from } = ctx
     const phoneCandidates = normalizePhoneCandidates(from)
-    const guardPatient = await prisma.patient.findFirst({
-      where: { clinicId, phone: { in: phoneCandidates } },
-      select: { id: true },
+    const activeAppts = await prisma.appointment.findMany({
+      where: {
+        clinicId,
+        status: { in: ['scheduled', 'confirmed', 'confirmation_pending'] },
+        scheduledAt: { gt: new Date() },
+        patient: { phone: { in: phoneCandidates } },
+      },
+      orderBy: { scheduledAt: 'asc' },
+      select: {
+        id: true,
+        serviceId: true,
+        scheduledAt: true,
+        service: { select: { name: true } },
+      },
+      take: 5,
     })
 
-    if (guardPatient) {
-      const activeAppts = await prisma.appointment.findMany({
-        where: {
-          clinicId,
-          patientId: guardPatient.id,
-          status: { in: ['scheduled', 'confirmed', 'confirmation_pending'] },
-          scheduledAt: { gt: new Date() },
-        },
-        orderBy: { scheduledAt: 'asc' },
-        select: {
-          id: true,
-          serviceId: true,
-          scheduledAt: true,
-          service: { select: { name: true } },
-        },
-        take: 5,
-      })
-
-      if (activeAppts.length > 0) {
+    if (activeAppts.length > 0) {
         const candidates = activeAppts.map((a) => ({
           id: a.id,
           serviceId: a.serviceId,
@@ -246,7 +240,6 @@ async function handleEntryState(ctx: HandlerContext): Promise<HandlerResult> {
               `عندك أكثر من موعد قائم.\n\nهل تبغى:\n1. تعديل موعد قائم\n2. حجز موعد إضافي`,
           }
         }
-      }
     }
 
     const services = await prisma.service.findMany({
